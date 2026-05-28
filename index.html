@@ -169,10 +169,8 @@ img {
   display: grid;
   place-items: center;
   border-radius: 999px;
-  background: rgba(255, 253, 248, 0.7);
   border: 1px solid var(--line);
   box-shadow: 0 10px 34px rgba(80, 50, 31, 0.08);
-  backdrop-filter: blur(16px);
   transition: transform 220ms var(--ease), opacity 220ms ease, background 220ms ease;
 }
 
@@ -196,10 +194,8 @@ img {
   justify-content: center;
   gap: 8px;
   border-radius: 999px;
-  background: rgba(255, 253, 248, 0.62);
   border: 1px solid var(--soft-line);
   box-shadow: 0 10px 34px rgba(80, 50, 31, 0.06);
-  backdrop-filter: blur(16px);
 }
 
 .dot {
@@ -219,11 +215,7 @@ img {
 .tiny-brand {
   justify-self: end;
   padding: 11px 14px;
-  border-radius: 999px;
   color: var(--muted);
-  background: rgba(255, 253, 248, 0.58);
-  border: 1px solid var(--soft-line);
-  backdrop-filter: blur(16px);
   font-size: 0.78rem;
   letter-spacing: 0.03em;
   white-space: nowrap;
@@ -246,18 +238,15 @@ img {
   opacity: 0;
   pointer-events: none;
   transform: translate3d(32px, 0, 0) scale(0.985);
-  filter: blur(7px);
   transition:
     opacity 440ms ease,
-    transform 560ms var(--ease),
-    filter 500ms ease;
+    transform 560ms var(--ease);
 }
 
 .page.is-active {
   opacity: 1;
   pointer-events: auto;
   transform: translate3d(0, 0, 0) scale(1);
-  filter: blur(0);
   z-index: 2;
 }
 
@@ -276,7 +265,7 @@ img {
   background: var(--paper);
   border: 1px solid rgba(255, 255, 255, 0.74);
   box-shadow: var(--shadow);
-  backdrop-filter: blur(24px);
+  backdrop-filter: blur(8px);
   position: relative;
   overflow: hidden;
 }
@@ -324,7 +313,9 @@ img {
 h1,
 h2 {
   margin: 0;
-  letter-spacing: -0.055em;
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-weight: 400;
+  letter-spacing: -0.02em;
   line-height: 0.96;
   text-wrap: balance;
 }
@@ -1106,6 +1097,9 @@ textarea:focus {
 }
 
   </style>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&display=swap" rel="stylesheet">
 </head>
 <body>
   <canvas id="confettiCanvas" aria-hidden="true"></canvas>
