@@ -43,7 +43,7 @@ body {
     radial-gradient(ellipse at 62% 90%, rgba(90, 122, 94, 0.05), transparent 30%),
     radial-gradient(ellipse at 28% 70%, rgba(26, 20, 40, 0.03), transparent 26%),
     linear-gradient(160deg, #f7f2ee 0%, #ece4da 50%, #f4ede8 100%);
-  font-family: 'DM Sans', Inter, ui-sans-serif, system-ui, -apple-system, sans-serif;
+  font-family: 'Lora', Georgia, serif;
   overflow-x: hidden;
   overflow-y: auto;
   cursor: var(--cursor) !important;
@@ -90,18 +90,7 @@ img {
   z-index: 30;
 }
 
-.grain {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  opacity: 0.22;
-  z-index: 0;
-  background-image:
-    radial-gradient(circle at 30% 60%, rgba(30,23,16,.028) 1px, transparent 1px),
-    radial-gradient(circle at 70% 35%, rgba(30,23,16,.022) 1px, transparent 1px),
-    radial-gradient(circle at 50% 80%, rgba(30,23,16,.018) 1px, transparent 1px);
-  background-size: 20px 20px, 15px 15px, 25px 25px;
-}
+.grain { display: none; }
 
 .ambient {
   position: fixed;
@@ -125,9 +114,8 @@ img {
 }
 
 @keyframes inkPulse {
-  0%   { opacity: 0.68; transform: translate(-50%, -50%) rotate(var(--angle, -12deg)) scale(1) skewX(0deg); }
-  50%  { opacity: 0.9; transform: translate(-50%, -50%) rotate(calc(var(--angle, -12deg) + 3deg)) scale(1.08) skewX(2deg); }
-  100% { opacity: 0.72; transform: translate(-50%, -50%) rotate(calc(var(--angle, -12deg) - 2deg)) scale(0.95) skewX(-1deg); }
+  0%   { opacity: 0.65; transform: translate(-50%, -50%) rotate(var(--angle, -12deg)) scale(1); }
+  100% { opacity: 0.85; transform: translate(-50%, -50%) rotate(calc(var(--angle, -12deg) + 4deg)) scale(1.10); }
 }
 
 .topbar {
@@ -233,12 +221,11 @@ img {
   padding: 96px 18px 28px;
   opacity: 0;
   pointer-events: none;
-  transform: scale(0.97) translateY(16px);
-  filter: blur(5px);
+  transform: scale(0.98) translateY(18px);
+  will-change: opacity, transform;
   transition:
-    opacity 540ms ease,
-    transform 620ms var(--ease),
-    filter 500ms ease;
+    opacity 480ms ease,
+    transform 560ms var(--ease);
   overflow-y: auto;
 }
 
@@ -246,7 +233,6 @@ img {
   opacity: 1;
   pointer-events: auto;
   transform: scale(1) translateY(0);
-  filter: blur(0px);
   z-index: 2;
 }
 
@@ -261,10 +247,9 @@ img {
 .panel {
   width: min(900px, 100%);
   border-radius: var(--radius-xl);
-  background: rgba(245, 238, 218, 0.92);
+  background: rgba(247, 241, 228, 0.96);
   border: 1px solid rgba(30, 23, 16, 0.09);
-  box-shadow: var(--shadow), inset 0 1px 0 rgba(255, 255, 255, 0.55);
-  backdrop-filter: blur(6px);
+  box-shadow: var(--shadow), inset 0 1px 0 rgba(255, 255, 255, 0.7);
   position: relative;
   overflow: hidden;
 }
@@ -333,7 +318,7 @@ img {
 h1,
 h2 {
   margin: 0;
-  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-family: 'Playfair Display', Georgia, serif;
   font-weight: 400;
   letter-spacing: -0.01em;
   line-height: 0.94;
@@ -468,7 +453,6 @@ h3 {
 .orb {
   position: absolute;
   border-radius: 999px;
-  filter: blur(0.2px);
   animation: slowPulse 5.5s ease-in-out infinite;
 }
 
@@ -1014,7 +998,6 @@ textarea:focus {
   height: 32px;
   border-radius: 999px;
   background: rgba(46, 33, 27, 0.10);
-  filter: blur(0.4px);
 }
 
 .cake-base {
@@ -1117,7 +1100,6 @@ textarea:focus {
   border-radius: 999px;
   opacity: 0;
   background: rgba(120, 112, 108, 0.34);
-  filter: blur(2px);
 }
 
 .candle.is-out .flame {
@@ -1235,42 +1217,58 @@ textarea:focus {
   transition: opacity 1100ms ease;
 }
 
-/* per-page ink wash focus — different painting each slide */
-body[data-page="0"] .iwp-lotus  { opacity: 0.30; }
-body[data-page="0"] .iwp-bamboo { opacity: 0.26; }
-body[data-page="0"] .iwp-plum   { opacity: 0.04; }
-body[data-page="0"] .iwp-grapes { opacity: 0.05; }
-body[data-page="0"] .iwp-bird   { opacity: 0.06; }
+/* slide tint overlay — color mood shifts per page */
+.slide-tint {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  transition: background-color 900ms ease;
+}
 
-body[data-page="1"] .iwp-lotus  { opacity: 0.05; }
-body[data-page="1"] .iwp-bamboo { opacity: 0.06; }
-body[data-page="1"] .iwp-plum   { opacity: 0.30; }
-body[data-page="1"] .iwp-grapes { opacity: 0.26; }
-body[data-page="1"] .iwp-bird   { opacity: 0.05; }
+body[data-page="0"] .slide-tint { background-color: rgba(184, 144, 60, 0.06); }   /* warm gold — lotus/goldfish */
+body[data-page="1"] .slide-tint { background-color: rgba(130, 55, 165, 0.09); }   /* purple — plum/grapes */
+body[data-page="2"] .slide-tint { background-color: rgba(55, 108, 62, 0.08); }    /* sage green — bamboo */
+body[data-page="3"] .slide-tint { background-color: rgba(190, 65, 95, 0.07); }    /* rose pink — lotus bloom */
+body[data-page="4"] .slide-tint { background-color: rgba(168, 38, 58, 0.08); }    /* deep red — chrysanthemum */
+body[data-page="5"] .slide-tint { background-color: rgba(85, 40, 138, 0.10); }    /* deep purple — finale */
 
-body[data-page="2"] .iwp-lotus  { opacity: 0.06; }
-body[data-page="2"] .iwp-bamboo { opacity: 0.32; }
-body[data-page="2"] .iwp-plum   { opacity: 0.06; }
-body[data-page="2"] .iwp-grapes { opacity: 0.05; }
-body[data-page="2"] .iwp-bird   { opacity: 0.30; }
+/* per-page ink wash focus — different painting each slide, higher contrast */
+body[data-page="0"] .iwp-lotus  { opacity: 0.38; }
+body[data-page="0"] .iwp-bamboo { opacity: 0.30; }
+body[data-page="0"] .iwp-plum   { opacity: 0.03; }
+body[data-page="0"] .iwp-grapes { opacity: 0.03; }
+body[data-page="0"] .iwp-bird   { opacity: 0.04; }
 
-body[data-page="3"] .iwp-lotus  { opacity: 0.30; }
-body[data-page="3"] .iwp-bamboo { opacity: 0.07; }
-body[data-page="3"] .iwp-plum   { opacity: 0.24; }
-body[data-page="3"] .iwp-grapes { opacity: 0.05; }
-body[data-page="3"] .iwp-bird   { opacity: 0.04; }
+body[data-page="1"] .iwp-lotus  { opacity: 0.04; }
+body[data-page="1"] .iwp-bamboo { opacity: 0.04; }
+body[data-page="1"] .iwp-plum   { opacity: 0.38; }
+body[data-page="1"] .iwp-grapes { opacity: 0.34; }
+body[data-page="1"] .iwp-bird   { opacity: 0.04; }
 
-body[data-page="4"] .iwp-lotus  { opacity: 0.07; }
-body[data-page="4"] .iwp-bamboo { opacity: 0.07; }
-body[data-page="4"] .iwp-plum   { opacity: 0.06; }
-body[data-page="4"] .iwp-grapes { opacity: 0.30; }
-body[data-page="4"] .iwp-bird   { opacity: 0.26; }
+body[data-page="2"] .iwp-lotus  { opacity: 0.04; }
+body[data-page="2"] .iwp-bamboo { opacity: 0.40; }
+body[data-page="2"] .iwp-plum   { opacity: 0.04; }
+body[data-page="2"] .iwp-grapes { opacity: 0.03; }
+body[data-page="2"] .iwp-bird   { opacity: 0.38; }
 
-body[data-page="5"] .iwp-lotus  { opacity: 0.26; }
-body[data-page="5"] .iwp-bamboo { opacity: 0.20; }
-body[data-page="5"] .iwp-plum   { opacity: 0.20; }
-body[data-page="5"] .iwp-grapes { opacity: 0.16; }
-body[data-page="5"] .iwp-bird   { opacity: 0.18; }
+body[data-page="3"] .iwp-lotus  { opacity: 0.38; }
+body[data-page="3"] .iwp-bamboo { opacity: 0.05; }
+body[data-page="3"] .iwp-plum   { opacity: 0.30; }
+body[data-page="3"] .iwp-grapes { opacity: 0.04; }
+body[data-page="3"] .iwp-bird   { opacity: 0.03; }
+
+body[data-page="4"] .iwp-lotus  { opacity: 0.05; }
+body[data-page="4"] .iwp-bamboo { opacity: 0.05; }
+body[data-page="4"] .iwp-plum   { opacity: 0.04; }
+body[data-page="4"] .iwp-grapes { opacity: 0.38; }
+body[data-page="4"] .iwp-bird   { opacity: 0.34; }
+
+body[data-page="5"] .iwp-lotus  { opacity: 0.32; }
+body[data-page="5"] .iwp-bamboo { opacity: 0.24; }
+body[data-page="5"] .iwp-plum   { opacity: 0.26; }
+body[data-page="5"] .iwp-grapes { opacity: 0.20; }
+body[data-page="5"] .iwp-bird   { opacity: 0.22; }
 
 /* letter scroll on final page */
 .letter-scroll {
@@ -1282,7 +1280,7 @@ body[data-page="5"] .iwp-bird   { opacity: 0.18; }
   border-radius: var(--radius-lg);
   background: rgba(248, 244, 238, 0.82);
   border: 1px solid var(--soft-line);
-  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-family: 'Playfair Display', Georgia, serif;
   font-size: 1.06rem;
   font-style: italic;
   line-height: 1.82;
@@ -1377,7 +1375,7 @@ body[data-page="5"] .iwp-bird   { opacity: 0.18; }
   max-width: 420px;
   margin: 0 auto 24px;
   text-align: center;
-  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-family: 'Playfair Display', Georgia, serif;
   font-size: clamp(1.05rem, 2vw, 1.3rem);
   font-style: italic;
   color: var(--muted);
@@ -1387,10 +1385,11 @@ body[data-page="5"] .iwp-bird   { opacity: 0.18; }
   </style>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
 </head>
 <body>
   <canvas id="confettiCanvas" aria-hidden="true"></canvas>
+  <div class="slide-tint" aria-hidden="true"></div>
   <div class="ambient" id="ambient" aria-hidden="true"></div>
 
   <!-- Ink wash painting background — inspired by Angela's artwork -->
@@ -1398,20 +1397,16 @@ body[data-page="5"] .iwp-bird   { opacity: 0.18; }
 
     <!-- Lotus + goldfish + bird — bottom right (her lotus painting) -->
     <svg class="ink-wash-piece iwp-lotus" viewBox="0 0 480 480" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <filter id="inkBleed"><feGaussianBlur stdDeviation="3.5"/></filter>
-        <filter id="inkSoft"><feGaussianBlur stdDeviation="2"/></filter>
-      </defs>
       <!-- Large ink wash lotus leaf 1 — very wet, dark -->
-      <ellipse cx="170" cy="335" rx="145" ry="100" fill="rgba(12,8,22,0.34)" transform="rotate(-22 170 335)" filter="url(#inkBleed)"/>
-      <ellipse cx="170" cy="335" rx="120" ry="82" fill="rgba(12,8,22,0.28)" transform="rotate(-22 170 335)"/>
+      <ellipse cx="170" cy="335" rx="145" ry="100" fill="rgba(12,8,22,0.32)" transform="rotate(-22 170 335)"/>
+      <ellipse cx="170" cy="335" rx="108" ry="74" fill="rgba(12,8,22,0.26)" transform="rotate(-22 170 335)"/>
       <!-- Leaf 2 -->
-      <ellipse cx="285" cy="308" rx="158" ry="104" fill="rgba(12,8,22,0.28)" transform="rotate(11 285 308)" filter="url(#inkBleed)"/>
-      <ellipse cx="285" cy="308" rx="130" ry="86" fill="rgba(12,8,22,0.22)" transform="rotate(11 285 308)"/>
+      <ellipse cx="285" cy="308" rx="158" ry="104" fill="rgba(12,8,22,0.26)" transform="rotate(11 285 308)"/>
+      <ellipse cx="285" cy="308" rx="118" ry="78" fill="rgba(12,8,22,0.20)" transform="rotate(11 285 308)"/>
       <!-- Leaf 3 smaller -->
-      <ellipse cx="115" cy="375" rx="92" ry="62" fill="rgba(12,8,22,0.22)" transform="rotate(-38 115 375)" filter="url(#inkSoft)"/>
+      <ellipse cx="115" cy="375" rx="92" ry="62" fill="rgba(12,8,22,0.20)" transform="rotate(-38 115 375)"/>
       <!-- Leaf 4 -->
-      <ellipse cx="360" cy="355" rx="86" ry="55" fill="rgba(12,8,22,0.18)" transform="rotate(8 360 355)" filter="url(#inkSoft)"/>
+      <ellipse cx="360" cy="355" rx="86" ry="55" fill="rgba(12,8,22,0.16)" transform="rotate(8 360 355)"/>
       <!-- Lotus stem 1 -->
       <path d="M192 292 Q197 215 202 148" stroke="rgba(12,8,22,0.48)" stroke-width="10" stroke-linecap="round"/>
       <!-- Lotus stem 2 -->
@@ -1429,11 +1424,11 @@ body[data-page="5"] .iwp-bird   { opacity: 0.18; }
       <!-- Seed pod center -->
       <circle cx="316" cy="108" r="8" fill="rgba(180,140,60,0.5)"/>
       <!-- Goldfish 1 — orange/gold like hers -->
-      <ellipse cx="405" cy="415" rx="34" ry="17" fill="rgba(210,110,35,0.65)" transform="rotate(-28 405 415)" filter="url(#inkSoft)"/>
+      <ellipse cx="405" cy="415" rx="34" ry="17" fill="rgba(210,110,35,0.65)" transform="rotate(-28 405 415)"/>
       <path d="M432 402 Q455 388 449 418" fill="rgba(210,110,35,0.55)"/>
       <ellipse cx="405" cy="415" rx="20" ry="9" fill="rgba(230,135,45,0.5)" transform="rotate(-28 405 415)"/>
       <!-- Goldfish 2 -->
-      <ellipse cx="370" cy="445" rx="28" ry="14" fill="rgba(225,125,40,0.62)" transform="rotate(18 370 445)" filter="url(#inkSoft)"/>
+      <ellipse cx="370" cy="445" rx="28" ry="14" fill="rgba(225,125,40,0.62)" transform="rotate(18 370 445)"/>
       <path d="M344 436 Q322 423 328 450" fill="rgba(225,125,40,0.52)"/>
       <!-- Small green bird — like her painting -->
       <ellipse cx="112" cy="138" rx="20" ry="11" fill="rgba(50,98,58,0.68)" transform="rotate(-12 112 138)"/>
@@ -1475,9 +1470,8 @@ body[data-page="5"] .iwp-bird   { opacity: 0.18; }
 
     <!-- Plum blossoms — top area, inspired by the 4-panel scroll -->
     <svg class="ink-wash-piece iwp-plum" viewBox="0 0 500 360" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <defs><filter id="branchTex"><feGaussianBlur stdDeviation="1.5"/></filter></defs>
       <!-- Main gnarled branch — dark ink -->
-      <path d="M0 310 Q55 248 105 205 Q155 162 198 124 Q241 86 278 56 Q310 30 360 10" stroke="rgba(18,10,28,0.48)" stroke-width="18" fill="none" stroke-linecap="round" filter="url(#branchTex)"/>
+      <path d="M0 310 Q55 248 105 205 Q155 162 198 124 Q241 86 278 56 Q310 30 360 10" stroke="rgba(18,10,28,0.46)" stroke-width="18" fill="none" stroke-linecap="round"/>
       <path d="M198 124 Q248 106 308 88 Q355 74 420 62" stroke="rgba(18,10,28,0.40)" stroke-width="12" fill="none" stroke-linecap="round"/>
       <path d="M105 205 Q125 258 114 320" stroke="rgba(18,10,28,0.34)" stroke-width="9" fill="none" stroke-linecap="round"/>
       <!-- Branch bark texture -->
@@ -1514,15 +1508,14 @@ body[data-page="5"] .iwp-bird   { opacity: 0.18; }
 
     <!-- Grape cluster — top right (she paints grapes — purple!) -->
     <svg class="ink-wash-piece iwp-grapes" viewBox="0 0 280 380" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <defs><filter id="gSoft"><feGaussianBlur stdDeviation="2"/></filter></defs>
       <!-- Vine tendrils -->
       <path d="M140 0 Q135 35 130 65 Q118 95 96 125 Q74 155 52 190 Q30 225 12 268" stroke="rgba(18,10,28,0.38)" stroke-width="7" fill="none" stroke-linecap="round"/>
       <path d="M130 65 Q168 58 200 78 Q228 98 224 132" stroke="rgba(18,10,28,0.30)" stroke-width="5" fill="none" stroke-linecap="round"/>
       <!-- Ink wash leaf -->
-      <path d="M118 88 Q145 62 162 74 Q178 88 172 112 Q166 136 143 140 Q120 144 108 128 Q96 112 118 88Z" fill="rgba(48,90,48,0.38)" filter="url(#gSoft)"/>
-      <path d="M75 140 Q100 115 116 128 Q132 140 126 162 Q120 184 99 186 Q78 188 68 172 Q58 156 75 140Z" fill="rgba(48,90,48,0.30)" filter="url(#gSoft)"/>
+      <path d="M118 88 Q145 62 162 74 Q178 88 172 112 Q166 136 143 140 Q120 144 108 128 Q96 112 118 88Z" fill="rgba(48,90,48,0.36)"/>
+      <path d="M75 140 Q100 115 116 128 Q132 140 126 162 Q120 184 99 186 Q78 188 68 172 Q58 156 75 140Z" fill="rgba(48,90,48,0.28)"/>
       <!-- Grape cluster 1 — purple like her painting -->
-      <circle cx="200" cy="140" r="11" fill="rgba(98,48,145,0.58)" filter="url(#gSoft)"/>
+      <circle cx="200" cy="140" r="11" fill="rgba(98,48,145,0.58)"/>
       <circle cx="218" cy="140" r="11" fill="rgba(108,52,152,0.58)"/>
       <circle cx="236" cy="140" r="11" fill="rgba(98,48,145,0.55)"/>
       <circle cx="193" cy="154" r="11" fill="rgba(105,50,148,0.58)"/>
@@ -1553,7 +1546,7 @@ body[data-page="5"] .iwp-bird   { opacity: 0.18; }
     <!-- Chrysanthemum / small ink flowers — bottom left corner -->
     <svg class="ink-wash-piece iwp-bird" viewBox="0 0 140 140" fill="none" xmlns="http://www.w3.org/2000/svg">
       <!-- Chrysanthemum inspired by the 4-panel painting red flowers -->
-      <circle cx="70" cy="70" r="36" fill="rgba(190,48,55,0.18)" filter="url(#inkSoft)"/>
+      <circle cx="70" cy="70" r="36" fill="rgba(190,48,55,0.16)"/>
       <!-- Petals -->
       <ellipse cx="70" cy="38" rx="8" ry="18" fill="rgba(195,50,58,0.50)"/>
       <ellipse cx="90" cy="44" rx="8" ry="18" fill="rgba(195,50,58,0.48)" transform="rotate(36 90 44)"/>
@@ -1955,7 +1948,7 @@ window.BIRTHDAY_CONFIG = {
     ];
     const angles = [-28, 15, -12, 22, -6, 35, -18];
     ambient.innerHTML = "";
-    for (let i = 0; i < 8; i += 1) {
+    for (let i = 0; i < 5; i += 1) {
       const blob = document.createElement("div");
       blob.className = "ink-blob";
       blob.style.setProperty("--x", `${8 + Math.random() * 84}%`);
