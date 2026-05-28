@@ -44,7 +44,8 @@ body {
     radial-gradient(ellipse at 28% 70%, rgba(26, 20, 40, 0.03), transparent 26%),
     linear-gradient(160deg, #f7f2ee 0%, #ece4da 50%, #f4ede8 100%);
   font-family: 'DM Sans', Inter, ui-sans-serif, system-ui, -apple-system, sans-serif;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
   cursor: var(--cursor) !important;
   text-rendering: geometricPrecision;
 }
@@ -218,7 +219,7 @@ img {
 .stage {
   position: relative;
   width: 100vw;
-  height: 100svh;
+  min-height: 100svh;
   z-index: 1;
   isolation: isolate;
 }
@@ -226,6 +227,7 @@ img {
 .page {
   position: absolute;
   inset: 0;
+  min-height: 100svh;
   display: grid;
   place-items: center;
   padding: 96px 18px 28px;
@@ -235,6 +237,7 @@ img {
   transition:
     opacity 560ms ease,
     transform 640ms var(--ease);
+  overflow-y: auto;
 }
 
 .page.is-active {
@@ -254,7 +257,6 @@ img {
 
 .panel {
   width: min(900px, 100%);
-  min-height: min(670px, calc(100svh - 138px));
   border-radius: var(--radius-xl);
   background: rgba(245, 238, 218, 0.92);
   border: 1px solid rgba(30, 23, 16, 0.09);
@@ -1062,10 +1064,6 @@ textarea:focus {
   100% { opacity: 0; transform: translateX(-50%) translateY(-56px) scale(2.6); }
 }
 
-.final-panel {
-  min-height: min(630px, calc(100svh - 138px));
-}
-
 .final-art {
   width: min(210px, 46vw);
   margin: 0 auto 20px;
@@ -1083,7 +1081,6 @@ textarea:focus {
 }
 
 @media (max-width: 860px) {
-  body { overflow: auto; }
   .stage { min-height: 100svh; height: auto; }
   .page {
     position: relative;
@@ -1150,6 +1147,110 @@ textarea:focus {
   }
 }
 
+/* ─── ink wash background paintings ─── */
+.ink-wash-bg {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.ink-wash-piece {
+  position: absolute;
+}
+
+.iwp-lotus {
+  bottom: -4vh;
+  right: -2vw;
+  width: clamp(280px, 34vw, 520px);
+  height: auto;
+  opacity: 0.30;
+}
+
+.iwp-bamboo {
+  left: -1vw;
+  top: 3vh;
+  width: clamp(100px, 11vw, 180px);
+  height: clamp(380px, 78vh, 740px);
+  opacity: 0.26;
+}
+
+.iwp-plum {
+  top: -2vh;
+  left: 6vw;
+  width: clamp(220px, 32vw, 480px);
+  height: auto;
+  opacity: 0.22;
+}
+
+.iwp-grapes {
+  top: 8vh;
+  right: 2vw;
+  width: clamp(160px, 20vw, 300px);
+  height: auto;
+  opacity: 0.20;
+}
+
+.iwp-bird {
+  bottom: 12vh;
+  left: 16vw;
+  width: clamp(80px, 10vw, 150px);
+  height: auto;
+  opacity: 0.22;
+}
+
+/* ─── final page angela photo ─── */
+.final-panel {
+  min-height: clamp(500px, calc(100svh - 138px), 720px);
+}
+
+.angela-frame {
+  width: min(220px, 50vw);
+  height: min(220px, 50vw);
+  border-radius: 50%;
+  overflow: hidden;
+  margin: 0 auto 20px;
+  border: 4px solid rgba(124, 77, 187, 0.22);
+  box-shadow: 0 8px 32px rgba(26, 20, 40, 0.15), 0 0 0 8px rgba(242, 236, 248, 0.6);
+  background:
+    radial-gradient(ellipse at 40% 35%, rgba(168, 110, 210, 0.5) 0%, rgba(140, 88, 188, 0.2) 40%, transparent 65%),
+    radial-gradient(ellipse at 68% 65%, rgba(190, 140, 230, 0.3) 0%, transparent 50%),
+    linear-gradient(135deg, #ede0f5 0%, #d4b8e8 100%);
+}
+
+.angela-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.angela-frame.no-photo::after {
+  content: "✦";
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: 2.5rem;
+  color: rgba(124, 77, 187, 0.45);
+}
+
+.angela-frame.no-photo {
+  position: relative;
+}
+
+.final-message {
+  max-width: 420px;
+  margin: 0 auto 24px;
+  text-align: center;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(1.05rem, 2vw, 1.3rem);
+  font-style: italic;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
   </style>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1158,6 +1259,192 @@ textarea:focus {
 <body>
   <canvas id="confettiCanvas" aria-hidden="true"></canvas>
   <div class="ambient" id="ambient" aria-hidden="true"></div>
+
+  <!-- Ink wash painting background — inspired by Angela's artwork -->
+  <div class="ink-wash-bg" aria-hidden="true">
+
+    <!-- Lotus + goldfish + bird — bottom right (her lotus painting) -->
+    <svg class="ink-wash-piece iwp-lotus" viewBox="0 0 480 480" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <filter id="inkBleed"><feGaussianBlur stdDeviation="3.5"/></filter>
+        <filter id="inkSoft"><feGaussianBlur stdDeviation="2"/></filter>
+      </defs>
+      <!-- Large ink wash lotus leaf 1 — very wet, dark -->
+      <ellipse cx="170" cy="335" rx="145" ry="100" fill="rgba(12,8,22,0.34)" transform="rotate(-22 170 335)" filter="url(#inkBleed)"/>
+      <ellipse cx="170" cy="335" rx="120" ry="82" fill="rgba(12,8,22,0.28)" transform="rotate(-22 170 335)"/>
+      <!-- Leaf 2 -->
+      <ellipse cx="285" cy="308" rx="158" ry="104" fill="rgba(12,8,22,0.28)" transform="rotate(11 285 308)" filter="url(#inkBleed)"/>
+      <ellipse cx="285" cy="308" rx="130" ry="86" fill="rgba(12,8,22,0.22)" transform="rotate(11 285 308)"/>
+      <!-- Leaf 3 smaller -->
+      <ellipse cx="115" cy="375" rx="92" ry="62" fill="rgba(12,8,22,0.22)" transform="rotate(-38 115 375)" filter="url(#inkSoft)"/>
+      <!-- Leaf 4 -->
+      <ellipse cx="360" cy="355" rx="86" ry="55" fill="rgba(12,8,22,0.18)" transform="rotate(8 360 355)" filter="url(#inkSoft)"/>
+      <!-- Lotus stem 1 -->
+      <path d="M192 292 Q197 215 202 148" stroke="rgba(12,8,22,0.48)" stroke-width="10" stroke-linecap="round"/>
+      <!-- Lotus stem 2 -->
+      <path d="M308 272 Q313 200 316 132" stroke="rgba(12,8,22,0.42)" stroke-width="8" stroke-linecap="round"/>
+      <!-- Lotus flower 1 (bud) — bright pink/red like hers -->
+      <ellipse cx="202" cy="128" rx="24" ry="34" fill="rgba(205,55,85,0.70)"/>
+      <ellipse cx="185" cy="134" rx="17" ry="28" fill="rgba(200,50,80,0.58)" transform="rotate(-20 185 134)"/>
+      <ellipse cx="219" cy="136" rx="17" ry="28" fill="rgba(200,50,80,0.55)" transform="rotate(18 219 136)"/>
+      <!-- Flower 2 (open bloom) — vivid pink -->
+      <ellipse cx="316" cy="112" rx="32" ry="42" fill="rgba(218,60,90,0.65)"/>
+      <ellipse cx="293" cy="120" rx="22" ry="34" fill="rgba(210,55,85,0.58)" transform="rotate(-24 293 120)"/>
+      <ellipse cx="339" cy="120" rx="22" ry="34" fill="rgba(210,55,85,0.55)" transform="rotate(22 339 120)"/>
+      <ellipse cx="305" cy="125" rx="16" ry="26" fill="rgba(220,65,95,0.52)" transform="rotate(-10 305 125)"/>
+      <ellipse cx="327" cy="125" rx="16" ry="26" fill="rgba(220,65,95,0.50)" transform="rotate(10 327 125)"/>
+      <!-- Seed pod center -->
+      <circle cx="316" cy="108" r="8" fill="rgba(180,140,60,0.5)"/>
+      <!-- Goldfish 1 — orange/gold like hers -->
+      <ellipse cx="405" cy="415" rx="34" ry="17" fill="rgba(210,110,35,0.65)" transform="rotate(-28 405 415)" filter="url(#inkSoft)"/>
+      <path d="M432 402 Q455 388 449 418" fill="rgba(210,110,35,0.55)"/>
+      <ellipse cx="405" cy="415" rx="20" ry="9" fill="rgba(230,135,45,0.5)" transform="rotate(-28 405 415)"/>
+      <!-- Goldfish 2 -->
+      <ellipse cx="370" cy="445" rx="28" ry="14" fill="rgba(225,125,40,0.62)" transform="rotate(18 370 445)" filter="url(#inkSoft)"/>
+      <path d="M344 436 Q322 423 328 450" fill="rgba(225,125,40,0.52)"/>
+      <!-- Small green bird — like her painting -->
+      <ellipse cx="112" cy="138" rx="20" ry="11" fill="rgba(50,98,58,0.68)" transform="rotate(-12 112 138)"/>
+      <circle cx="128" cy="132" r="10" fill="rgba(50,98,58,0.72)"/>
+      <path d="M138 131 L155 129" stroke="rgba(12,8,22,0.65)" stroke-width="3" stroke-linecap="round"/>
+      <circle cx="131" cy="129" r="2.5" fill="rgba(12,8,22,0.5)"/>
+      <!-- Wing detail -->
+      <path d="M110 137 Q100 128 108 122" stroke="rgba(68,130,75,0.5)" stroke-width="2" fill="none" stroke-linecap="round"/>
+    </svg>
+
+    <!-- Bamboo — left edge -->
+    <svg class="ink-wash-piece iwp-bamboo" viewBox="0 0 180 700" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Stalk 1 -->
+      <path d="M68 700 Q66 662 68 642 Q70 622 68 594 Q66 566 68 536 Q70 506 68 476 Q66 446 68 416 Q70 386 68 356 Q66 326 68 296 Q70 266 68 236 Q66 206 68 176 Q70 146 68 116 Q66 86 68 50 Q70 18 68 0" stroke="rgba(25,45,22,0.48)" stroke-width="14" stroke-linecap="round"/>
+      <!-- Nodes 1 -->
+      <rect x="55" y="638" width="26" height="7" rx="3.5" fill="rgba(18,32,16,0.42)"/>
+      <rect x="55" y="530" width="26" height="7" rx="3.5" fill="rgba(18,32,16,0.42)"/>
+      <rect x="55" y="410" width="26" height="7" rx="3.5" fill="rgba(18,32,16,0.42)"/>
+      <rect x="55" y="292" width="26" height="7" rx="3.5" fill="rgba(18,32,16,0.42)"/>
+      <rect x="55" y="172" width="26" height="7" rx="3.5" fill="rgba(18,32,16,0.42)"/>
+      <!-- Stalk 2 -->
+      <path d="M118 700 Q116 655 118 628 Q120 601 118 568 Q116 535 118 500 Q120 465 118 430 Q116 395 118 360 Q120 325 118 288 Q116 250 118 210 Q120 170 118 130 Q116 90 118 40 Q120 10 118 0" stroke="rgba(25,45,22,0.38)" stroke-width="11" stroke-linecap="round"/>
+      <rect x="106" y="622" width="24" height="6" rx="3" fill="rgba(18,32,16,0.36)"/>
+      <rect x="106" y="492" width="24" height="6" rx="3" fill="rgba(18,32,16,0.36)"/>
+      <rect x="106" y="352" width="24" height="6" rx="3" fill="rgba(18,32,16,0.36)"/>
+      <rect x="106" y="210" width="24" height="6" rx="3" fill="rgba(18,32,16,0.36)"/>
+      <!-- Leaves — loose green brush strokes like her style -->
+      <path d="M70 628 Q110 604 135 582" stroke="rgba(55,100,50,0.58)" stroke-width="5.5" fill="none" stroke-linecap="round"/>
+      <path d="M66 522 Q28 498 6 476" stroke="rgba(55,100,50,0.52)" stroke-width="5" fill="none" stroke-linecap="round"/>
+      <path d="M70 402 Q112 378 138 356" stroke="rgba(55,100,50,0.55)" stroke-width="5" fill="none" stroke-linecap="round"/>
+      <path d="M66 404 Q28 380 5 360" stroke="rgba(55,100,50,0.45)" stroke-width="4" fill="none" stroke-linecap="round"/>
+      <path d="M120 490 Q160 466 178 444" stroke="rgba(55,100,50,0.50)" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+      <path d="M116 355 Q76 332 55 312" stroke="rgba(55,100,50,0.45)" stroke-width="4" fill="none" stroke-linecap="round"/>
+      <path d="M70 282 Q108 258 132 236" stroke="rgba(55,100,50,0.48)" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+      <path d="M120 280 Q158 258 176 238" stroke="rgba(55,100,50,0.42)" stroke-width="4" fill="none" stroke-linecap="round"/>
+      <path d="M68 162 Q105 138 128 116" stroke="rgba(55,100,50,0.44)" stroke-width="4" fill="none" stroke-linecap="round"/>
+      <path d="M118 160 Q154 138 172 118" stroke="rgba(55,100,50,0.38)" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+    </svg>
+
+    <!-- Plum blossoms — top area, inspired by the 4-panel scroll -->
+    <svg class="ink-wash-piece iwp-plum" viewBox="0 0 500 360" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs><filter id="branchTex"><feGaussianBlur stdDeviation="1.5"/></filter></defs>
+      <!-- Main gnarled branch — dark ink -->
+      <path d="M0 310 Q55 248 105 205 Q155 162 198 124 Q241 86 278 56 Q310 30 360 10" stroke="rgba(18,10,28,0.48)" stroke-width="18" fill="none" stroke-linecap="round" filter="url(#branchTex)"/>
+      <path d="M198 124 Q248 106 308 88 Q355 74 420 62" stroke="rgba(18,10,28,0.40)" stroke-width="12" fill="none" stroke-linecap="round"/>
+      <path d="M105 205 Q125 258 114 320" stroke="rgba(18,10,28,0.34)" stroke-width="9" fill="none" stroke-linecap="round"/>
+      <!-- Branch bark texture -->
+      <path d="M62 262 Q68 252 72 255" stroke="rgba(18,10,28,0.22)" stroke-width="4" fill="none" stroke-linecap="round"/>
+      <path d="M148 178 Q156 168 158 172" stroke="rgba(18,10,28,0.18)" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <path d="M235 100 Q242 90 244 93" stroke="rgba(18,10,28,0.16)" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <!-- Plum blossoms — cluster 1 (branch tip) -->
+      <circle cx="360" cy="10" r="12" fill="rgba(215,95,130,0.65)"/>
+      <circle cx="344" cy="4" r="10" fill="rgba(210,90,125,0.58)"/>
+      <circle cx="374" cy="3" r="9" fill="rgba(210,90,125,0.55)"/>
+      <circle cx="352" cy="-4" r="8" fill="rgba(215,95,128,0.50)"/>
+      <circle cx="368" cy="-4" r="8" fill="rgba(215,95,128,0.48)"/>
+      <circle cx="360" cy="10" r="3.5" fill="rgba(184,144,55,0.72)"/>
+      <!-- Cluster 2 (upper branch) -->
+      <circle cx="278" cy="56" r="11" fill="rgba(215,95,130,0.60)"/>
+      <circle cx="264" cy="49" r="9" fill="rgba(210,90,125,0.54)"/>
+      <circle cx="291" cy="48" r="9" fill="rgba(210,90,125,0.52)"/>
+      <circle cx="271" cy="42" r="7" fill="rgba(215,95,128,0.46)"/>
+      <circle cx="286" cy="42" r="7" fill="rgba(215,95,128,0.44)"/>
+      <circle cx="278" cy="56" r="3" fill="rgba(184,144,55,0.68)"/>
+      <!-- Cluster 3 (mid branch) -->
+      <circle cx="198" cy="124" r="11" fill="rgba(215,95,130,0.55)"/>
+      <circle cx="185" cy="117" r="9" fill="rgba(210,90,125,0.50)"/>
+      <circle cx="211" cy="117" r="8" fill="rgba(210,90,125,0.48)"/>
+      <circle cx="198" cy="124" r="3" fill="rgba(184,144,55,0.65)"/>
+      <!-- Side branch blossoms -->
+      <circle cx="352" cy="78" r="9" fill="rgba(215,95,130,0.48)"/>
+      <circle cx="395" cy="63" r="8" fill="rgba(210,90,125,0.44)"/>
+      <circle cx="435" cy="62" r="7" fill="rgba(215,95,128,0.40)"/>
+      <!-- Small buds -->
+      <ellipse cx="460" cy="62" rx="5" ry="8" fill="rgba(215,95,130,0.38)"/>
+      <ellipse cx="480" cy="62" rx="4" ry="7" fill="rgba(215,95,128,0.34)"/>
+    </svg>
+
+    <!-- Grape cluster — top right (she paints grapes — purple!) -->
+    <svg class="ink-wash-piece iwp-grapes" viewBox="0 0 280 380" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs><filter id="gSoft"><feGaussianBlur stdDeviation="2"/></filter></defs>
+      <!-- Vine tendrils -->
+      <path d="M140 0 Q135 35 130 65 Q118 95 96 125 Q74 155 52 190 Q30 225 12 268" stroke="rgba(18,10,28,0.38)" stroke-width="7" fill="none" stroke-linecap="round"/>
+      <path d="M130 65 Q168 58 200 78 Q228 98 224 132" stroke="rgba(18,10,28,0.30)" stroke-width="5" fill="none" stroke-linecap="round"/>
+      <!-- Ink wash leaf -->
+      <path d="M118 88 Q145 62 162 74 Q178 88 172 112 Q166 136 143 140 Q120 144 108 128 Q96 112 118 88Z" fill="rgba(48,90,48,0.38)" filter="url(#gSoft)"/>
+      <path d="M75 140 Q100 115 116 128 Q132 140 126 162 Q120 184 99 186 Q78 188 68 172 Q58 156 75 140Z" fill="rgba(48,90,48,0.30)" filter="url(#gSoft)"/>
+      <!-- Grape cluster 1 — purple like her painting -->
+      <circle cx="200" cy="140" r="11" fill="rgba(98,48,145,0.58)" filter="url(#gSoft)"/>
+      <circle cx="218" cy="140" r="11" fill="rgba(108,52,152,0.58)"/>
+      <circle cx="236" cy="140" r="11" fill="rgba(98,48,145,0.55)"/>
+      <circle cx="193" cy="154" r="11" fill="rgba(105,50,148,0.58)"/>
+      <circle cx="211" cy="154" r="11" fill="rgba(98,48,145,0.60)"/>
+      <circle cx="229" cy="154" r="11" fill="rgba(108,52,152,0.56)"/>
+      <circle cx="247" cy="154" r="11" fill="rgba(98,48,145,0.52)"/>
+      <circle cx="198" cy="168" r="11" fill="rgba(105,50,148,0.56)"/>
+      <circle cx="216" cy="168" r="11" fill="rgba(98,48,145,0.58)"/>
+      <circle cx="234" cy="168" r="10" fill="rgba(108,52,152,0.52)"/>
+      <circle cx="204" cy="181" r="10" fill="rgba(105,50,148,0.50)"/>
+      <circle cx="221" cy="181" r="10" fill="rgba(98,48,145,0.50)"/>
+      <circle cx="238" cy="181" r="9" fill="rgba(108,52,152,0.46)"/>
+      <circle cx="210" cy="193" r="9" fill="rgba(105,50,148,0.44)"/>
+      <circle cx="226" cy="193" r="9" fill="rgba(98,48,145,0.44)"/>
+      <!-- Highlight on grapes -->
+      <circle cx="214" cy="152" r="4" fill="rgba(180,155,210,0.35)"/>
+      <circle cx="232" cy="142" r="3" fill="rgba(180,155,210,0.30)"/>
+      <!-- Grape cluster 2 — smaller -->
+      <circle cx="52" cy="238" r="9" fill="rgba(98,48,145,0.48)"/>
+      <circle cx="67" cy="234" r="9" fill="rgba(108,52,152,0.45)"/>
+      <circle cx="46" cy="250" r="9" fill="rgba(105,50,148,0.45)"/>
+      <circle cx="61" cy="248" r="9" fill="rgba(98,48,145,0.48)"/>
+      <circle cx="76" cy="246" r="8" fill="rgba(108,52,152,0.42)"/>
+      <circle cx="52" cy="262" r="8" fill="rgba(105,50,148,0.42)"/>
+      <circle cx="66" cy="261" r="8" fill="rgba(98,48,145,0.40)"/>
+    </svg>
+
+    <!-- Chrysanthemum / small ink flowers — bottom left corner -->
+    <svg class="ink-wash-piece iwp-bird" viewBox="0 0 140 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Chrysanthemum inspired by the 4-panel painting red flowers -->
+      <circle cx="70" cy="70" r="36" fill="rgba(190,48,55,0.18)" filter="url(#inkSoft)"/>
+      <!-- Petals -->
+      <ellipse cx="70" cy="38" rx="8" ry="18" fill="rgba(195,50,58,0.50)"/>
+      <ellipse cx="90" cy="44" rx="8" ry="18" fill="rgba(195,50,58,0.48)" transform="rotate(36 90 44)"/>
+      <ellipse cx="100" cy="62" rx="8" ry="18" fill="rgba(195,50,58,0.46)" transform="rotate(72 100 62)"/>
+      <ellipse cx="93" cy="84" rx="8" ry="18" fill="rgba(195,50,58,0.48)" transform="rotate(108 93 84)"/>
+      <ellipse cx="73" cy="95" rx="8" ry="18" fill="rgba(195,50,58,0.50)" transform="rotate(144 73 95)"/>
+      <ellipse cx="50" cy="88" rx="8" ry="18" fill="rgba(195,50,58,0.48)" transform="rotate(-144 50 88)"/>
+      <ellipse cx="40" cy="68" rx="8" ry="18" fill="rgba(195,50,58,0.46)" transform="rotate(-108 40 68)"/>
+      <ellipse cx="47" cy="47" rx="8" ry="18" fill="rgba(195,50,58,0.48)" transform="rotate(-72 47 47)"/>
+      <!-- Inner petals -->
+      <ellipse cx="70" cy="52" rx="6" ry="14" fill="rgba(210,60,65,0.45)"/>
+      <ellipse cx="86" cy="58" rx="6" ry="14" fill="rgba(210,60,65,0.42)" transform="rotate(45 86 58)"/>
+      <ellipse cx="88" cy="76" rx="6" ry="14" fill="rgba(210,60,65,0.42)" transform="rotate(90 88 76)"/>
+      <ellipse cx="76" cy="88" rx="6" ry="14" fill="rgba(210,60,65,0.42)" transform="rotate(135 76 88)"/>
+      <ellipse cx="57" cy="84" rx="6" ry="14" fill="rgba(210,60,65,0.42)" transform="rotate(-135 57 84)"/>
+      <ellipse cx="50" cy="68" rx="6" ry="14" fill="rgba(210,60,65,0.42)" transform="rotate(-90 50 68)"/>
+      <ellipse cx="56" cy="52" rx="6" ry="14" fill="rgba(210,60,65,0.42)" transform="rotate(-45 56 52)"/>
+      <!-- Center -->
+      <circle cx="70" cy="70" r="9" fill="rgba(184,144,55,0.55)"/>
+      <circle cx="70" cy="70" r="5" fill="rgba(200,160,60,0.65)"/>
+    </svg>
+
+  </div>
+
   <div class="grain" aria-hidden="true"></div>
 
   <header class="topbar" aria-label="Birthday site navigation">
@@ -1290,11 +1577,14 @@ textarea:focus {
 
     <section class="page" data-page="5" aria-labelledby="finalTitle">
       <div class="panel final-panel">
-        <img class="final-art reveal" data-img="party" alt="" style="--d: 0ms" />
+        <div class="angela-frame reveal no-photo" style="--d: 0ms" id="angelaFrame">
+          <img data-img="angela" alt="Angela" id="angelaPhoto" style="display:none"/>
+        </div>
         <p class="eyebrow reveal" style="--d: 80ms">from <span data-sender-name>Spencer</span></p>
         <h2 id="finalTitle" class="reveal" style="--d: 160ms">happy birthday, <span data-friend-name>birthday girl</span>.</h2>
-        <p class="lede compact reveal" style="--d: 240ms">hope today feels easy, sweet, and very yours.</p>
-        <div class="button-row center reveal" style="--d: 320ms">
+        <p class="final-message reveal" style="--d: 240ms">wishing you a day as beautiful as your art —<br>full of color, warmth, and the people who love you.</p>
+        <p class="lede compact reveal" style="--d: 300ms">hope today is everything.</p>
+        <div class="button-row center reveal" style="--d: 380ms">
           <button class="ghost" type="button" id="restartButton">restart</button>
         </div>
       </div>
@@ -1365,7 +1655,8 @@ window.BIRTHDAY_CONFIG = {
       watermelon: "assets/capy-watermelon.png",
       crown: "assets/capy-crown.png",
       party: "assets/capy-party.png",
-      cakeCapy: "assets/capy-cake-big.png"
+      cakeCapy: "assets/capy-cake-big.png",
+      angela: ""
     },
     blowThreshold: 0.09
   };
@@ -1382,7 +1673,7 @@ window.BIRTHDAY_CONFIG = {
 
   const state = {
     page: 0,
-    selectedDate: "",
+    selectedDates: [],
     selectedTime: "",
     selectedIdea: "",
     candlesFinished: false,
@@ -1449,6 +1740,13 @@ window.BIRTHDAY_CONFIG = {
       const key = img.getAttribute('data-img');
       if (cfg.imagePaths[key]) img.src = cfg.imagePaths[key];
     });
+    const angelaPhoto = $("#angelaPhoto");
+    const angelaFrame = $("#angelaFrame");
+    if (angelaPhoto && cfg.imagePaths.angela) {
+      angelaPhoto.src = cfg.imagePaths.angela;
+      angelaPhoto.style.display = "";
+      if (angelaFrame) angelaFrame.classList.remove("no-photo");
+    }
   }
 
   function makeProgress() {
@@ -1699,9 +1997,14 @@ window.BIRTHDAY_CONFIG = {
 
   function selectDate(iso) {
     if ((cfg.blockedDates || []).includes(iso)) return;
-    state.selectedDate = iso;
+    const idx = state.selectedDates.indexOf(iso);
+    if (idx === -1) {
+      state.selectedDates.push(iso);
+    } else {
+      state.selectedDates.splice(idx, 1);
+    }
     $$(".date-tile").forEach(tile => {
-      const selected = tile.dataset.date === iso;
+      const selected = state.selectedDates.includes(tile.dataset.date);
       tile.classList.toggle("is-selected", selected);
       tile.setAttribute("aria-selected", String(selected));
     });
@@ -1710,43 +2013,38 @@ window.BIRTHDAY_CONFIG = {
 
   function updateSelectedLine() {
     const line = $("#selectedLine");
-    if (!state.selectedDate) {
-      line.textContent = "No day picked yet.";
+    if (!state.selectedDates.length) {
+      line.textContent = "No days picked yet.";
       return;
     }
-    const date = parseISODate(state.selectedDate);
-    const formatted = new Intl.DateTimeFormat(undefined, {
-      weekday: "long",
-      month: "long",
-      day: "numeric"
-    }).format(date);
-    const bits = [formatted];
+    const fmt = new Intl.DateTimeFormat(undefined, { weekday: "short", month: "short", day: "numeric" });
+    const dateStr = state.selectedDates
+      .slice()
+      .sort()
+      .map(iso => fmt.format(parseISODate(iso)))
+      .join(", ");
+    const bits = [dateStr];
     if (state.selectedTime) bits.push(state.selectedTime);
     if (state.selectedIdea) bits.push(state.selectedIdea);
     line.textContent = bits.join(" · ");
   }
 
   function buildPlanMessage() {
-    if (!state.selectedDate) {
-      $("#sendStatus").textContent = "Pick a day first. The calendar is decorative until then.";
+    if (!state.selectedDates.length) {
+      $("#sendStatus").textContent = "Pick at least one day first.";
       return "";
     }
-    const date = parseISODate(state.selectedDate);
-    const formatted = new Intl.DateTimeFormat(undefined, {
-      weekday: "long",
-      month: "long",
-      day: "numeric",
-      year: "numeric"
-    }).format(date);
+    const fmt = new Intl.DateTimeFormat(undefined, { weekday: "long", month: "long", day: "numeric", year: "numeric" });
+    const dateLines = state.selectedDates.slice().sort().map(iso => fmt.format(parseISODate(iso))).join(", ");
     const note = $("#planNote").value.trim();
     return [
-      `${cfg.friendName || "Birthday girl"} picked a hangout day.`,
-      `Date: ${formatted}`,
+      `${cfg.friendName || "Birthday girl"} picked hangout day(s).`,
+      `Date(s): ${dateLines}`,
       `Time: ${state.selectedTime || "not picked"}`,
       `Idea: ${state.selectedIdea || "not picked"}`,
       note ? `Note: ${note}` : "Note: none",
       "",
-      `Sent from the capybara birthday site by ${cfg.senderName || "Spencer"}.`
+      `Sent by ${cfg.senderName || "Spencer"}.`
     ].join("\n");
   }
 
@@ -1815,7 +2113,8 @@ window.BIRTHDAY_CONFIG = {
     const message = buildPlanMessage();
     if (!message) return;
 
-    const start = parseISODate(state.selectedDate);
+    const primaryDate = state.selectedDates.slice().sort()[0];
+    const start = parseISODate(primaryDate);
     const hour = timeToHour(state.selectedTime);
     start.setHours(hour, 0, 0, 0);
     const end = new Date(start);
