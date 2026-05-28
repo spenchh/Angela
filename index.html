@@ -616,6 +616,39 @@ h3 {
   text-transform: uppercase;
 }
 
+.photo-grid.is-empty {
+  display: block;
+}
+
+.empty-gallery {
+  margin-top: 28px;
+  min-height: 170px;
+  border-radius: 28px;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  padding: 26px;
+  color: var(--muted);
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.56), rgba(255, 244, 236, 0.68)),
+    radial-gradient(circle at 82% 10%, rgba(167, 201, 155, 0.30), transparent 34%);
+  border: 1px dashed rgba(66, 43, 33, 0.18);
+}
+
+.empty-gallery strong {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+}
+
+.empty-gallery code {
+  padding: 2px 6px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.68);
+  color: var(--clay-dark);
+}
+
 .calendar-layout {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(290px, 360px);
@@ -668,6 +701,43 @@ h3 {
 
 .date-tile.is-weekend {
   background: rgba(238, 248, 236, 0.72);
+}
+
+.date-tile.is-blocked {
+  color: rgba(255, 250, 243, 0.78);
+  background:
+    repeating-linear-gradient(135deg, rgba(255,255,255,0.06) 0 6px, transparent 6px 12px),
+    linear-gradient(135deg, rgba(46, 33, 27, 0.88), rgba(46, 33, 27, 0.72));
+  border-color: rgba(46, 33, 27, 0.18);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 8px 22px rgba(46, 33, 27, 0.08);
+  opacity: 0.82;
+}
+
+.date-tile.is-blocked:hover {
+  transform: none;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 8px 22px rgba(46, 33, 27, 0.08);
+}
+
+.date-tile.is-blocked::after {
+  opacity: 0;
+}
+
+.date-tile.is-blocked .dow,
+.date-tile.is-blocked .month,
+.date-tile.is-blocked .day,
+.date-tile.is-blocked .date-note {
+  color: rgba(255, 250, 243, 0.76);
+}
+
+.date-note {
+  position: relative;
+  z-index: 1;
+  margin-top: 3px;
+  color: var(--muted);
+  font-size: 0.65rem;
+  font-weight: 820;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 }
 
 .date-tile.is-selected {
@@ -1080,23 +1150,11 @@ textarea:focus {
       </div>
     </section>
 
-    <section class="page" data-page="2" aria-labelledby="momentsTitle">
-      <div class="panel wide-panel moments-panel">
-        <p class="eyebrow reveal" style="--d: 0ms">little moments</p>
-        <h2 id="momentsTitle" class="reveal" style="--d: 70ms">photos go here</h2>
-        <p class="subtle reveal" style="--d: 140ms">a small shelf for favorite pictures.</p>
-        <div class="photo-grid reveal" id="photoGrid" style="--d: 220ms"></div>
-        <div class="button-row center reveal" style="--d: 320ms">
-          <button class="primary magnetic" type="button" data-next>pick a day</button>
-        </div>
-      </div>
-    </section>
-
-    <section class="page" data-page="3" aria-labelledby="calendarTitle">
+    <section class="page" data-page="2" aria-labelledby="calendarTitle">
       <div class="panel wide-panel calendar-panel">
         <p class="eyebrow reveal" style="--d: 0ms">hangout scheduler</p>
         <h2 id="calendarTitle" class="reveal" style="--d: 70ms">pick a day</h2>
-        <p class="subtle reveal" style="--d: 140ms">next three weeks are below.</p>
+        <p class="subtle reveal" style="--d: 140ms">available days are below.</p>
         <div class="calendar-layout reveal" style="--d: 220ms">
           <div class="calendar-grid" id="calendarGrid" role="listbox" aria-label="Date options"></div>
           <aside class="schedule-card">
@@ -1109,13 +1167,26 @@ textarea:focus {
             <button class="primary full magnetic" type="button" id="sendPlan">send pick</button>
             <div class="tool-row">
               <button class="ghost small" type="button" id="copyPlan">copy</button>
+              <button class="ghost small" type="button" id="googleCalendar">Google Cal</button>
               <button class="ghost small" type="button" id="calendarInvite">calendar file</button>
             </div>
-            <p class="micro" id="sendStatus">Email notification turns on when Formspree is added.</p>
+            <p class="micro" id="sendStatus">Google Calendar opens a prefilled event. Formspree handles automatic email.</p>
           </aside>
         </div>
         <div class="button-row center reveal" style="--d: 300ms">
           <button class="ghost" type="button" data-next>continue</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="page" data-page="3" aria-labelledby="momentsTitle">
+      <div class="panel wide-panel moments-panel">
+        <p class="eyebrow reveal" style="--d: 0ms">little moments</p>
+        <h2 id="momentsTitle" class="reveal" style="--d: 70ms">photos go here</h2>
+        <p class="subtle reveal" style="--d: 140ms">a small shelf for favorite pictures.</p>
+        <div class="photo-grid reveal" id="photoGrid" style="--d: 220ms"></div>
+        <div class="button-row center reveal" style="--d: 320ms">
+          <button class="primary magnetic" type="button" data-next>continue</button>
         </div>
       </div>
     </section>
@@ -1176,6 +1247,15 @@ window.BIRTHDAY_CONFIG = {
   scheduleStart: "2026-05-31",
   scheduleDays: 21,
 
+  // Hidden = removed completely. Blocked = blacked out and unclickable.
+  hiddenDates: [
+    "2026-06-14", "2026-06-15", "2026-06-16", "2026-06-17", "2026-06-18", "2026-06-19", "2026-06-20"
+  ],
+  blockedDates: ["2026-06-10", "2026-06-11"],
+
+  // Leave blank to use the visitor's browser time zone for Google Calendar.
+  calendarTimeZone: "",
+
   // Example: "https://formspree.io/f/xxxxxxx"
   formspreeEndpoint: "",
 
@@ -1212,6 +1292,9 @@ window.BIRTHDAY_CONFIG = {
     recipientEmail: "kogomaspencer@gmail.com",
     scheduleStart: "",
     scheduleDays: 21,
+    hiddenDates: [],
+    blockedDates: [],
+    calendarTimeZone: "",
     formspreeEndpoint: "",
     personalPhotos: [],
     dateIdeas: ["boba", "dessert", "dinner", "walk", "bookstore", "movie", "picnic", "surprise me"],
@@ -1447,25 +1530,32 @@ window.BIRTHDAY_CONFIG = {
   function renderPhotos() {
     const grid = $("#photoGrid");
     grid.innerHTML = "";
+    grid.classList.remove("is-empty");
     const photos = (cfg.personalPhotos || []).filter(Boolean);
-    const slots = Math.max(6, photos.length || 0);
 
-    for (let i = 0; i < slots; i += 1) {
+    if (!photos.length) {
+      grid.classList.add("is-empty");
+      grid.innerHTML = `
+        <div class="empty-gallery">
+          <div>
+            <strong>add the real photos when you are ready</strong>
+            Put images in <code>assets/photos/</code>, then list them in <code>personalPhotos</code>.
+          </div>
+        </div>
+      `;
+      return;
+    }
+
+    photos.forEach((photo, index) => {
       const card = document.createElement("article");
       card.className = "photo-card";
       card.style.setProperty("--tilt", `${(Math.random() * 2.4 - 1.2).toFixed(2)}deg`);
-
-      if (photos[i]) {
-        const img = document.createElement("img");
-        img.src = photos[i];
-        img.alt = `photo ${i + 1}`;
-        card.appendChild(img);
-      } else {
-        card.classList.add("empty");
-        card.dataset.label = `photo ${String(i + 1).padStart(2, "0")}`;
-      }
+      const img = document.createElement("img");
+      img.src = photo;
+      img.alt = `photo ${index + 1}`;
+      card.appendChild(img);
       grid.appendChild(card);
-    }
+    });
   }
 
   function setupCalendar() {
@@ -1474,6 +1564,7 @@ window.BIRTHDAY_CONFIG = {
     makeChips("#ideaOptions", cfg.dateIdeas || [], "selectedIdea", "idea-chip");
     $("#sendPlan").addEventListener("click", sendPlan);
     $("#copyPlan").addEventListener("click", copyPlan);
+    $("#googleCalendar").addEventListener("click", openGoogleCalendar);
     $("#calendarInvite").addEventListener("click", downloadCalendarInvite);
   }
 
@@ -1491,6 +1582,8 @@ window.BIRTHDAY_CONFIG = {
     const grid = $("#calendarGrid");
     const start = getStartDate();
     const days = Number(cfg.scheduleDays || 21);
+    const hiddenDates = new Set(cfg.hiddenDates || []);
+    const blockedDates = new Set(cfg.blockedDates || []);
     const fmtDow = new Intl.DateTimeFormat(undefined, { weekday: "short" });
     const fmtMonth = new Intl.DateTimeFormat(undefined, { month: "short" });
 
@@ -1499,6 +1592,9 @@ window.BIRTHDAY_CONFIG = {
       const date = new Date(start);
       date.setDate(start.getDate() + i);
       const iso = toLocalISODate(date);
+      if (hiddenDates.has(iso)) continue;
+
+      const blocked = blockedDates.has(iso);
       const button = document.createElement("button");
       button.type = "button";
       button.className = "date-tile";
@@ -1506,12 +1602,19 @@ window.BIRTHDAY_CONFIG = {
       button.setAttribute("role", "option");
       button.setAttribute("aria-selected", "false");
       if ([0, 6].includes(date.getDay())) button.classList.add("is-weekend");
+      if (blocked) {
+        button.classList.add("is-blocked");
+        button.disabled = true;
+        button.setAttribute("aria-disabled", "true");
+        button.title = "Unavailable";
+      }
       button.innerHTML = `
         <span class="dow">${fmtDow.format(date)}</span>
         <span class="day">${date.getDate()}</span>
         <span class="month">${fmtMonth.format(date)}</span>
+        ${blocked ? '<span class="date-note">away</span>' : ''}
       `;
-      button.addEventListener("click", () => selectDate(iso));
+      if (!blocked) button.addEventListener("click", () => selectDate(iso));
       grid.appendChild(button);
     }
   }
@@ -1534,6 +1637,7 @@ window.BIRTHDAY_CONFIG = {
   }
 
   function selectDate(iso) {
+    if ((cfg.blockedDates || []).includes(iso)) return;
     state.selectedDate = iso;
     $$(".date-tile").forEach(tile => {
       const selected = tile.dataset.date === iso;
@@ -1645,6 +1749,34 @@ window.BIRTHDAY_CONFIG = {
     window.location.href = `mailto:${encodeURIComponent(cfg.recipientEmail)}?subject=${subject}&body=${body}`;
   }
 
+  function openGoogleCalendar() {
+    const status = $("#sendStatus");
+    const message = buildPlanMessage();
+    if (!message) return;
+
+    const start = parseISODate(state.selectedDate);
+    const hour = timeToHour(state.selectedTime);
+    start.setHours(hour, 0, 0, 0);
+    const end = new Date(start);
+    end.setHours(start.getHours() + 2);
+
+    const params = new URLSearchParams({
+      action: "TEMPLATE",
+      text: `Hangout with ${cfg.senderName || "Spencer"}`,
+      dates: `${formatGoogleCalendarDate(start)}/${formatGoogleCalendarDate(end)}`,
+      details: message,
+      location: ""
+    });
+
+    if (cfg.recipientEmail) params.set("add", cfg.recipientEmail);
+    const browserTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    const timeZone = cfg.calendarTimeZone || browserTimeZone;
+    if (timeZone) params.set("ctz", timeZone);
+
+    window.open(`https://calendar.google.com/calendar/render?${params.toString()}`, "_blank", "noopener");
+    status.textContent = "Google Calendar opened. Save it there and send the invite.";
+  }
+
   function downloadCalendarInvite() {
     const status = $("#sendStatus");
     const message = buildPlanMessage();
@@ -1666,10 +1798,12 @@ window.BIRTHDAY_CONFIG = {
       `DTSTART:${formatICSDate(start)}`,
       `DTEND:${formatICSDate(end)}`,
       `SUMMARY:${escapeICS(`Hangout with ${cfg.senderName || "Spencer"}`)}`,
+      cfg.recipientEmail ? `ORGANIZER;CN=${escapeICS(cfg.senderName || "Spencer")}:mailto:${cfg.recipientEmail}` : "",
+      cfg.recipientEmail ? `ATTENDEE;CN=${escapeICS(cfg.senderName || "Spencer")};RSVP=TRUE:mailto:${cfg.recipientEmail}` : "",
       `DESCRIPTION:${escapeICS(message)}`,
       "END:VEVENT",
       "END:VCALENDAR"
-    ].join("\r\n");
+    ].filter(Boolean).join("\r\n");
 
     const blob = new Blob([ics], { type: "text/calendar;charset=utf-8" });
     const url = URL.createObjectURL(blob);
@@ -1911,6 +2045,10 @@ window.BIRTHDAY_CONFIG = {
     if (value.includes("afternoon") || value.includes("coffee")) return 15;
     if (value.includes("dinner") || value.includes("movie")) return 18;
     return 13;
+  }
+
+  function formatGoogleCalendarDate(date) {
+    return date.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}Z$/, "Z");
   }
 
   function formatICSDate(date) {
