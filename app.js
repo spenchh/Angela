@@ -87,7 +87,7 @@
   function makeBackgroundCapys() {
     const bg = $('.capy-background');
     bg.innerHTML = '';
-    const count = 24;
+    const count = 12;
     for (let i = 0; i < count; i++) {
       const img = document.createElement('img');
       img.className = 'bg-capy';
@@ -140,12 +140,18 @@
       response.textContent = "The no button has entered witness protection.";
     };
 
+    let rafPending = false;
     zone.addEventListener('pointermove', (e) => {
-      const rect = no.getBoundingClientRect();
-      const cx = rect.left + rect.width / 2;
-      const cy = rect.top + rect.height / 2;
-      const distance = Math.hypot(e.clientX - cx, e.clientY - cy);
-      if (distance < 125) moveNo();
+      if (rafPending) return;
+      rafPending = true;
+      requestAnimationFrame(() => {
+        rafPending = false;
+        const rect = no.getBoundingClientRect();
+        const cx = rect.left + rect.width / 2;
+        const cy = rect.top + rect.height / 2;
+        const distance = Math.hypot(e.clientX - cx, e.clientY - cy);
+        if (distance < 125) moveNo();
+      });
     });
     no.addEventListener('pointerenter', moveNo);
     no.addEventListener('click', (e) => {
