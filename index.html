@@ -233,10 +233,12 @@ img {
   padding: 96px 18px 28px;
   opacity: 0;
   pointer-events: none;
-  transform: scale(0.97) translateY(14px);
+  transform: scale(0.97) translateY(16px);
+  filter: blur(5px);
   transition:
-    opacity 560ms ease,
-    transform 640ms var(--ease);
+    opacity 540ms ease,
+    transform 620ms var(--ease),
+    filter 500ms ease;
   overflow-y: auto;
 }
 
@@ -244,11 +246,12 @@ img {
   opacity: 1;
   pointer-events: auto;
   transform: scale(1) translateY(0);
+  filter: blur(0px);
   z-index: 2;
 }
 
 .stage.is-backing .page {
-  transform: scale(0.97) translateY(-14px);
+  transform: scale(0.97) translateY(-16px);
 }
 
 .stage.is-backing .page.is-active {
@@ -513,7 +516,15 @@ h3 {
   }
 }
 
-.question-panel,
+.question-panel {
+  display: grid;
+  align-content: start;
+  justify-items: start;
+  text-align: left;
+  padding: clamp(28px, 5vw, 52px);
+  gap: 0;
+}
+
 .cake-panel,
 .final-panel {
   display: grid;
@@ -523,34 +534,41 @@ h3 {
   padding: clamp(28px, 5vw, 58px);
 }
 
+.question-panel .eyebrow { margin-bottom: 14px; }
+.question-panel h2 { font-size: clamp(2.8rem, 7.5vw, 6rem); }
+.question-panel .subtle { margin-top: 12px; margin-bottom: 0; text-align: left; }
+
 .answer-zone {
   position: relative;
-  width: min(560px, 100%);
-  height: 280px;
-  margin: 28px auto 8px;
-  display: grid;
-  place-items: center;
-  border-radius: 32px;
+  width: 100%;
+  height: min(310px, calc(100svh - 370px));
+  min-height: 220px;
+  margin: 22px 0 6px;
+  border-radius: 24px;
   background:
-    linear-gradient(135deg, rgba(245, 240, 234, 0.5), rgba(234, 227, 214, 0.72)),
-    radial-gradient(circle at 25% 24%, rgba(124, 77, 187, 0.05), transparent 40%);
+    radial-gradient(ellipse at 18% 30%, rgba(155, 106, 170, 0.07), transparent 45%),
+    radial-gradient(ellipse at 80% 70%, rgba(124, 77, 187, 0.05), transparent 42%),
+    linear-gradient(135deg, rgba(245, 240, 234, 0.55), rgba(234, 227, 214, 0.70));
   border: 1px solid var(--soft-line);
   overflow: hidden;
 }
 
 .yes-button {
+  position: absolute;
+  left: 14%;
+  top: 28%;
   min-width: 108px;
   z-index: 2;
 }
 
 .no-button {
   position: absolute;
-  left: 58%;
-  top: 56%;
+  left: 62%;
+  top: 18%;
   min-width: 94px;
   transition:
-    left 260ms var(--ease),
-    top 260ms var(--ease),
+    left 280ms var(--ease),
+    top 280ms var(--ease),
     transform 180ms var(--ease);
   will-change: left, top;
 }
@@ -838,20 +856,38 @@ h3 {
 .chip-group {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 14px;
+  gap: 6px;
+  margin-bottom: 10px;
 }
 
-.time-chip,
+#timeOptions {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(62px, 1fr));
+  gap: 5px;
+}
+
+.time-chip {
+  min-height: 32px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: rgba(244, 237, 216, 0.72);
+  border: 1px solid var(--soft-line);
+  color: var(--ink);
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-align: center;
+  transition: transform 200ms var(--ease), background 200ms ease, border-color 200ms ease;
+}
+
 .idea-chip {
-  min-height: 36px;
+  min-height: 34px;
   padding: 0 12px;
   border-radius: 999px;
   background: rgba(244, 237, 216, 0.72);
   border: 1px solid var(--soft-line);
   color: var(--ink);
-  font-size: 0.86rem;
-  font-weight: 720;
+  font-size: 0.84rem;
+  font-weight: 600;
   transition: transform 200ms var(--ease), background 200ms ease, border-color 200ms ease;
 }
 
@@ -860,10 +896,16 @@ h3 {
   transform: translateY(-2px);
 }
 
-.time-chip.is-selected,
+.time-chip.is-selected {
+  background: var(--plum-2);
+  border-color: rgba(124, 77, 187, 0.30);
+  color: var(--primary-dark);
+}
+
 .idea-chip.is-selected {
   background: var(--plum-2);
   border-color: rgba(124, 77, 187, 0.25);
+  color: var(--primary-dark);
 }
 
 .note-label {
@@ -1135,7 +1177,7 @@ textarea:focus {
   .day { font-size: 1.55rem; }
   .cake-wrap { min-height: 300px; }
   .cake-capy { display: none; }
-  .answer-zone { height: 240px; }
+  .answer-zone { min-height: 200px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1158,6 +1200,65 @@ textarea:focus {
 
 .ink-wash-piece {
   position: absolute;
+  transition: opacity 1100ms ease;
+}
+
+/* per-page ink wash focus — different painting each slide */
+body[data-page="0"] .iwp-lotus  { opacity: 0.30; }
+body[data-page="0"] .iwp-bamboo { opacity: 0.26; }
+body[data-page="0"] .iwp-plum   { opacity: 0.04; }
+body[data-page="0"] .iwp-grapes { opacity: 0.05; }
+body[data-page="0"] .iwp-bird   { opacity: 0.06; }
+
+body[data-page="1"] .iwp-lotus  { opacity: 0.05; }
+body[data-page="1"] .iwp-bamboo { opacity: 0.06; }
+body[data-page="1"] .iwp-plum   { opacity: 0.30; }
+body[data-page="1"] .iwp-grapes { opacity: 0.26; }
+body[data-page="1"] .iwp-bird   { opacity: 0.05; }
+
+body[data-page="2"] .iwp-lotus  { opacity: 0.06; }
+body[data-page="2"] .iwp-bamboo { opacity: 0.32; }
+body[data-page="2"] .iwp-plum   { opacity: 0.06; }
+body[data-page="2"] .iwp-grapes { opacity: 0.05; }
+body[data-page="2"] .iwp-bird   { opacity: 0.30; }
+
+body[data-page="3"] .iwp-lotus  { opacity: 0.30; }
+body[data-page="3"] .iwp-bamboo { opacity: 0.07; }
+body[data-page="3"] .iwp-plum   { opacity: 0.24; }
+body[data-page="3"] .iwp-grapes { opacity: 0.05; }
+body[data-page="3"] .iwp-bird   { opacity: 0.04; }
+
+body[data-page="4"] .iwp-lotus  { opacity: 0.07; }
+body[data-page="4"] .iwp-bamboo { opacity: 0.07; }
+body[data-page="4"] .iwp-plum   { opacity: 0.06; }
+body[data-page="4"] .iwp-grapes { opacity: 0.30; }
+body[data-page="4"] .iwp-bird   { opacity: 0.26; }
+
+body[data-page="5"] .iwp-lotus  { opacity: 0.26; }
+body[data-page="5"] .iwp-bamboo { opacity: 0.20; }
+body[data-page="5"] .iwp-plum   { opacity: 0.20; }
+body[data-page="5"] .iwp-grapes { opacity: 0.16; }
+body[data-page="5"] .iwp-bird   { opacity: 0.18; }
+
+/* letter scroll on final page */
+.letter-scroll {
+  width: min(520px, 100%);
+  max-height: 260px;
+  overflow-y: auto;
+  margin: 0 auto 20px;
+  padding: 22px 26px;
+  border-radius: var(--radius-lg);
+  background: rgba(248, 244, 238, 0.82);
+  border: 1px solid var(--soft-line);
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 1.06rem;
+  font-style: italic;
+  line-height: 1.82;
+  color: var(--ink);
+  text-align: left;
+  white-space: pre-wrap;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(124, 77, 187, 0.18) transparent;
 }
 
 .iwp-lotus {
@@ -1491,21 +1592,11 @@ textarea:focus {
 
     <section class="page" data-page="1" aria-labelledby="questionTitle">
       <div class="panel question-panel">
-        <!-- Lotus ink wash decoration -->
-        <svg class="ink-deco ink-deco-corner" viewBox="0 0 80 80" fill="none" aria-hidden="true">
-          <path d="M40 70 Q40 50 40 38" stroke="rgba(38,24,58,0.18)" stroke-width="3" stroke-linecap="round"/>
-          <path d="M40 38 Q28 28 18 22" stroke="rgba(38,24,58,0.15)" stroke-width="2" stroke-linecap="round"/>
-          <path d="M40 38 Q52 28 62 22" stroke="rgba(38,24,58,0.15)" stroke-width="2" stroke-linecap="round"/>
-          <ellipse cx="40" cy="28" rx="12" ry="10" fill="rgba(155,106,170,0.25)"/>
-          <ellipse cx="27" cy="24" rx="9" ry="7" fill="rgba(155,106,170,0.18)" transform="rotate(-25 27 24)"/>
-          <ellipse cx="53" cy="24" rx="9" ry="7" fill="rgba(155,106,170,0.18)" transform="rotate(25 53 24)"/>
-          <ellipse cx="40" cy="28" rx="6" ry="5" fill="rgba(184,144,74,0.35)"/>
-        </svg>
         <p class="eyebrow reveal" style="--d: 0ms">one question</p>
-        <h2 id="questionTitle" class="reveal" style="--d: 80ms">hang out soon?</h2>
-        <p class="subtle reveal" style="--d: 150ms">pick yes to choose a day.</p>
+        <h2 id="questionTitle" class="reveal" style="--d: 80ms">hang out<br>soon?</h2>
+        <p class="subtle reveal" style="--d: 150ms">the no button has trust issues. proceed with care.</p>
         <div class="answer-zone reveal" id="answerZone" style="--d: 240ms">
-          <button class="primary yes-button magnetic" type="button" id="yesButton">yes</button>
+          <button class="primary yes-button magnetic" type="button" id="yesButton">yes ✦</button>
           <button class="secondary no-button" type="button" id="noButton">no</button>
         </div>
         <p class="micro response-line" id="questionResponse"></p>
@@ -1583,7 +1674,7 @@ textarea:focus {
         <p class="eyebrow reveal" style="--d: 80ms">from <span data-sender-name>Spencer</span></p>
         <h2 id="finalTitle" class="reveal" style="--d: 160ms">happy birthday, <span data-friend-name>birthday girl</span>.</h2>
         <p class="final-message reveal" style="--d: 240ms">wishing you a day as beautiful as your art —<br>full of color, warmth, and the people who love you.</p>
-        <p class="lede compact reveal" style="--d: 300ms">hope today is everything.</p>
+        <div class="letter-scroll reveal" id="letterScroll" style="--d: 300ms; display:none"></div>
         <div class="button-row center reveal" style="--d: 380ms">
           <button class="ghost" type="button" id="restartButton">restart</button>
         </div>
@@ -1627,12 +1718,15 @@ window.BIRTHDAY_CONFIG = {
     "boba",
     "dessert",
     "dinner",
-    "walk",
-    "bookstore",
+    "escape room",
+    "draw",
     "movie",
     "picnic",
     "surprise me"
   ],
+
+  // Put your letter here. It will appear on the final page.
+  birthdayLetter: ``,
 };
 
   </script>
@@ -1649,7 +1743,8 @@ window.BIRTHDAY_CONFIG = {
     calendarTimeZone: "",
     formspreeEndpoint: "",
     personalPhotos: [],
-    dateIdeas: ["boba", "dessert", "dinner", "walk", "bookstore", "movie", "picnic", "surprise me"],
+    dateIdeas: ["boba", "dessert", "dinner", "escape room", "draw", "movie", "picnic", "surprise me"],
+    birthdayLetter: "",
     imagePaths: {
       bouquet: "assets/capy-bouquet.png",
       watermelon: "assets/capy-watermelon.png",
@@ -1675,7 +1770,7 @@ window.BIRTHDAY_CONFIG = {
     page: 0,
     selectedDates: [],
     selectedTime: "",
-    selectedIdea: "",
+    selectedIdeas: [],
     candlesFinished: false,
     finalConfettiPlayed: false,
     mic: null,
@@ -1708,6 +1803,7 @@ window.BIRTHDAY_CONFIG = {
     makeProgress();
     makeBackgroundCapys();
     renderPhotos();
+    renderLetter();
     setupNavigation();
     setupQuestion();
     setupCalendar();
@@ -1783,6 +1879,7 @@ window.BIRTHDAY_CONFIG = {
     const backing = next < state.page;
     stage.classList.toggle("is-backing", backing);
     state.page = next;
+    document.body.dataset.page = next;
 
     pages.forEach((page, i) => {
       const active = i === next;
@@ -1922,9 +2019,32 @@ window.BIRTHDAY_CONFIG = {
 
   function setupCalendar() {
     makeCalendar();
-    makeChips("#timeOptions", ["lunch", "afternoon", "dinner", "surprise me"], "selectedTime");
-    makeChips("#ideaOptions", cfg.dateIdeas || [], "selectedIdea", "idea-chip");
+    makeChips("#timeOptions", ["10 AM","11 AM","12 PM","1 PM","2 PM","3 PM","4 PM","5 PM","6 PM","7 PM","8 PM"], "selectedTime");
+    makeIdeasChips("#ideaOptions", cfg.dateIdeas || []);
     $("#googleCalendar").addEventListener("click", openGoogleCalendar);
+  }
+
+  function makeIdeasChips(selector, items) {
+    const wrap = $(selector);
+    wrap.innerHTML = "";
+    items.forEach(item => {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "idea-chip";
+      button.textContent = item;
+      button.addEventListener("click", () => {
+        const idx = state.selectedIdeas.indexOf(item);
+        if (idx === -1) {
+          state.selectedIdeas.push(item);
+          button.classList.add("is-selected");
+        } else {
+          state.selectedIdeas.splice(idx, 1);
+          button.classList.remove("is-selected");
+        }
+        updateSelectedLine();
+      });
+      wrap.appendChild(button);
+    });
   }
 
   function getStartDate() {
@@ -2025,7 +2145,7 @@ window.BIRTHDAY_CONFIG = {
       .join(", ");
     const bits = [dateStr];
     if (state.selectedTime) bits.push(state.selectedTime);
-    if (state.selectedIdea) bits.push(state.selectedIdea);
+    if (state.selectedIdeas.length) bits.push(state.selectedIdeas.join(", "));
     line.textContent = bits.join(" · ");
   }
 
@@ -2041,7 +2161,7 @@ window.BIRTHDAY_CONFIG = {
       `${cfg.friendName || "Birthday girl"} picked hangout day(s).`,
       `Date(s): ${dateLines}`,
       `Time: ${state.selectedTime || "not picked"}`,
-      `Idea: ${state.selectedIdea || "not picked"}`,
+      `Ideas: ${state.selectedIdeas.length ? state.selectedIdeas.join(", ") : "not picked"}`,
       note ? `Note: ${note}` : "Note: none",
       "",
       `Sent by ${cfg.senderName || "Spencer"}.`
@@ -2059,7 +2179,7 @@ window.BIRTHDAY_CONFIG = {
       senderName: cfg.senderName,
       selectedDate: state.selectedDate,
       selectedTime: state.selectedTime,
-      selectedIdea: state.selectedIdea,
+      selectedIdeas: state.selectedIdeas.join(", "),
       note: $("#planNote").value.trim(),
       message
     };
@@ -2289,6 +2409,16 @@ window.BIRTHDAY_CONFIG = {
     state.audioData = null;
   }
 
+  function renderLetter() {
+    const el = $("#letterScroll");
+    if (!el) return;
+    const letter = cfg.birthdayLetter || "";
+    if (letter.trim()) {
+      el.textContent = letter;
+      el.style.display = "";
+    }
+  }
+
   function setupMagneticButtons() {
     $$(".magnetic").forEach(button => {
       button.addEventListener("pointermove", event => {
@@ -2400,10 +2530,15 @@ window.BIRTHDAY_CONFIG = {
   }
 
   function timeToHour(label) {
-    const value = (label || "").toLowerCase();
-    if (value.includes("lunch")) return 12;
-    if (value.includes("afternoon") || value.includes("coffee")) return 15;
-    if (value.includes("dinner") || value.includes("movie")) return 18;
+    const value = (label || "").trim();
+    const match = value.match(/^(\d+)\s*(AM|PM)$/i);
+    if (match) {
+      let h = parseInt(match[1], 10);
+      const meridiem = match[2].toUpperCase();
+      if (meridiem === "PM" && h !== 12) h += 12;
+      if (meridiem === "AM" && h === 12) h = 0;
+      return h;
+    }
     return 13;
   }
 
