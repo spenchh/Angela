@@ -699,6 +699,19 @@ h3 {
 }
 @keyframes antWord { to { opacity: 1; } }
 
+.anticipate-quip {
+  margin: 16px 0 0;
+  font-family: 'Fraunces', Georgia, serif;
+  font-optical-sizing: auto;
+  font-style: italic;
+  font-size: clamp(1rem, 2.8vw, 1.4rem);
+  letter-spacing: 0.03em;
+  color: #3a2960;
+  opacity: 0;
+  text-align: center;
+  animation: antWord 600ms ease 400ms forwards;
+}
+
 /* default end-of-cake loader — a soft morphing ink blob (swap for any from
    loaders.html by changing this one block) */
 .end-loader {
@@ -751,7 +764,7 @@ h3 {
 .question-panel h2        { grid-column: 1; grid-row: 2; align-self: center; }
 .question-panel .subtle   { grid-column: 1 / -1; grid-row: 3; margin-top: 14px; margin-bottom: 0; }
 .question-panel .response-line { grid-column: 1 / -1; grid-row: 4; }
-#answerZone               { grid-column: 2; grid-row: 2; align-self: center; flex-direction: column; gap: 10px; margin: 0; }
+#answerZone               { grid-column: 2; grid-row: 2; align-self: center; flex-direction: row; gap: 12px; margin: 0; }
 
 .cake-panel,
 .final-panel {
@@ -1793,7 +1806,14 @@ body[data-page="5"] .iwp-capy   { opacity: 0.38; }
 }
 
 /* ─── special final slide flourishes ─── */
-.final-panel { position: relative; overflow: hidden; }
+.final-panel {
+  position: relative; overflow: hidden;
+  padding-right: clamp(170px, 22vw, 260px); /* space for the spotify wall card */
+}
+@media (max-width: 480px) {
+  .final-panel { padding-right: clamp(28px, 6vw, 44px); }
+  .spotify-wall { right: auto; left: 50%; transform: translateX(-50%) rotate(3deg); top: auto; bottom: -10px; }
+}
 
 .final-ink-corner {
   position: absolute;
@@ -1890,18 +1910,32 @@ body[data-page="5"] .iwp-capy   { opacity: 0.38; }
   background: linear-gradient(180deg, transparent, rgba(124, 77, 187, 0.5), transparent);
 }
 
-/* ─── Spotify embed on final slide (shows the real album art) ─── */
-.spotify-card {
-  width: min(430px, 94%);
-  margin: 0 auto 18px;
-  border-radius: 16px;
+/* ─── Spotify wallpaper element — tilted card leaning on the right side ─── */
+.spotify-wall {
+  position: absolute;
+  right: clamp(-20px, -2vw, -10px);
+  top: 50%;
+  transform: translateY(-50%) rotate(6deg);
+  width: clamp(140px, 18vw, 210px);
+  border-radius: 14px;
   overflow: hidden;
-  box-shadow: 0 6px 24px rgba(80, 40, 140, 0.16);
+  box-shadow:
+    0 12px 40px rgba(80, 40, 140, 0.22),
+    0 2px 8px rgba(0,0,0,0.12),
+    inset 0 0 0 1px rgba(255,255,255,0.18);
+  z-index: 3;
+  pointer-events: auto;
+  transition: transform 400ms var(--ease);
 }
-.spotify-embed {
+.spotify-wall:hover {
+  transform: translateY(-50%) rotate(2deg) scale(1.04);
+}
+.spotify-wall .spotify-embed {
   display: block;
   width: 100%;
   border: 0;
+  /* compact player height */
+  height: 380px;
 }
 
 /* gentle falling petals — only animate on the final slide */
@@ -1950,6 +1984,7 @@ body[data-page="5"] .petal {
   <div class="anticipate" id="anticipate" aria-hidden="true">
     <div class="anticipate-ink">
       <span class="end-loader"></span>
+      <p class="anticipate-quip" id="anticipateQuip"></p>
     </div>
   </div>
 
@@ -2315,9 +2350,9 @@ body[data-page="5"] .petal {
           <circle cx="82" cy="200" r="2" fill="rgba(184,144,74,0.55)"/>
         </svg>
         <div class="copy-stack">
-          <p class="eyebrow reveal" style="--d: 0ms">for sunday</p>
+
           <h1 id="coverTitle" class="reveal" style="--d: 80ms">happy birthday, <span data-friend-name>birthday girl</span>.</h1>
-          <p class="lede reveal" style="--d: 160ms">made for you. open when ready.</p>
+          <p class="lede reveal" style="--d: 160ms">open when ready.</p>
           <div class="button-row reveal" style="--d: 240ms">
             <button class="primary magnetic" type="button" data-next>open</button>
           </div>
@@ -2335,9 +2370,7 @@ body[data-page="5"] .petal {
 
     <section class="page" data-page="1" aria-labelledby="questionTitle">
       <div class="panel question-panel">
-        <p class="eyebrow reveal" style="--d: 0ms">one question</p>
-        <h2 id="questionTitle" class="reveal" style="--d: 80ms">hang out<br>soon?</h2>
-        <p class="subtle reveal" style="--d: 150ms">there's really only one right answer here.</p>
+        <h2 id="questionTitle" class="reveal" style="--d: 80ms">Hangout<br>soon?</h2>
         <div class="answer-zone reveal" id="answerZone" style="--d: 240ms">
           <button class="primary yes-button magnetic" type="button" id="yesButton">yes</button>
           <button class="secondary no-button" type="button" id="noButton">no</button>
@@ -2348,7 +2381,6 @@ body[data-page="5"] .petal {
 
     <section class="page" data-page="2" aria-labelledby="calendarTitle">
       <div class="panel wide-panel calendar-panel">
-        <p class="eyebrow reveal" style="--d: 0ms">hangout scheduler</p>
         <h2 id="calendarTitle" class="reveal" style="--d: 70ms">pick a day</h2>
         <p class="subtle reveal" style="--d: 140ms">available days are below.</p>
         <div class="calendar-layout reveal" style="--d: 220ms">
@@ -2367,7 +2399,7 @@ body[data-page="5"] .petal {
             </div>
             <div class="chip-group idea-group" id="ideaOptions" aria-label="Plan ideas"></div>
             <label class="note-label" for="planNote">note</label>
-            <textarea id="planNote" rows="3" placeholder="anything useful"></textarea>
+            <textarea id="planNote" rows="3" placeholder="Any special requests?"></textarea>
             <button class="primary full magnetic" type="button" id="googleCalendar">add to google calendar</button>
             <p class="micro" id="sendStatus"></p>
           </aside>
@@ -2390,7 +2422,6 @@ body[data-page="5"] .petal {
 
     <section class="page" data-page="4" aria-labelledby="cakeTitle">
       <div class="panel cake-panel">
-        <p class="eyebrow reveal" style="--d: 0ms">make a wish</p>
         <h2 id="cakeTitle" class="reveal" style="--d: 80ms">blow out the candles</h2>
         <p class="subtle reveal" style="--d: 150ms">use the mic, or tap the flames.</p>
 
@@ -2411,7 +2442,7 @@ body[data-page="5"] .petal {
         <div class="button-row center reveal" style="--d: 320ms">
           <button class="ghost" type="button" id="micButton">use mic</button>
         </div>
-        <p class="micro" id="cakeStatus">Candles are still alive. Tragic for wax.</p>
+        <p class="micro" id="cakeStatus"></p>
       </div>
     </section>
 
@@ -2458,16 +2489,15 @@ body[data-page="5"] .petal {
         </div>
         <p class="eyebrow reveal" style="--d: 80ms">from <span data-sender-name>Spencer</span></p>
         <h2 id="finalTitle" class="reveal" style="--d: 160ms">happy birthday, <span data-friend-name>birthday girl</span>.</h2>
-        <p class="final-message reveal" style="--d: 240ms">wishing you a day as beautiful as your art —<br>full of color, warmth, and the people who love you.</p>
-        <div class="spotify-card reveal" style="--d: 275ms">
+        <div class="letter-scroll reveal" id="letterScroll" style="--d: 280ms; display:none"></div>
+        <!-- Spotify floated as a tilted wallpaper element on the right -->
+        <div class="spotify-wall reveal" style="--d: 320ms">
           <iframe class="spotify-embed"
             src="https://open.spotify.com/embed/track/4kEhwajTV4psTYa9FaWwac?utm_source=generator"
             height="352" loading="lazy"
             title="Paragraphs by Luke Chiang on Spotify"
             allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
         </div>
-        <div class="letter-scroll reveal" id="letterScroll" style="--d: 310ms; display:none"></div>
-        <p class="signature reveal" style="--d: 340ms">with love,<br><span data-sender-name>Spencer</span></p>
         <div class="button-row center reveal" style="--d: 400ms">
           <button class="ghost" type="button" id="restartButton">restart</button>
         </div>
@@ -2775,7 +2805,7 @@ window.BIRTHDAY_CONFIG = {
     const yes = $("#yesButton");
     const zone = $("#answerZone");
     const response = $("#questionResponse");
-    const quips = ["nice try.", "nope.", "catch me.", "not today.", "too slow.", "keep dreaming.", "almost!"];
+    const quips = ["bruh.", "I see how it is.", "SO you hate me huh", "okay then I see.", "really tho?", "bruh.", "okay I see how it is."];
     let dodges = 0;
 
     // Flee anywhere on screen, away from the pointer.
@@ -2844,7 +2874,8 @@ window.BIRTHDAY_CONFIG = {
     });
 
     yes.addEventListener("click", () => {
-      response.textContent = "solid choice.";
+      response.textContent = dodges > 0 ? "finally." : "solid choice.";
+      window._noButtonDodges = dodges;
       burstConfetti(28, { x: window.innerWidth / 2, y: window.innerHeight * 0.58 });
       window.setTimeout(() => goToPage(2), 520);
     });
@@ -3423,6 +3454,14 @@ window.BIRTHDAY_CONFIG = {
     if (!ant) { goToPage(5); return; }
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+    const quipEl = $("#anticipateQuip");
+    if (quipEl) {
+      quipEl.textContent = (window._noButtonDodges > 0)
+        ? "bruh took you long enough 😭"
+        : "";
+      quipEl.style.display = quipEl.textContent ? "" : "none";
+    }
+
     ant.classList.remove("is-leaving");
     ant.classList.add("is-active");
 
@@ -3446,7 +3485,7 @@ window.BIRTHDAY_CONFIG = {
     const button = $("#micButton");
     button.disabled = false;
     button.textContent = "use mic";
-    $("#cakeStatus").textContent = "Candles are still alive. Tragic for wax.";
+    $("#cakeStatus").textContent = "";
   }
 
   function stopMic() {
