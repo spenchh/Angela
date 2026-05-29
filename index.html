@@ -813,20 +813,87 @@ h3 {
 .moments-panel {
   display: flex;
   flex-direction: column;
+  align-items: center;
   max-height: calc(100svh - 120px);
-  overflow-y: auto;
-  overscroll-behavior: contain;
+  overflow: hidden;
+  gap: 0;
 }
 
 /* remove the soft white glow over the bottom photos */
 .moments-panel::after { display: none; }
 
-.photo-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 14px;
-  margin-top: 28px;
+/* one-at-a-time polaroid stage */
+.photo-stage {
+  position: relative;
+  width: clamp(220px, 52vw, 380px);
+  height: clamp(260px, 56vw, 430px);
+  margin: 12px auto 0;
+  flex-shrink: 0;
 }
+
+.photo-stage-hint {
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  opacity: 0.7;
+  margin: 10px 0 0;
+  text-align: center;
+  transition: opacity 400ms ease;
+}
+.photo-stage-hint.is-done { opacity: 0; pointer-events: none; }
+
+.photo-stage-counter {
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  opacity: 0.5;
+  margin: 4px 0 0;
+  text-align: center;
+}
+
+/* each card sits absolute inside the stage, initially below + hidden */
+.photo-stage .photo-card {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transform: rotate(var(--tilt, 0deg)) translateY(40px) scale(0.92);
+  transition:
+    opacity 550ms var(--ease),
+    transform 550ms var(--ease);
+  pointer-events: none;
+  min-height: unset;
+}
+
+.photo-stage .photo-card.is-visible {
+  opacity: 1;
+  transform: rotate(var(--tilt, 0deg)) translateY(0) scale(1);
+  pointer-events: auto;
+  z-index: 2;
+}
+
+/* stacked ghost behind the visible card */
+.photo-stage .photo-card.is-behind {
+  opacity: 0.35;
+  transform: rotate(calc(var(--tilt, 0deg) * -0.5)) translateY(-6px) scale(0.94);
+  z-index: 1;
+  pointer-events: none;
+}
+
+@keyframes polaroidDrop {
+  0%   { opacity: 0; transform: rotate(var(--tilt,0deg)) translateY(-32px) scale(0.94) rotate(-6deg); }
+  60%  { opacity: 1; transform: rotate(var(--tilt,0deg)) translateY(6px)  scale(1.02); }
+  100% { opacity: 1; transform: rotate(var(--tilt,0deg)) translateY(0)    scale(1); }
+}
+
+.photo-stage .photo-card.is-entering {
+  animation: polaroidDrop 550ms var(--ease) both;
+}
+
+/* keep photo-grid used only internally for JS; visually replaced by photo-stage */
+.photo-grid { display: none; }
 
 .photo-card {
   /* spray-border colors — overridden per card by colors sampled from the photo */
@@ -1900,7 +1967,7 @@ body[data-page="5"] .iwp-capy   { opacity: 0.38; }
 /* ─── Spotify compact embed on final slide ─── */
 .spotify-card {
   width: min(380px, 94%);
-  margin: 0 auto 18px;
+  margin: 18px auto 18px;
   border-radius: 14px;
   overflow: hidden;
   box-shadow: 0 4px 20px rgba(80, 40, 140, 0.14);
@@ -2386,8 +2453,11 @@ body[data-page="5"] .petal {
     <section class="page" data-page="3" aria-labelledby="momentsTitle">
       <div class="panel wide-panel moments-panel">
         <p class="eyebrow reveal" id="momentsTitle" style="--d: 0ms">pic album</p>
-        <div class="photo-grid reveal" id="photoGrid" style="--d: 160ms"></div>
-        <div class="button-row center reveal" style="--d: 320ms">
+        <div class="photo-stage reveal" id="photoStage" style="--d: 100ms"></div>
+        <p class="photo-stage-hint reveal" id="photoHint" style="--d: 200ms">tap to reveal</p>
+        <p class="photo-stage-counter" id="photoCounter"></p>
+        <div class="photo-grid" id="photoGrid" aria-hidden="true"></div>
+        <div class="button-row center" id="photoContinueRow" style="opacity:0; pointer-events:none; transition: opacity 500ms ease; margin-top: 14px;">
           <button class="primary magnetic" type="button" data-next>continue</button>
         </div>
       </div>
@@ -2743,6 +2813,16 @@ window.BIRTHDAY_CONFIG = {
       state.finalConfettiPlayed = true;
       window.setTimeout(() => rainConfetti(4200), 320);
     }
+
+    if (next === 3) {
+      // First time entering: auto-reveal card 1 after the slide transition settles
+      if (typeof window._onPhotoSlideEnter === "function") {
+        window.setTimeout(window._onPhotoSlideEnter, 480);
+      }
+    }
+    if (backing && next < 3 && typeof window._resetPhotoStage === "function") {
+      window._resetPhotoStage();
+    }
   }
 
   function makeBackgroundCapys() {
@@ -3009,13 +3089,17 @@ window.BIRTHDAY_CONFIG = {
 
   function renderPhotos() {
     const grid = $("#photoGrid");
+    const stage = $("#photoStage");
+    const hint = $("#photoHint");
+    const counter = $("#photoCounter");
+    const continueRow = $("#photoContinueRow");
     grid.innerHTML = "";
-    grid.classList.remove("is-empty");
+    stage.innerHTML = "";
+
     const photos = (cfg.personalPhotos || []);
     const washes = ["wash-purple", "wash-sage", "wash-gold", "wash-plum", "wash-slate", "wash-blush"];
     const labels = ["a moment", "a memory", "just us", "favorite", "a smile", "together"];
     const tilts = [-3.2, 2.4, -1.6, 3.0, -1.0, 2.8];
-
     const count = Math.max(photos.filter(Boolean).length, 6);
 
     const makePlaceholder = (card, i) => {
@@ -3030,6 +3114,7 @@ window.BIRTHDAY_CONFIG = {
       card.appendChild(label);
     };
 
+    const cards = [];
     for (let i = 0; i < count; i += 1) {
       const card = document.createElement("article");
       card.className = "photo-card";
@@ -3039,16 +3124,92 @@ window.BIRTHDAY_CONFIG = {
         const img = document.createElement("img");
         img.src = photos[i];
         img.alt = `photo ${i + 1}`;
-        // If the file isn't there yet, fall back to a watercolor placeholder.
         img.addEventListener("error", () => makePlaceholder(card, i));
-        // Tint this frame's spray border with colors sampled from the photo.
         applyFrameColors(img, card, FRAME_FALLBACKS[i % FRAME_FALLBACKS.length]);
         card.appendChild(img);
       } else {
         makePlaceholder(card, i);
       }
-      grid.appendChild(card);
+      stage.appendChild(card);
+      cards.push(card);
     }
+
+    let revealed = 0;
+
+    const updateCounter = () => {
+      counter.textContent = `${revealed} / ${count}`;
+    };
+    updateCounter();
+
+    const revealNext = () => {
+      if (revealed >= count) return;
+
+      // Demote current visible to behind
+      if (revealed > 0) {
+        const prev = cards[revealed - 1];
+        prev.classList.remove("is-visible", "is-entering");
+        prev.classList.add("is-behind");
+        // after transition, fully hide it
+        window.setTimeout(() => prev.classList.remove("is-behind"), 600);
+      }
+
+      const card = cards[revealed];
+      card.classList.add("is-visible", "is-entering");
+      // remove entering class after animation completes
+      window.setTimeout(() => card.classList.remove("is-entering"), 600);
+
+      revealed += 1;
+      updateCounter();
+
+      if (revealed >= count) {
+        hint.classList.add("is-done");
+        window.setTimeout(() => {
+          continueRow.style.opacity = "1";
+          continueRow.style.pointerEvents = "";
+        }, 400);
+      } else {
+        hint.textContent = "tap for next";
+        hint.classList.remove("is-done");
+      }
+    };
+
+    // Reveal first card immediately when slide becomes active
+    const onPhotoSlideEnter = () => {
+      if (revealed === 0) revealNext();
+    };
+
+    // Tap / click anywhere in the stage reveals next
+    stage.addEventListener("click", () => {
+      if (revealed < count) revealNext();
+    });
+
+    // Scroll (wheel) on the moments panel also advances
+    const panel = stage.closest(".moments-panel");
+    if (panel) {
+      panel.addEventListener("wheel", (e) => {
+        if (revealed < count) { e.preventDefault(); revealNext(); }
+      }, { passive: false });
+    }
+
+    // Keyboard: right arrow / space while on this slide
+    document.addEventListener("keydown", (e) => {
+      if (state.page !== 3) return;
+      if (e.key === "ArrowRight" || e.key === " ") { e.preventDefault(); revealNext(); }
+    });
+
+    // Expose so goToPage can trigger the first reveal
+    window._onPhotoSlideEnter = onPhotoSlideEnter;
+
+    // Reset on re-visit
+    window._resetPhotoStage = () => {
+      revealed = 0;
+      cards.forEach(c => c.classList.remove("is-visible", "is-entering", "is-behind"));
+      hint.textContent = "tap to reveal";
+      hint.classList.remove("is-done");
+      continueRow.style.opacity = "0";
+      continueRow.style.pointerEvents = "none";
+      updateCounter();
+    };
   }
 
   function setupCalendar() {
