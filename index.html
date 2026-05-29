@@ -512,18 +512,21 @@ h3 {
 .cover-polaroid::before {
   content: "";
   position: absolute;
-  inset: -14px;
+  inset: -10px;
   pointer-events: none;
-  border-radius: 8px;
+  border-radius: 6px;
   background-image:
-    radial-gradient(rgba(124, 77, 187, 0.55) 0.8px, transparent 1.4px),
-    radial-gradient(rgba(200, 130, 220, 0.45) 0.7px, transparent 1.3px),
-    radial-gradient(rgba(184, 144, 60, 0.40) 0.6px, transparent 1.2px);
-  background-size: 7px 7px, 11px 11px, 9px 9px;
-  background-position: 0 0, 3px 5px, 6px 2px;
-  -webkit-mask: radial-gradient(ellipse at center, transparent 56%, #000 78%);
-          mask: radial-gradient(ellipse at center, transparent 56%, #000 78%);
-  opacity: 0.85;
+    radial-gradient(ellipse 60px 38px at 8% 6%,   rgba(244, 138, 48, 0.85), transparent 70%),
+    radial-gradient(ellipse 48px 44px at 92% 4%,  rgba(58, 178, 168, 0.80), transparent 70%),
+    radial-gradient(ellipse 52px 40px at 4% 94%,  rgba(70, 120, 210, 0.78), transparent 70%),
+    radial-gradient(ellipse 58px 40px at 96% 96%, rgba(240, 196, 64, 0.82), transparent 70%),
+    radial-gradient(ellipse 70px 30px at 50% 2%,  rgba(224, 92, 140, 0.72), transparent 72%),
+    radial-gradient(ellipse 30px 60px at 98% 50%, rgba(120, 188, 92, 0.72), transparent 72%),
+    radial-gradient(ellipse 30px 60px at 2% 48%,  rgba(180, 96, 200, 0.68), transparent 72%),
+    radial-gradient(ellipse 64px 28px at 46% 98%, rgba(238, 120, 70, 0.70), transparent 72%);
+  background-repeat: no-repeat;
+  -webkit-mask: radial-gradient(ellipse at center, transparent 58%, #000 82%);
+          mask: radial-gradient(ellipse at center, transparent 58%, #000 82%);
   z-index: 3;
 }
 
@@ -794,6 +797,9 @@ h3 {
   overscroll-behavior: contain;
 }
 
+/* remove the soft white glow over the bottom photos */
+.moments-panel::after { display: none; }
+
 .photo-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -815,24 +821,48 @@ h3 {
   isolation: isolate;
 }
 
-/* Light spray-art / airbrushed speckle border around each polaroid */
+/* Colorful spray-paint brush border around each polaroid (instax "spray art" look) */
 .photo-card::before {
   content: "";
   position: absolute;
-  inset: -14px;
+  inset: -10px;
   pointer-events: none;
-  border-radius: 8px;
-  /* scattered fine spray dots in soft purple / pink / gold */
+  border-radius: 6px;
+  /* big soft spray-paint blooms of color around the edges */
   background-image:
-    radial-gradient(rgba(124, 77, 187, 0.55) 0.8px, transparent 1.4px),
-    radial-gradient(rgba(200, 130, 220, 0.45) 0.7px, transparent 1.3px),
-    radial-gradient(rgba(184, 144, 60, 0.40) 0.6px, transparent 1.2px);
-  background-size: 7px 7px, 11px 11px, 9px 9px;
-  background-position: 0 0, 3px 5px, 6px 2px;
-  /* fade out toward the center so the spray only frames the edges */
-  -webkit-mask: radial-gradient(ellipse at center, transparent 56%, #000 78%);
-          mask: radial-gradient(ellipse at center, transparent 56%, #000 78%);
-  opacity: 0.85;
+    radial-gradient(ellipse 60px 38px at 8% 6%,   rgba(244, 138, 48, 0.85), transparent 70%),
+    radial-gradient(ellipse 48px 44px at 92% 4%,  rgba(58, 178, 168, 0.80), transparent 70%),
+    radial-gradient(ellipse 52px 40px at 4% 94%,  rgba(70, 120, 210, 0.78), transparent 70%),
+    radial-gradient(ellipse 58px 40px at 96% 96%, rgba(240, 196, 64, 0.82), transparent 70%),
+    radial-gradient(ellipse 70px 30px at 50% 2%,  rgba(224, 92, 140, 0.72), transparent 72%),
+    radial-gradient(ellipse 30px 60px at 98% 50%, rgba(120, 188, 92, 0.72), transparent 72%),
+    radial-gradient(ellipse 30px 60px at 2% 48%,  rgba(180, 96, 200, 0.68), transparent 72%),
+    radial-gradient(ellipse 64px 28px at 46% 98%, rgba(238, 120, 70, 0.70), transparent 72%);
+  /* fine spray speckle on top for texture */
+  background-repeat: no-repeat;
+  /* fade out toward the center so the paint only frames the edges */
+  -webkit-mask: radial-gradient(ellipse at center, transparent 58%, #000 82%);
+          mask: radial-gradient(ellipse at center, transparent 58%, #000 82%);
+  z-index: 3;
+}
+
+/* extra fine speckle layer for the spray texture */
+.photo-card::after {
+  content: "";
+  position: absolute;
+  inset: -10px;
+  pointer-events: none;
+  border-radius: 6px;
+  background-image:
+    radial-gradient(rgba(244,138,48,0.9) 0.7px, transparent 1.3px),
+    radial-gradient(rgba(58,178,168,0.9) 0.6px, transparent 1.2px),
+    radial-gradient(rgba(224,92,140,0.9) 0.6px, transparent 1.2px),
+    radial-gradient(rgba(240,196,64,0.9) 0.6px, transparent 1.2px);
+  background-size: 9px 9px, 13px 13px, 11px 11px, 15px 15px;
+  background-position: 0 0, 4px 6px, 7px 2px, 2px 9px;
+  -webkit-mask: radial-gradient(ellipse at center, transparent 56%, #000 80%);
+          mask: radial-gradient(ellipse at center, transparent 56%, #000 80%);
+  opacity: 0.8;
   z-index: 3;
 }
 
@@ -1758,7 +1788,6 @@ body[data-page="5"] .petal {
       <span class="ink-drop d3"></span>
       <span class="ink-ring"></span>
     </div>
-    <p class="anticipate-word" id="anticipateWord">one more thing…</p>
     <div class="anticipate-bar"><span></span></div>
   </div>
 
@@ -2094,10 +2123,8 @@ body[data-page="5"] .petal {
 
     <section class="page" data-page="3" aria-labelledby="momentsTitle">
       <div class="panel wide-panel moments-panel">
-        <p class="eyebrow reveal" style="--d: 0ms">little moments</p>
-        <h2 id="momentsTitle" class="reveal" style="--d: 70ms">photos go here</h2>
-        <p class="subtle reveal" style="--d: 140ms">a small shelf for favorite pictures.</p>
-        <div class="photo-grid reveal" id="photoGrid" style="--d: 220ms"></div>
+        <p class="eyebrow reveal" id="momentsTitle" style="--d: 0ms">pic album</p>
+        <div class="photo-grid reveal" id="photoGrid" style="--d: 160ms"></div>
         <div class="button-row center reveal" style="--d: 320ms">
           <button class="primary magnetic" type="button" data-next>continue</button>
         </div>
@@ -2961,24 +2988,14 @@ window.BIRTHDAY_CONFIG = {
 
   function playAnticipation() {
     const ant = $("#anticipate");
-    const word = $("#anticipateWord");
     if (!ant) { goToPage(5); return; }
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     ant.classList.remove("is-leaving");
     ant.classList.add("is-active");
 
-    const lines = ["one more thing…", "letting the ink settle…", "almost there…"];
-    let i = 0;
-    word.textContent = lines[0];
-    const cycle = window.setInterval(() => {
-      i = (i + 1) % lines.length;
-      word.textContent = lines[i];
-    }, 820);
-
     const hold = reduced ? 200 : 2500;
     window.setTimeout(() => {
-      window.clearInterval(cycle);
       goToPage(5);
       ant.classList.add("is-leaving");
       window.setTimeout(() => {
