@@ -736,12 +736,22 @@ h3 {
 
 .question-panel {
   display: grid;
-  align-content: start;
-  justify-items: start;
+  grid-template-columns: 1fr auto;
+  grid-template-rows: auto auto auto auto;
+  align-content: center;
+  align-items: start;
   text-align: left;
   padding: clamp(48px, 6.5vw, 80px) clamp(28px, 4vw, 50px) clamp(36px, 5vw, 58px) clamp(56px, 8vw, 104px);
-  gap: 0;
+  column-gap: clamp(24px, 4vw, 56px);
+  row-gap: 0;
 }
+
+/* eyebrow + subtitle + response span full width; heading + answer-zone share a row */
+.question-panel .eyebrow  { grid-column: 1 / -1; margin-bottom: 10px; }
+.question-panel h2        { grid-column: 1; grid-row: 2; align-self: center; }
+.question-panel .subtle   { grid-column: 1 / -1; grid-row: 3; margin-top: 14px; margin-bottom: 0; }
+.question-panel .response-line { grid-column: 1 / -1; grid-row: 4; }
+#answerZone               { grid-column: 2; grid-row: 2; align-self: center; flex-direction: column; gap: 10px; margin: 0; }
 
 .cake-panel,
 .final-panel {
@@ -752,7 +762,6 @@ h3 {
   padding: clamp(28px, 5vw, 58px);
 }
 
-.question-panel .eyebrow { margin-bottom: 14px; }
 .question-panel h2 { font-size: clamp(3rem, 8vw, 6.5rem); line-height: 0.9; }
 .question-panel .subtle { margin-top: 14px; margin-bottom: 0; text-align: left; }
 
@@ -1556,6 +1565,22 @@ textarea:focus {
   transform: rotate(0deg) translateY(14px);
 }
 
+/* inline SVG art pieces */
+.art-svg { width: auto; height: auto; object-fit: unset; }
+.art-willow { /* drooping willow — top-center */
+  top: -4vh; left: 50%; transform: translateX(-50%) translateY(-20px);
+  width: clamp(180px, 22vw, 320px); max-height: 55vh;
+}
+.art-petals { /* floating petals — full-frame scatter */
+  inset: 0; width: 100%; height: 100%;
+  transform: translateY(-8px);
+}
+.art-wisteria { /* wisteria cluster — top-right corner */
+  top: -2vh; right: -1vw;
+  width: clamp(180px, 22vw, 280px); max-height: 50vh;
+  transform: rotate(4deg) translateY(-18px);
+}
+
 /* per-slide reveals — a piece only appears when its file has loaded
    (.is-loaded) AND its slide is active */
 body[data-page="0"] .art-sakura.is-loaded { opacity: 0.55; transform: rotate(3deg) translateY(0); }
@@ -1576,6 +1601,24 @@ body[data-page="4"] .art-ink-tree.is-loaded{ opacity: 0.40; transform: rotate(-1
 body[data-page="5"] .art-sakura.is-loaded      { opacity: 0.60; transform: rotate(3deg) translateY(0); }
 body[data-page="5"] .art-capy.is-loaded        { opacity: 0.60; transform: rotate(0deg) translateY(0); }
 body[data-page="5"] .art-ink-flowers.is-loaded { opacity: 0.45; transform: rotate(2.5deg) translate(0,0); }
+
+/* willow — cover + calendar */
+body[data-page="0"] .art-willow.is-loaded { opacity: 0.48; transform: translateX(-50%) translateY(0); }
+body[data-page="2"] .art-willow.is-loaded { opacity: 0.38; transform: translateX(-50%) translateY(0); }
+
+/* petals — sprinkled on most slides */
+body[data-page="0"] .art-petals.is-loaded { opacity: 0.55; transform: translateY(0); }
+body[data-page="1"] .art-petals.is-loaded { opacity: 0.40; transform: translateY(0); }
+body[data-page="3"] .art-petals.is-loaded { opacity: 0.65; transform: translateY(0); }
+body[data-page="5"] .art-petals.is-loaded { opacity: 0.50; transform: translateY(0); }
+
+/* wisteria — question slide + finale */
+body[data-page="1"] .art-wisteria.is-loaded { opacity: 0.55; transform: rotate(4deg) translateY(0); }
+body[data-page="5"] .art-wisteria.is-loaded { opacity: 0.48; transform: rotate(4deg) translateY(0); }
+
+/* photos slide (3) — richer ink wash: add plum + ink-tree + petals */
+body[data-page="3"] .art-plum.is-loaded     { opacity: 0.55; transform: rotate(-2deg) translateY(0); }
+body[data-page="3"] .art-ink-tree.is-loaded { opacity: 0.35; transform: rotate(-1.5deg) translateY(0); }
 
 /* slide tint overlay — color mood shifts per page */
 .slide-tint {
@@ -1923,6 +1966,89 @@ body[data-page="5"] .petal {
     <img class="art-piece art-ink-tree" alt="" data-art="inkTree" />
     <img class="art-piece art-ink-flowers" alt="" data-art="inkFlowers" />
     <img class="art-piece art-capy" alt="" data-art="capy" />
+
+    <!-- Inline SVG art — willow branch, falling petals, wisteria cluster -->
+    <svg class="art-piece art-svg art-willow" viewBox="0 0 320 520" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- main branch -->
+      <path d="M160 0 Q168 55 155 110 Q142 165 150 220" stroke="rgba(38,28,20,0.42)" stroke-width="11" stroke-linecap="round" fill="none"/>
+      <!-- drooping fronds -->
+      <path d="M155 80 Q130 130 115 185 Q108 210 120 235" stroke="rgba(80,110,65,0.55)" stroke-width="4" stroke-linecap="round" fill="none"/>
+      <path d="M158 95 Q185 148 195 210 Q200 240 188 268" stroke="rgba(80,110,65,0.50)" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+      <path d="M150 120 Q118 175 105 238 Q98 270 110 300" stroke="rgba(80,110,65,0.48)" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+      <path d="M162 115 Q195 170 210 240 Q216 275 205 308" stroke="rgba(80,110,65,0.44)" stroke-width="3" stroke-linecap="round" fill="none"/>
+      <path d="M148 145 Q112 205 100 275 Q95 312 108 345" stroke="rgba(80,110,65,0.42)" stroke-width="3" stroke-linecap="round" fill="none"/>
+      <path d="M165 140 Q200 205 215 280 Q222 318 210 355" stroke="rgba(80,110,65,0.38)" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+      <path d="M145 170 Q104 240 93 320 Q88 362 102 398" stroke="rgba(80,110,65,0.36)" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+      <path d="M168 165 Q208 240 225 325 Q232 368 218 408" stroke="rgba(80,110,65,0.32)" stroke-width="2" stroke-linecap="round" fill="none"/>
+      <!-- leaf dots along fronds -->
+      <ellipse cx="118" cy="226" rx="6" ry="9" fill="rgba(90,120,72,0.45)" transform="rotate(-30 118 226)"/>
+      <ellipse cx="198" cy="252" rx="5" ry="8" fill="rgba(90,120,72,0.40)" transform="rotate(22 198 252)"/>
+      <ellipse cx="107" cy="335" rx="5" ry="8" fill="rgba(90,120,72,0.38)" transform="rotate(-18 107 335)"/>
+      <ellipse cx="212" cy="348" rx="5" ry="8" fill="rgba(90,120,72,0.35)" transform="rotate(15 212 348)"/>
+    </svg>
+
+    <svg class="art-piece art-svg art-petals" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Scattered ink-wash cherry blossom petals floating in space -->
+      <ellipse cx="52" cy="38" rx="18" ry="11" fill="rgba(220,140,165,0.55)" transform="rotate(-28 52 38)"/>
+      <ellipse cx="340" cy="62" rx="14" ry="8" fill="rgba(215,130,158,0.48)" transform="rotate(18 340 62)"/>
+      <ellipse cx="210" cy="18" rx="16" ry="10" fill="rgba(225,148,170,0.52)" transform="rotate(-12 210 18)"/>
+      <ellipse cx="78" cy="120" rx="13" ry="8" fill="rgba(210,128,155,0.44)" transform="rotate(35 78 120)"/>
+      <ellipse cx="368" cy="148" rx="15" ry="9" fill="rgba(218,138,162,0.50)" transform="rotate(-22 368 148)"/>
+      <ellipse cx="145" cy="88" rx="11" ry="7" fill="rgba(228,152,174,0.42)" transform="rotate(8 145 88)"/>
+      <ellipse cx="295" cy="108" rx="17" ry="10" fill="rgba(212,132,158,0.48)" transform="rotate(-38 295 108)"/>
+      <ellipse cx="30" cy="210" rx="12" ry="7" fill="rgba(220,140,165,0.40)" transform="rotate(42 30 210)"/>
+      <ellipse cx="382" cy="255" rx="14" ry="9" fill="rgba(215,135,160,0.44)" transform="rotate(-15 382 255)"/>
+      <ellipse cx="180" cy="178" rx="10" ry="6" fill="rgba(225,148,172,0.38)" transform="rotate(28 180 178)"/>
+      <ellipse cx="258" cy="225" rx="16" ry="10" fill="rgba(210,128,155,0.46)" transform="rotate(-32 258 225)"/>
+      <ellipse cx="95" cy="308" rx="13" ry="8" fill="rgba(218,138,164,0.42)" transform="rotate(16 95 308)"/>
+      <ellipse cx="348" cy="335" rx="11" ry="7" fill="rgba(222,142,168,0.40)" transform="rotate(-25 348 335)"/>
+      <ellipse cx="165" cy="358" rx="15" ry="9" fill="rgba(215,132,160,0.44)" transform="rotate(38 165 358)"/>
+      <ellipse cx="310" cy="378" rx="12" ry="8" fill="rgba(220,140,165,0.38)" transform="rotate(-10 310 378)"/>
+      <!-- stamens -->
+      <circle cx="52" cy="38" r="3" fill="rgba(180,80,110,0.30)"/>
+      <circle cx="340" cy="62" r="2.5" fill="rgba(180,80,110,0.28)"/>
+      <circle cx="295" cy="108" r="3" fill="rgba(180,80,110,0.28)"/>
+    </svg>
+
+    <svg class="art-piece art-svg art-wisteria" viewBox="0 0 280 480" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- horizontal vine branch across top -->
+      <path d="M0 55 Q70 42 140 48 Q210 54 280 44" stroke="rgba(28,18,42,0.38)" stroke-width="9" stroke-linecap="round" fill="none"/>
+      <!-- secondary branch curving down -->
+      <path d="M80 50 Q88 95 82 130" stroke="rgba(28,18,42,0.32)" stroke-width="6" stroke-linecap="round" fill="none"/>
+      <path d="M175 46 Q185 100 178 148" stroke="rgba(28,18,42,0.30)" stroke-width="5.5" stroke-linecap="round" fill="none"/>
+      <path d="M230 45 Q242 88 236 122" stroke="rgba(28,18,42,0.28)" stroke-width="5" stroke-linecap="round" fill="none"/>
+      <!-- wisteria clusters — small lavender teardrops -->
+      <!-- cluster 1 under 80px branch -->
+      <ellipse cx="76" cy="148" rx="9" ry="13" fill="rgba(148,100,195,0.55)"/>
+      <ellipse cx="88" cy="156" rx="8" ry="12" fill="rgba(140,90,188,0.52)"/>
+      <ellipse cx="68" cy="158" rx="7" ry="11" fill="rgba(155,108,200,0.48)"/>
+      <ellipse cx="80" cy="168" rx="7" ry="11" fill="rgba(148,100,195,0.46)"/>
+      <ellipse cx="92" cy="170" rx="6" ry="10" fill="rgba(140,90,188,0.42)"/>
+      <ellipse cx="70" cy="175" rx="6" ry="10" fill="rgba(155,108,200,0.40)"/>
+      <ellipse cx="82" cy="185" rx="6" ry="9" fill="rgba(148,100,195,0.36)"/>
+      <ellipse cx="94" cy="188" rx="5" ry="8" fill="rgba(140,90,188,0.32)"/>
+      <ellipse cx="72" cy="190" rx="5" ry="8" fill="rgba(155,108,200,0.30)"/>
+      <!-- cluster 2 -->
+      <ellipse cx="172" cy="165" rx="9" ry="14" fill="rgba(148,100,195,0.52)"/>
+      <ellipse cx="185" cy="174" rx="8" ry="13" fill="rgba(140,90,188,0.48)"/>
+      <ellipse cx="160" cy="175" rx="7" ry="12" fill="rgba(155,108,200,0.45)"/>
+      <ellipse cx="174" cy="186" rx="7" ry="11" fill="rgba(148,100,195,0.42)"/>
+      <ellipse cx="188" cy="190" rx="6" ry="10" fill="rgba(140,90,188,0.38)"/>
+      <ellipse cx="162" cy="192" rx="6" ry="10" fill="rgba(155,108,200,0.35)"/>
+      <ellipse cx="176" cy="202" rx="5" ry="9" fill="rgba(148,100,195,0.32)"/>
+      <!-- cluster 3 -->
+      <ellipse cx="230" cy="138" rx="8" ry="12" fill="rgba(148,100,195,0.50)"/>
+      <ellipse cx="242" cy="146" rx="7" ry="11" fill="rgba(140,90,188,0.46)"/>
+      <ellipse cx="220" cy="148" rx="6" ry="10" fill="rgba(155,108,200,0.42)"/>
+      <ellipse cx="232" cy="158" rx="6" ry="10" fill="rgba(148,100,195,0.38)"/>
+      <ellipse cx="244" cy="162" rx="5" ry="9" fill="rgba(140,90,188,0.34)"/>
+      <ellipse cx="222" cy="162" rx="5" ry="8" fill="rgba(155,108,200,0.30)"/>
+      <!-- tiny leaves along vine -->
+      <ellipse cx="35" cy="46" rx="9" ry="6" fill="rgba(55,90,50,0.40)" transform="rotate(-12 35 46)"/>
+      <ellipse cx="118" cy="44" rx="10" ry="6" fill="rgba(55,90,50,0.38)" transform="rotate(8 118 44)"/>
+      <ellipse cx="205" cy="50" rx="9" ry="5" fill="rgba(55,90,50,0.35)" transform="rotate(-5 205 50)"/>
+      <ellipse cx="258" cy="43" rx="8" ry="5" fill="rgba(55,90,50,0.32)" transform="rotate(15 258 43)"/>
+    </svg>
   </div>
 
   <!-- Ink wash painting background — inspired by Angela's artwork -->
@@ -2666,14 +2792,21 @@ window.BIRTHDAY_CONFIG = {
       const maxX = Math.max(pad, window.innerWidth - btnRect.width - pad);
       const maxY = Math.max(pad, window.innerHeight - btnRect.height - pad);
 
+      // Flee radius: at most ~35% of viewport so it stays nearby but not too far.
+      const fleeR = Math.min(window.innerWidth, window.innerHeight) * 0.35;
+      const curX = parseFloat(no.style.left) || (window.innerWidth / 2);
+      const curY = parseFloat(no.style.top) || (window.innerHeight / 2);
+
       let nextX = pad + Math.random() * (maxX - pad);
       let nextY = pad + Math.random() * (maxY - pad);
 
       if (pointerX !== null && pointerY !== null) {
-        for (let tries = 0; tries < 16; tries += 1) {
-          const cx = pad + Math.random() * (maxX - pad);
-          const cy = pad + Math.random() * (maxY - pad);
-          if (Math.hypot(pointerX - (cx + btnRect.width / 2), pointerY - (cy + btnRect.height / 2)) > 200) {
+        for (let tries = 0; tries < 24; tries += 1) {
+          const angle = Math.random() * Math.PI * 2;
+          const dist = fleeR * (0.3 + Math.random() * 0.7);
+          const cx = Math.max(pad, Math.min(maxX, curX + Math.cos(angle) * dist));
+          const cy = Math.max(pad, Math.min(maxY, curY + Math.sin(angle) * dist));
+          if (Math.hypot(pointerX - (cx + btnRect.width / 2), pointerY - (cy + btnRect.height / 2)) > 120) {
             nextX = cx; nextY = cy; break;
           }
         }
@@ -2857,13 +2990,15 @@ window.BIRTHDAY_CONFIG = {
       inkFlowers: "assets/art/ink-flowers.png",
       capy: "assets/art/capybara.png"
     };
-    $$(".art-piece").forEach(img => {
+    $$(".art-piece[data-art]").forEach(img => {
       const key = img.dataset.art;
       const src = artMap[key];
       if (!src) return;
       img.addEventListener("load", () => img.classList.add("is-loaded"));
       img.src = src;
     });
+    // Inline SVG art pieces are always present — mark them loaded immediately.
+    $$(".art-piece.art-svg").forEach(el => el.classList.add("is-loaded"));
   }
 
   function renderPhotos() {
