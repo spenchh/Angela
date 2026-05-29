@@ -568,6 +568,59 @@ h3 {
   50% { transform: scale(1.06); opacity: 1; }
 }
 
+/* ─── ink-bloom intro loader ─── */
+.intro {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(160deg, #f7f2ee 0%, #ece4da 50%, #f4ede8 100%);
+  overflow: hidden;
+  animation: introFade 700ms ease 1700ms forwards;
+}
+.intro.is-done { display: none; }
+
+.intro-bloom {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(124,77,187,0.55) 0%, rgba(124,77,187,0.18) 45%, transparent 70%);
+  transform: scale(0);
+  animation: bloomIn 1500ms cubic-bezier(.2,.7,.2,1) forwards;
+}
+.intro-bloom.two {
+  width: 26px; height: 26px;
+  background: radial-gradient(circle, rgba(184,144,60,0.45) 0%, rgba(155,106,170,0.16) 50%, transparent 72%);
+  animation: bloomIn 1700ms cubic-bezier(.2,.7,.2,1) 120ms forwards;
+}
+.intro-word {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(1.3rem, 4vw, 2.1rem);
+  letter-spacing: 0.14em;
+  color: #2a1f3a;
+  opacity: 0;
+  animation: introWord 1200ms ease 360ms forwards;
+}
+
+@keyframes bloomIn {
+  0%   { transform: scale(0); opacity: 0.9; }
+  70%  { opacity: 0.5; }
+  100% { transform: scale(46); opacity: 0; }
+}
+@keyframes introWord {
+  0%   { opacity: 0; transform: translateY(10px) scale(0.96); letter-spacing: 0.4em; }
+  40%  { opacity: 1; }
+  100% { opacity: 1; transform: translateY(0) scale(1); letter-spacing: 0.14em; }
+}
+@keyframes introFade {
+  to { opacity: 0; visibility: hidden; }
+}
+
 .reveal {
   opacity: 0;
   transform: translateY(16px);
@@ -608,38 +661,31 @@ h3 {
 .question-panel .subtle { margin-top: 12px; margin-bottom: 0; text-align: left; }
 
 .answer-zone {
-  position: relative;
-  width: 100%;
-  height: min(310px, calc(100svh - 370px));
-  min-height: 220px;
-  margin: 22px 0 6px;
-  border-radius: 24px;
-  background:
-    radial-gradient(ellipse at 18% 30%, rgba(155, 106, 170, 0.07), transparent 45%),
-    radial-gradient(ellipse at 80% 70%, rgba(124, 77, 187, 0.05), transparent 42%),
-    linear-gradient(135deg, rgba(245, 240, 234, 0.55), rgba(234, 227, 214, 0.70));
-  border: 1px solid var(--soft-line);
-  overflow: hidden;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 26px 0 6px;
 }
 
 .yes-button {
-  position: absolute;
-  left: 14%;
-  top: 28%;
   min-width: 108px;
   z-index: 2;
 }
 
 .no-button {
-  position: absolute;
-  left: 62%;
-  top: 18%;
   min-width: 94px;
   transition:
-    left 280ms var(--ease),
-    top 280ms var(--ease),
-    transform 180ms var(--ease);
+    left 260ms var(--ease),
+    top 260ms var(--ease),
+    transform 160ms var(--ease);
   will-change: left, top;
+}
+
+/* once it starts running, it breaks out and roams the whole screen */
+.no-button.is-loose {
+  position: fixed;
+  z-index: 40;
+  margin: 0;
 }
 
 .response-line {
@@ -1316,7 +1362,6 @@ textarea:focus {
   .day { font-size: 1.55rem; }
   .cake-wrap { min-height: 300px; }
   .cake-capy { display: none; }
-  .answer-zone { min-height: 200px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1610,6 +1655,13 @@ body[data-page="5"] .petal {
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
 </head>
 <body>
+  <!-- Ink-bloom intro loader -->
+  <div class="intro" id="intro" aria-hidden="true">
+    <div class="intro-bloom"></div>
+    <div class="intro-bloom two"></div>
+    <p class="intro-word">為你 · for you</p>
+  </div>
+
   <canvas id="confettiCanvas" aria-hidden="true"></canvas>
   <div class="slide-tint" aria-hidden="true"></div>
   <div class="ambient" id="ambient" aria-hidden="true"></div>
@@ -1899,7 +1951,7 @@ body[data-page="5"] .petal {
       <div class="panel question-panel">
         <p class="eyebrow reveal" style="--d: 0ms">one question</p>
         <h2 id="questionTitle" class="reveal" style="--d: 80ms">hang out<br>soon?</h2>
-        <p class="subtle reveal" style="--d: 150ms">the no button has trust issues. proceed with care.</p>
+        <p class="subtle reveal" style="--d: 150ms">there's really only one right answer here.</p>
         <div class="answer-zone reveal" id="answerZone" style="--d: 240ms">
           <button class="primary yes-button magnetic" type="button" id="yesButton">yes ✦</button>
           <button class="secondary no-button" type="button" id="noButton">no</button>
@@ -2183,6 +2235,14 @@ window.BIRTHDAY_CONFIG = {
 
     window.addEventListener("resize", setCanvasSize);
     window.addEventListener("keydown", handleKeydown);
+    dismissIntro();
+  }
+
+  function dismissIntro() {
+    const intro = $("#intro");
+    if (!intro) return;
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    window.setTimeout(() => intro.classList.add("is-done"), reduced ? 0 : 2500);
   }
 
   function setCanvasSize() {
@@ -2256,6 +2316,14 @@ window.BIRTHDAY_CONFIG = {
     const backing = next < state.page;
     // If leaving the cake slide, reset candles so the finale is reachable again.
     if (state.page === 4 && next !== 5) resetCandles();
+    // Reset the runaway "no" button so it sits next to "yes" again.
+    if (next !== 1) {
+      const no = $("#noButton");
+      if (no) {
+        no.classList.remove("is-loose");
+        no.style.left = no.style.top = no.style.transform = "";
+      }
+    }
     stage.classList.toggle("is-backing", backing);
     state.page = next;
     document.body.dataset.page = next;
@@ -2310,49 +2378,55 @@ window.BIRTHDAY_CONFIG = {
   function setupQuestion() {
     const no = $("#noButton");
     const yes = $("#yesButton");
-    const zone = $("#answerZone");
     const response = $("#questionResponse");
+    const quips = ["nice try.", "nope.", "catch me.", "not today.", "too slow.", "keep dreaming.", "almost!"];
+    let dodges = 0;
 
-    const moveNo = (pointerX = null, pointerY = null) => {
-      const zoneRect = zone.getBoundingClientRect();
+    // Flee anywhere on screen, away from the pointer.
+    const flee = (pointerX = null, pointerY = null) => {
+      // On first dodge, break out of the flow so it can roam freely.
+      if (!no.classList.contains("is-loose")) no.classList.add("is-loose");
+
       const btnRect = no.getBoundingClientRect();
-      const maxX = Math.max(12, zoneRect.width - btnRect.width - 12);
-      const maxY = Math.max(12, zoneRect.height - btnRect.height - 12);
-      let nextX = Math.random() * maxX;
-      let nextY = Math.random() * maxY;
+      const pad = 14;
+      const maxX = Math.max(pad, window.innerWidth - btnRect.width - pad);
+      const maxY = Math.max(pad, window.innerHeight - btnRect.height - pad);
+
+      let nextX = pad + Math.random() * (maxX - pad);
+      let nextY = pad + Math.random() * (maxY - pad);
 
       if (pointerX !== null && pointerY !== null) {
-        for (let tries = 0; tries < 10; tries += 1) {
-          const candidateX = Math.random() * maxX;
-          const candidateY = Math.random() * maxY;
-          const centerX = zoneRect.left + candidateX + btnRect.width / 2;
-          const centerY = zoneRect.top + candidateY + btnRect.height / 2;
-          if (Math.hypot(pointerX - centerX, pointerY - centerY) > 135) {
-            nextX = candidateX;
-            nextY = candidateY;
-            break;
+        for (let tries = 0; tries < 14; tries += 1) {
+          const cx = pad + Math.random() * (maxX - pad);
+          const cy = pad + Math.random() * (maxY - pad);
+          if (Math.hypot(pointerX - (cx + btnRect.width / 2), pointerY - (cy + btnRect.height / 2)) > 180) {
+            nextX = cx; nextY = cy; break;
           }
         }
       }
 
       no.style.left = `${nextX}px`;
       no.style.top = `${nextY}px`;
-      response.textContent = "nice try.";
+      no.style.transform = `rotate(${(Math.random() * 24 - 12).toFixed(1)}deg)`;
+      dodges += 1;
+      response.textContent = quips[dodges % quips.length];
     };
 
-    zone.addEventListener("pointermove", event => {
+    // Run when the pointer gets close.
+    document.addEventListener("pointermove", event => {
+      if (state.page !== 1) return;
       const rect = no.getBoundingClientRect();
-      const centerX = rect.left + rect.width / 2;
-      const centerY = rect.top + rect.height / 2;
-      if (Math.hypot(event.clientX - centerX, event.clientY - centerY) < 128) {
-        moveNo(event.clientX, event.clientY);
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+      if (Math.hypot(event.clientX - cx, event.clientY - cy) < 90) {
+        flee(event.clientX, event.clientY);
       }
     });
 
-    no.addEventListener("pointerenter", event => moveNo(event.clientX, event.clientY));
+    no.addEventListener("pointerenter", event => flee(event.clientX, event.clientY));
     no.addEventListener("click", event => {
       event.preventDefault();
-      moveNo(event.clientX, event.clientY);
+      flee(event.clientX, event.clientY);
     });
 
     yes.addEventListener("click", () => {
