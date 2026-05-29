@@ -1233,42 +1233,41 @@ body[data-page="3"] .slide-tint { background-color: rgba(190, 65, 95, 0.07); }  
 body[data-page="4"] .slide-tint { background-color: rgba(168, 38, 58, 0.08); }    /* deep red — chrysanthemum */
 body[data-page="5"] .slide-tint { background-color: rgba(85, 40, 138, 0.10); }    /* deep purple — finale */
 
-/* per-page ink wash focus — different painting each slide, higher contrast */
-body[data-page="0"] .iwp-lotus  { opacity: 0.38; }
-body[data-page="0"] .iwp-bamboo { opacity: 0.30; }
-body[data-page="0"] .iwp-plum   { opacity: 0.03; }
-body[data-page="0"] .iwp-grapes { opacity: 0.03; }
-body[data-page="0"] .iwp-bird   { opacity: 0.04; }
+/* per-page ink wash focus — each slide features its own motifs */
+.iwp-lotus, .iwp-bamboo, .iwp-plum, .iwp-grapes,
+.iwp-bird, .iwp-flute, .iwp-capy { opacity: 0; }
 
-body[data-page="1"] .iwp-lotus  { opacity: 0.04; }
-body[data-page="1"] .iwp-bamboo { opacity: 0.04; }
-body[data-page="1"] .iwp-plum   { opacity: 0.38; }
-body[data-page="1"] .iwp-grapes { opacity: 0.34; }
-body[data-page="1"] .iwp-bird   { opacity: 0.04; }
+/* cover — her signature lotus + a touch of bamboo */
+body[data-page="0"] .iwp-lotus  { opacity: 0.40; }
+body[data-page="0"] .iwp-bamboo { opacity: 0.12; }
+body[data-page="0"] .iwp-capy   { opacity: 0.07; }
 
-body[data-page="2"] .iwp-lotus  { opacity: 0.04; }
-body[data-page="2"] .iwp-bamboo { opacity: 0.40; }
-body[data-page="2"] .iwp-plum   { opacity: 0.04; }
-body[data-page="2"] .iwp-grapes { opacity: 0.03; }
-body[data-page="2"] .iwp-bird   { opacity: 0.38; }
+/* question (fun) — capybara is the star, with plum blossoms */
+body[data-page="1"] .iwp-capy   { opacity: 0.42; }
+body[data-page="1"] .iwp-plum   { opacity: 0.30; }
+body[data-page="1"] .iwp-grapes { opacity: 0.06; }
 
-body[data-page="3"] .iwp-lotus  { opacity: 0.38; }
-body[data-page="3"] .iwp-bamboo { opacity: 0.05; }
+/* calendar — bamboo + flute (music & timing) */
+body[data-page="2"] .iwp-bamboo { opacity: 0.44; }
+body[data-page="2"] .iwp-flute  { opacity: 0.40; }
+body[data-page="2"] .iwp-bird   { opacity: 0.05; }
+
+/* photos — orchid bird + plum branch */
+body[data-page="3"] .iwp-bird   { opacity: 0.42; }
 body[data-page="3"] .iwp-plum   { opacity: 0.30; }
-body[data-page="3"] .iwp-grapes { opacity: 0.04; }
-body[data-page="3"] .iwp-bird   { opacity: 0.03; }
+body[data-page="3"] .iwp-lotus  { opacity: 0.06; }
 
-body[data-page="4"] .iwp-lotus  { opacity: 0.05; }
-body[data-page="4"] .iwp-bamboo { opacity: 0.05; }
-body[data-page="4"] .iwp-plum   { opacity: 0.04; }
-body[data-page="4"] .iwp-grapes { opacity: 0.38; }
-body[data-page="4"] .iwp-bird   { opacity: 0.34; }
+/* cake — grapes + chrysanthemum, warm & festive */
+body[data-page="4"] .iwp-grapes { opacity: 0.42; }
+body[data-page="4"] .iwp-bird   { opacity: 0.30; }
+body[data-page="4"] .iwp-capy   { opacity: 0.07; }
 
-body[data-page="5"] .iwp-lotus  { opacity: 0.32; }
-body[data-page="5"] .iwp-bamboo { opacity: 0.24; }
-body[data-page="5"] .iwp-plum   { opacity: 0.26; }
-body[data-page="5"] .iwp-grapes { opacity: 0.20; }
-body[data-page="5"] .iwp-bird   { opacity: 0.22; }
+/* final — everything blooms gently together */
+body[data-page="5"] .iwp-lotus  { opacity: 0.26; }
+body[data-page="5"] .iwp-bamboo { opacity: 0.18; }
+body[data-page="5"] .iwp-plum   { opacity: 0.20; }
+body[data-page="5"] .iwp-flute  { opacity: 0.22; }
+body[data-page="5"] .iwp-capy   { opacity: 0.30; }
 
 /* letter scroll on final page */
 .letter-scroll {
@@ -1296,7 +1295,6 @@ body[data-page="5"] .iwp-bird   { opacity: 0.22; }
   right: -2vw;
   width: clamp(280px, 34vw, 520px);
   height: auto;
-  opacity: 0.30;
 }
 
 .iwp-bamboo {
@@ -1304,7 +1302,6 @@ body[data-page="5"] .iwp-bird   { opacity: 0.22; }
   top: 3vh;
   width: clamp(100px, 11vw, 180px);
   height: clamp(380px, 78vh, 740px);
-  opacity: 0.26;
 }
 
 .iwp-plum {
@@ -1312,7 +1309,6 @@ body[data-page="5"] .iwp-bird   { opacity: 0.22; }
   left: 6vw;
   width: clamp(220px, 32vw, 480px);
   height: auto;
-  opacity: 0.22;
 }
 
 .iwp-grapes {
@@ -1320,7 +1316,6 @@ body[data-page="5"] .iwp-bird   { opacity: 0.22; }
   right: 2vw;
   width: clamp(160px, 20vw, 300px);
   height: auto;
-  opacity: 0.20;
 }
 
 .iwp-bird {
@@ -1328,7 +1323,22 @@ body[data-page="5"] .iwp-bird   { opacity: 0.22; }
   left: 16vw;
   width: clamp(80px, 10vw, 150px);
   height: auto;
-  opacity: 0.22;
+}
+
+.iwp-flute {
+  top: 10vh;
+  right: 4vw;
+  width: clamp(260px, 36vw, 560px);
+  height: auto;
+  opacity: 0;
+}
+
+.iwp-capy {
+  bottom: -2vh;
+  left: 4vw;
+  width: clamp(200px, 26vw, 400px);
+  height: auto;
+  opacity: 0;
 }
 
 /* ─── final page angela photo ─── */
@@ -1373,13 +1383,98 @@ body[data-page="5"] .iwp-bird   { opacity: 0.22; }
 
 .final-message {
   max-width: 420px;
-  margin: 0 auto 24px;
+  margin: 0 auto 22px;
   text-align: center;
   font-family: 'Playfair Display', Georgia, serif;
   font-size: clamp(1.05rem, 2vw, 1.3rem);
   font-style: italic;
   color: var(--muted);
   line-height: 1.7;
+}
+
+/* ─── special final slide flourishes ─── */
+.final-panel { position: relative; }
+
+/* soft ink-bloom halo behind her photo */
+.angela-frame {
+  position: relative;
+}
+.angela-frame::before {
+  content: "";
+  position: absolute;
+  inset: -22px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(124,77,187,0.18) 0%, transparent 70%);
+  z-index: -1;
+  animation: haloBreathe 5s ease-in-out infinite;
+}
+@keyframes haloBreathe {
+  0%, 100% { transform: scale(1); opacity: 0.7; }
+  50% { transform: scale(1.12); opacity: 1; }
+}
+
+/* handwritten-style signature */
+.signature {
+  margin: 2px 0 18px;
+  text-align: center;
+  font-family: 'Playfair Display', Georgia, serif;
+  font-style: italic;
+  font-size: clamp(1.1rem, 2.4vw, 1.45rem);
+  color: var(--primary-dark);
+  line-height: 1.35;
+}
+.signature span { font-weight: 500; }
+
+/* red seal stamp, like the ones on her paintings */
+.seal-stamp {
+  position: absolute;
+  right: clamp(16px, 4vw, 38px);
+  bottom: clamp(16px, 4vw, 38px);
+  width: 60px;
+  height: 60px;
+  border-radius: 7px;
+  background: linear-gradient(135deg, #bb342b 0%, #9a201a 100%);
+  border: 2px solid rgba(255, 255, 255, 0.28);
+  box-shadow: 0 4px 16px rgba(154, 32, 26, 0.34);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  justify-items: center;
+  transform: rotate(-7deg);
+  padding: 5px;
+  opacity: 0.94;
+  font-family: 'Songti SC', 'SimSun', 'STSong', 'Noto Serif CJK SC', serif;
+  color: #fdf3ef;
+  line-height: 1;
+}
+.seal-stamp span { font-size: 19px; }
+
+/* gentle falling petals — only animate on the final slide */
+.petals {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  border-radius: inherit;
+  z-index: 1;
+}
+.petal {
+  position: absolute;
+  top: -26px;
+  width: 14px;
+  height: 10px;
+  border-radius: 60% 40% 55% 45% / 62% 50% 50% 38%;
+  background: radial-gradient(ellipse at 40% 40%, rgba(220, 130, 165, 0.85), rgba(190, 95, 135, 0.5));
+  opacity: 0;
+}
+body[data-page="5"] .petal {
+  animation: petalFall var(--pt, 9s) linear var(--pd, 0s) infinite;
+}
+@keyframes petalFall {
+  0%   { transform: translateY(-30px) translateX(0) rotate(0deg); opacity: 0; }
+  12%  { opacity: 0.85; }
+  90%  { opacity: 0.7; }
+  100% { transform: translateY(740px) translateX(var(--px, 40px)) rotate(560deg); opacity: 0; }
 }
 
   </style>
@@ -1569,6 +1664,62 @@ body[data-page="5"] .iwp-bird   { opacity: 0.22; }
       <circle cx="70" cy="70" r="5" fill="rgba(200,160,60,0.65)"/>
     </svg>
 
+    <!-- Ink wash Chinese flute (dizi) — she plays flute -->
+    <svg class="ink-wash-piece iwp-flute" viewBox="0 0 560 280" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Bamboo flute body — single confident brushstroke -->
+      <path d="M44 156 Q280 132 512 104" stroke="rgba(34,24,42,0.46)" stroke-width="22" stroke-linecap="round"/>
+      <!-- Lighter inner highlight for the wet-ink look -->
+      <path d="M60 154 Q280 130 498 105" stroke="rgba(120,95,70,0.22)" stroke-width="9" stroke-linecap="round"/>
+      <!-- Binding rings -->
+      <path d="M150 145 L156 142" stroke="rgba(24,16,30,0.55)" stroke-width="26" stroke-linecap="round"/>
+      <path d="M470 110 L476 109" stroke="rgba(24,16,30,0.55)" stroke-width="26" stroke-linecap="round"/>
+      <!-- Blow hole -->
+      <ellipse cx="120" cy="148" rx="6" ry="5" fill="rgba(18,12,24,0.6)" transform="rotate(-6 120 148)"/>
+      <!-- Membrane hole -->
+      <ellipse cx="200" cy="142" rx="5" ry="4.5" fill="rgba(18,12,24,0.55)" transform="rotate(-6 200 142)"/>
+      <!-- Finger holes -->
+      <circle cx="300" cy="130" r="5.5" fill="rgba(18,12,24,0.55)"/>
+      <circle cx="334" cy="126" r="5.5" fill="rgba(18,12,24,0.55)"/>
+      <circle cx="368" cy="122" r="5.5" fill="rgba(18,12,24,0.55)"/>
+      <circle cx="402" cy="118" r="5.5" fill="rgba(18,12,24,0.55)"/>
+      <circle cx="436" cy="114" r="5.5" fill="rgba(18,12,24,0.55)"/>
+      <!-- Red silk tassel at the end (中国结) -->
+      <circle cx="512" cy="104" r="8" fill="rgba(190,40,45,0.6)"/>
+      <path d="M512 112 Q506 150 502 196" stroke="rgba(190,40,45,0.5)" stroke-width="4" stroke-linecap="round"/>
+      <path d="M512 112 Q516 150 520 200" stroke="rgba(200,55,55,0.45)" stroke-width="4" stroke-linecap="round"/>
+      <path d="M512 112 Q512 150 511 210" stroke="rgba(180,35,40,0.42)" stroke-width="3.5" stroke-linecap="round"/>
+      <!-- Floating ink music notes -->
+      <ellipse cx="150" cy="56" rx="11" ry="8" fill="rgba(34,24,42,0.4)" transform="rotate(-18 150 56)"/>
+      <path d="M160 52 Q163 30 158 16" stroke="rgba(34,24,42,0.42)" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+      <ellipse cx="232" cy="44" rx="9" ry="6.5" fill="rgba(34,24,42,0.32)" transform="rotate(-18 232 44)"/>
+      <path d="M240 40 Q243 22 239 10" stroke="rgba(34,24,42,0.34)" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <path d="M239 10 Q250 12 256 18" stroke="rgba(34,24,42,0.34)" stroke-width="3" fill="none" stroke-linecap="round"/>
+    </svg>
+
+    <!-- Ink wash capybara — she loves capybaras (hence the cursor) -->
+    <svg class="ink-wash-piece iwp-capy" viewBox="0 0 400 320" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Body — wet ink wash -->
+      <ellipse cx="168" cy="196" rx="138" ry="86" fill="rgba(58,44,38,0.30)"/>
+      <ellipse cx="168" cy="200" rx="110" ry="66" fill="rgba(48,36,32,0.24)"/>
+      <!-- Head / blocky snout, facing right -->
+      <ellipse cx="312" cy="172" rx="68" ry="58" fill="rgba(58,44,38,0.32)"/>
+      <ellipse cx="356" cy="184" rx="36" ry="34" fill="rgba(58,44,38,0.30)"/>
+      <!-- Ears -->
+      <ellipse cx="286" cy="120" rx="16" ry="14" fill="rgba(48,36,32,0.4)"/>
+      <ellipse cx="330" cy="124" rx="15" ry="13" fill="rgba(48,36,32,0.38)"/>
+      <!-- Eye -->
+      <circle cx="330" cy="160" r="6" fill="rgba(18,12,14,0.62)"/>
+      <!-- Nose -->
+      <ellipse cx="388" cy="186" rx="11" ry="9" fill="rgba(18,12,14,0.6)"/>
+      <!-- Stubby legs -->
+      <path d="M96 270 L94 300" stroke="rgba(48,36,32,0.4)" stroke-width="26" stroke-linecap="round"/>
+      <path d="M168 280 L168 306" stroke="rgba(48,36,32,0.38)" stroke-width="26" stroke-linecap="round"/>
+      <path d="M236 278 L240 304" stroke="rgba(48,36,32,0.36)" stroke-width="24" stroke-linecap="round"/>
+      <!-- A little orange goldfish friend, like in her painting -->
+      <ellipse cx="58" cy="150" rx="22" ry="11" fill="rgba(214,112,38,0.5)" transform="rotate(-20 58 150)"/>
+      <path d="M78 140 Q96 128 92 154" fill="rgba(214,112,38,0.42)"/>
+    </svg>
+
   </div>
 
   <div class="grain" aria-hidden="true"></div>
@@ -1701,6 +1852,15 @@ body[data-page="5"] .iwp-bird   { opacity: 0.22; }
 
     <section class="page" data-page="5" aria-labelledby="finalTitle">
       <div class="panel final-panel">
+        <div class="petals" aria-hidden="true">
+          <span class="petal" style="left: 8%;  --pt: 9.5s; --pd: 0s;   --px: 34px"></span>
+          <span class="petal" style="left: 22%; --pt: 11s;  --pd: 1.6s; --px: -28px"></span>
+          <span class="petal" style="left: 38%; --pt: 8.5s; --pd: 3.1s; --px: 22px"></span>
+          <span class="petal" style="left: 54%; --pt: 12s;  --pd: 0.8s; --px: -34px"></span>
+          <span class="petal" style="left: 68%; --pt: 9s;   --pd: 2.4s; --px: 30px"></span>
+          <span class="petal" style="left: 82%; --pt: 10.5s;--pd: 4s;   --px: -24px"></span>
+          <span class="petal" style="left: 92%; --pt: 11.5s;--pd: 1.2s; --px: 18px"></span>
+        </div>
         <div class="angela-frame reveal no-photo" style="--d: 0ms" id="angelaFrame">
           <img data-img="angela" alt="Angela" id="angelaPhoto" style="display:none"/>
         </div>
@@ -1708,8 +1868,12 @@ body[data-page="5"] .iwp-bird   { opacity: 0.22; }
         <h2 id="finalTitle" class="reveal" style="--d: 160ms">happy birthday, <span data-friend-name>birthday girl</span>.</h2>
         <p class="final-message reveal" style="--d: 240ms">wishing you a day as beautiful as your art —<br>full of color, warmth, and the people who love you.</p>
         <div class="letter-scroll reveal" id="letterScroll" style="--d: 300ms; display:none"></div>
-        <div class="button-row center reveal" style="--d: 380ms">
+        <p class="signature reveal" style="--d: 340ms">with love,<br><span data-sender-name>Spencer</span></p>
+        <div class="button-row center reveal" style="--d: 400ms">
           <button class="ghost" type="button" id="restartButton">restart</button>
+        </div>
+        <div class="seal-stamp" aria-hidden="true" title="生日快乐">
+          <span>生</span><span>日</span><span>快</span><span>乐</span>
         </div>
       </div>
     </section>
@@ -1743,9 +1907,20 @@ window.BIRTHDAY_CONFIG = {
   // Example: "https://formspree.io/f/xxxxxxx"
   formspreeEndpoint: "",
 
-  // Example:
-  // personalPhotos: ["assets/photos/photo-1.jpg", "assets/photos/photo-2.jpg"]
-  personalPhotos: [],
+  // Drop your 10 photos in assets/photos/ named photo-1.jpg ... photo-10.jpg
+  // (any that are missing will show a watercolor placeholder instead).
+  personalPhotos: [
+    "assets/photos/photo-1.jpg",
+    "assets/photos/photo-2.jpg",
+    "assets/photos/photo-3.jpg",
+    "assets/photos/photo-4.jpg",
+    "assets/photos/photo-5.jpg",
+    "assets/photos/photo-6.jpg",
+    "assets/photos/photo-7.jpg",
+    "assets/photos/photo-8.jpg",
+    "assets/photos/photo-9.jpg",
+    "assets/photos/photo-10.jpg"
+  ],
 
   dateIdeas: [
     "boba",
@@ -1758,7 +1933,14 @@ window.BIRTHDAY_CONFIG = {
     "surprise me"
   ],
 
-  // Put your letter here. It will appear on the final page.
+  // Photo of Angela for the final slide's circular frame.
+  // Drop the file at assets/photos/angela.jpg (or change this path).
+  imagePaths: {
+    angela: "assets/photos/angela.jpg"
+  },
+
+  // Put your letter here — it shows on the final page. Use \n for line breaks,
+  // or just write it across multiple lines inside these backticks.
   birthdayLetter: ``,
 };
 
@@ -1784,7 +1966,7 @@ window.BIRTHDAY_CONFIG = {
       crown: "assets/capy-crown.png",
       party: "assets/capy-party.png",
       cakeCapy: "assets/capy-cake-big.png",
-      angela: ""
+      angela: "assets/photos/angela.jpg"
     },
     blowThreshold: 0.09
   };
@@ -1801,7 +1983,7 @@ window.BIRTHDAY_CONFIG = {
 
   const state = {
     page: 0,
-    selectedDates: [],
+    selectedDate: "",
     selectedStartTime: "",
     selectedEndTime: "",
     selectedIdeas: [],
@@ -1873,9 +2055,16 @@ window.BIRTHDAY_CONFIG = {
     const angelaPhoto = $("#angelaPhoto");
     const angelaFrame = $("#angelaFrame");
     if (angelaPhoto && cfg.imagePaths.angela) {
+      // Show the photo only once it actually loads; otherwise keep the ink-bloom placeholder.
+      angelaPhoto.addEventListener("load", () => {
+        angelaPhoto.style.display = "";
+        if (angelaFrame) angelaFrame.classList.remove("no-photo");
+      });
+      angelaPhoto.addEventListener("error", () => {
+        angelaPhoto.style.display = "none";
+        if (angelaFrame) angelaFrame.classList.add("no-photo");
+      });
       angelaPhoto.src = cfg.imagePaths.angela;
-      angelaPhoto.style.display = "";
-      if (angelaFrame) angelaFrame.classList.remove("no-photo");
     }
   }
 
@@ -2021,12 +2210,25 @@ window.BIRTHDAY_CONFIG = {
     const grid = $("#photoGrid");
     grid.innerHTML = "";
     grid.classList.remove("is-empty");
-    const photos = (cfg.personalPhotos || []).filter(Boolean);
+    const photos = (cfg.personalPhotos || []);
     const washes = ["wash-purple", "wash-sage", "wash-gold", "wash-plum", "wash-slate", "wash-blush"];
-    const labels = ["a moment", "a memory", "just us", "favorite", "a smile", "together"];
-    const tilts = [-2.4, 1.8, -1.2, 2.1, -0.8, 1.5];
+    const labels = ["a moment", "a memory", "just us", "favorite", "a smile", "together", "good days", "us", "again", "always"];
+    const tilts = [-2.4, 1.8, -1.2, 2.1, -0.8, 1.5, -1.9, 1.1, -1.4, 2.0];
 
-    const count = Math.max(photos.length, 6);
+    const count = Math.max(photos.filter(Boolean).length, 10);
+
+    const makePlaceholder = (card, i) => {
+      card.classList.add("empty", washes[i % washes.length]);
+      card.querySelectorAll("img").forEach(n => n.remove());
+      const wash = document.createElement("div");
+      wash.className = "photo-card-wash";
+      card.appendChild(wash);
+      const label = document.createElement("span");
+      label.className = "photo-placeholder-label";
+      label.textContent = labels[i % labels.length];
+      card.appendChild(label);
+    };
+
     for (let i = 0; i < count; i += 1) {
       const card = document.createElement("article");
       card.className = "photo-card";
@@ -2036,16 +2238,11 @@ window.BIRTHDAY_CONFIG = {
         const img = document.createElement("img");
         img.src = photos[i];
         img.alt = `photo ${i + 1}`;
+        // If the file isn't there yet, fall back to a watercolor placeholder.
+        img.addEventListener("error", () => makePlaceholder(card, i));
         card.appendChild(img);
       } else {
-        card.classList.add("empty", washes[i % washes.length]);
-        const wash = document.createElement("div");
-        wash.className = "photo-card-wash";
-        card.appendChild(wash);
-        const label = document.createElement("span");
-        label.className = "photo-placeholder-label";
-        label.textContent = labels[i % labels.length];
-        card.appendChild(label);
+        makePlaceholder(card, i);
       }
       grid.appendChild(card);
     }
@@ -2163,14 +2360,10 @@ window.BIRTHDAY_CONFIG = {
 
   function selectDate(iso) {
     if ((cfg.blockedDates || []).includes(iso)) return;
-    const idx = state.selectedDates.indexOf(iso);
-    if (idx === -1) {
-      state.selectedDates.push(iso);
-    } else {
-      state.selectedDates.splice(idx, 1);
-    }
+    // Single day only — Google Calendar can't take multiple days in one event.
+    state.selectedDate = state.selectedDate === iso ? "" : iso;
     $$(".date-tile").forEach(tile => {
-      const selected = state.selectedDates.includes(tile.dataset.date);
+      const selected = tile.dataset.date === state.selectedDate;
       tile.classList.toggle("is-selected", selected);
       tile.setAttribute("aria-selected", String(selected));
     });
@@ -2179,16 +2372,12 @@ window.BIRTHDAY_CONFIG = {
 
   function updateSelectedLine() {
     const line = $("#selectedLine");
-    if (!state.selectedDates.length) {
-      line.textContent = "No days picked yet.";
+    if (!state.selectedDate) {
+      line.textContent = "No day picked yet.";
       return;
     }
-    const fmt = new Intl.DateTimeFormat(undefined, { weekday: "short", month: "short", day: "numeric" });
-    const dateStr = state.selectedDates
-      .slice()
-      .sort()
-      .map(iso => fmt.format(parseISODate(iso)))
-      .join(", ");
+    const fmt = new Intl.DateTimeFormat(undefined, { weekday: "long", month: "short", day: "numeric" });
+    const dateStr = fmt.format(parseISODate(state.selectedDate));
     const bits = [dateStr];
     if (state.selectedStartTime || state.selectedEndTime) {
       const t = [state.selectedStartTime, state.selectedEndTime].filter(Boolean).join(" – ");
@@ -2199,16 +2388,16 @@ window.BIRTHDAY_CONFIG = {
   }
 
   function buildPlanMessage() {
-    if (!state.selectedDates.length) {
-      $("#sendStatus").textContent = "Pick at least one day first.";
+    if (!state.selectedDate) {
+      $("#sendStatus").textContent = "Pick a day first.";
       return "";
     }
     const fmt = new Intl.DateTimeFormat(undefined, { weekday: "long", month: "long", day: "numeric", year: "numeric" });
-    const dateLines = state.selectedDates.slice().sort().map(iso => fmt.format(parseISODate(iso))).join(", ");
+    const dateLines = fmt.format(parseISODate(state.selectedDate));
     const note = $("#planNote").value.trim();
     return [
-      `${cfg.friendName || "Birthday girl"} picked hangout day(s).`,
-      `Date(s): ${dateLines}`,
+      `${cfg.friendName || "Birthday girl"} picked a hangout day.`,
+      `Date: ${dateLines}`,
       `Time: ${state.selectedStartTime && state.selectedEndTime ? `${state.selectedStartTime} – ${state.selectedEndTime}` : state.selectedStartTime || state.selectedEndTime || "not picked"}`,
       `Ideas: ${state.selectedIdeas.length ? state.selectedIdeas.join(", ") : "not picked"}`,
       note ? `Note: ${note}` : "Note: none",
@@ -2283,8 +2472,7 @@ window.BIRTHDAY_CONFIG = {
     const message = buildPlanMessage();
     if (!message) return;
 
-    const primaryDate = state.selectedDates.slice().sort()[0];
-    const start = parseISODate(primaryDate);
+    const start = parseISODate(state.selectedDate);
     const startHour = timeToHour(state.selectedStartTime || "1 PM");
     const endHour = state.selectedEndTime ? timeToHour(state.selectedEndTime) : startHour + 2;
     start.setHours(startHour, 0, 0, 0);
