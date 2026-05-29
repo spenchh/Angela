@@ -48,7 +48,55 @@ body {
   overflow-y: auto;
   cursor: var(--cursor) !important;
   text-rendering: geometricPrecision;
+  transition: background 1000ms ease;
 }
+
+/* Per-slide full-page background — gives each slide its own distinct mood */
+body[data-page="0"] {
+  background:
+    radial-gradient(ellipse at 80% 85%, rgba(184, 144, 60, 0.16), transparent 46%),
+    radial-gradient(ellipse at 14% 16%, rgba(124, 77, 187, 0.08), transparent 38%),
+    linear-gradient(160deg, #f9f4ea 0%, #efe6d4 55%, #f6efe1 100%);
+}
+body[data-page="1"] {
+  background:
+    radial-gradient(ellipse at 18% 80%, rgba(124, 77, 187, 0.22), transparent 48%),
+    radial-gradient(ellipse at 84% 14%, rgba(155, 106, 170, 0.18), transparent 42%),
+    linear-gradient(160deg, #f3ecf8 0%, #e6d7f0 55%, #f1e8f8 100%);
+}
+body[data-page="2"] {
+  background:
+    radial-gradient(ellipse at 12% 50%, rgba(90, 122, 94, 0.20), transparent 46%),
+    radial-gradient(ellipse at 88% 80%, rgba(124, 77, 187, 0.10), transparent 40%),
+    linear-gradient(160deg, #eef4ec 0%, #dde9da 55%, #eef3ea 100%);
+}
+body[data-page="3"] {
+  background:
+    radial-gradient(ellipse at 82% 18%, rgba(200, 90, 120, 0.18), transparent 46%),
+    radial-gradient(ellipse at 18% 82%, rgba(155, 106, 170, 0.12), transparent 42%),
+    linear-gradient(160deg, #faeef0 0%, #f2dde2 55%, #f9edef 100%);
+}
+body[data-page="4"] {
+  background:
+    radial-gradient(ellipse at 50% 16%, rgba(190, 70, 90, 0.18), transparent 48%),
+    radial-gradient(ellipse at 16% 80%, rgba(184, 144, 60, 0.12), transparent 42%),
+    linear-gradient(160deg, #fbeee9 0%, #f4ddd4 55%, #faece6 100%);
+}
+body[data-page="5"] {
+  background:
+    radial-gradient(ellipse at 50% 50%, rgba(85, 40, 138, 0.24), transparent 60%),
+    radial-gradient(ellipse at 80% 12%, rgba(124, 77, 187, 0.18), transparent 44%),
+    linear-gradient(160deg, #2a1f44 0%, #3a2960 50%, #2e2148 100%);
+}
+/* finale is dark — lift the panel & text for contrast */
+body[data-page="5"] .panel { background: rgba(40, 30, 64, 0.82); border-color: rgba(200, 170, 240, 0.18); }
+body[data-page="5"] .final-message,
+body[data-page="5"] h2,
+body[data-page="5"] .signature { color: #f1e8f8; }
+body[data-page="5"] .final-message { color: #d8c8ee; }
+body[data-page="5"] .eyebrow { color: #c9aef0; }
+body[data-page="5"] .signature span { color: #e8d4ff; }
+body[data-page="5"] .letter-scroll { background: rgba(60, 46, 92, 0.6); color: #ede4f8; }
 
 body,
 button,
@@ -448,6 +496,25 @@ h3 {
   width: min(420px, 90%);
   filter: drop-shadow(0 24px 34px rgba(80, 50, 31, 0.14));
   animation: floatHero 5.5s ease-in-out infinite;
+}
+
+.cover-polaroid {
+  background: #fff;
+  padding: 14px 14px 52px;
+  border-radius: 2px;
+  box-shadow: 0 14px 40px rgba(26, 20, 40, 0.22), 0 4px 10px rgba(26, 20, 40, 0.10);
+  transform: rotate(-3deg);
+  animation: floatHero 5.5s ease-in-out infinite;
+  z-index: 1;
+  max-width: min(320px, 80%);
+}
+
+.cover-polaroid img {
+  width: 100%;
+  height: auto;
+  display: block;
+  filter: none;
+  animation: none;
 }
 
 .orb {
@@ -1754,7 +1821,9 @@ body[data-page="5"] .petal {
         <div class="hero-art reveal" style="--d: 180ms" aria-hidden="true">
           <span class="orb one"></span>
           <span class="orb two"></span>
-          <img data-img="bouquet" alt="" />
+          <div class="cover-polaroid">
+            <img data-img="cover" alt="" />
+          </div>
         </div>
       </div>
     </section>
@@ -1900,17 +1969,14 @@ window.BIRTHDAY_CONFIG = {
   // Example: "https://formspree.io/f/xxxxxxx"
   formspreeEndpoint: "",
 
-  // Drop your 8 photos in assets/photos/ named photo-1.jpg ... photo-8.jpg
-  // (any that are missing will show a watercolor placeholder instead).
+  // 6 photos for the gallery grid (3 on top, 3 on bottom).
   personalPhotos: [
-    "assets/photos/photo-1.jpg",
-    "assets/photos/photo-2.jpg",
-    "assets/photos/photo-3.jpg",
-    "assets/photos/photo-4.jpg",
-    "assets/photos/photo-5.jpg",
-    "assets/photos/photo-6.jpg",
-    "assets/photos/photo-7.jpg",
-    "assets/photos/photo-8.jpg"
+    "assets/photos/ang.jpg",
+    "assets/photos/ang4.jpg",
+    "assets/photos/ang5.jpg",
+    "assets/photos/ang7.jpg",
+    "assets/photos/ang8.jpg",
+    "assets/photos/ang2.jpg"
   ],
 
   dateIdeas: [
@@ -1927,7 +1993,8 @@ window.BIRTHDAY_CONFIG = {
   // Photo of Angela for the final slide's circular frame.
   // Drop the file at assets/photos/angela.jpg (or change this path).
   imagePaths: {
-    angela: "assets/photos/angela.jpg"
+    angela: "assets/photos/ang3.jpg",
+    cover: "assets/photos/ang1.jpg"
   },
 
   // Put your letter here — it shows on the final page. Use \n for line breaks,
@@ -1957,7 +2024,8 @@ window.BIRTHDAY_CONFIG = {
       crown: "assets/capy-crown.png",
       party: "assets/capy-party.png",
       cakeCapy: "assets/capy-cake-big.png",
-      angela: "assets/photos/angela.jpg"
+      angela: "assets/photos/ang3.jpg",
+      cover: "assets/photos/ang1.jpg"
     },
     blowThreshold: 0.09
   };
@@ -2203,10 +2271,10 @@ window.BIRTHDAY_CONFIG = {
     grid.classList.remove("is-empty");
     const photos = (cfg.personalPhotos || []);
     const washes = ["wash-purple", "wash-sage", "wash-gold", "wash-plum", "wash-slate", "wash-blush"];
-    const labels = ["a moment", "a memory", "just us", "favorite", "a smile", "together", "good days", "us"];
-    const tilts = [-2.4, 1.8, -1.2, 2.1, -0.8, 1.5, -1.9, 1.1];
+    const labels = ["a moment", "a memory", "just us", "favorite", "a smile", "together"];
+    const tilts = [-2.4, 1.8, -1.2, 2.1, -0.8, 1.5];
 
-    const count = Math.max(photos.filter(Boolean).length, 8);
+    const count = Math.max(photos.filter(Boolean).length, 6);
 
     const makePlaceholder = (card, i) => {
       card.classList.add("empty", washes[i % washes.length]);
