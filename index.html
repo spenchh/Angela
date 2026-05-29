@@ -48,7 +48,7 @@ body {
   overflow-y: auto;
   cursor: var(--cursor) !important;
   text-rendering: geometricPrecision;
-  transition: background 1000ms ease;
+  /* no background transition — animating gradients is expensive */
 }
 
 /* Per-slide full-page background — gives each slide its own distinct mood */
@@ -157,6 +157,7 @@ img {
   background: radial-gradient(ellipse at 38% 50%, var(--color) 0%, transparent 74%);
   animation: inkPulse var(--speed) ease-in-out var(--delay) infinite alternate;
   pointer-events: none;
+  will-change: opacity, transform;
 }
 
 @keyframes inkPulse {
@@ -754,6 +755,7 @@ h3 {
   text-align: left;
   padding: clamp(48px, 6.5vw, 80px) clamp(28px, 4vw, 50px) clamp(36px, 5vw, 58px) clamp(56px, 8vw, 104px);
   gap: 0;
+  overflow: visible; /* allow the no-button to roam inside panel bounds */
 }
 
 /* all children span full width */
@@ -795,8 +797,8 @@ h3 {
 
 /* once it starts running, it breaks out and roams the whole screen */
 .no-button.is-loose {
-  position: fixed;
-  z-index: 40;
+  position: absolute;
+  z-index: 10;
   margin: 0;
 }
 
@@ -1694,7 +1696,6 @@ body[data-page="3"] .art-ink-tree.is-loaded { opacity: 0.35; transform: rotate(-
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  transition: background-color 900ms ease;
 }
 
 body[data-page="0"] .slide-tint { background-color: rgba(184, 144, 60, 0.09); }
@@ -2832,7 +2833,7 @@ window.BIRTHDAY_CONFIG = {
     ];
     const angles = [-28, 15, -12, 22, -6, 35, -18];
     ambient.innerHTML = "";
-    for (let i = 0; i < 5; i += 1) {
+    for (let i = 0; i < 3; i += 1) {
       const blob = document.createElement("div");
       blob.className = "ink-blob";
       blob.style.setProperty("--x", `${8 + Math.random() * 84}%`);
@@ -2854,43 +2855,46 @@ window.BIRTHDAY_CONFIG = {
     const quips = ["bruh.", "I see how it is.", "SO you hate me huh", "okay then I see.", "really tho?", "bruh.", "okay I see how it is."];
     let dodges = 0;
 
-    // Flee anywhere on screen, away from the pointer.
+    // Flee within the question panel only.
+    const panel = zone.closest(".panel");
     const flee = (pointerX = null, pointerY = null) => {
-      // On first dodge, move it onto <body> so position:fixed is relative to the
-      // viewport (the active .page has a transform, which would otherwise trap it).
       if (!no.classList.contains("is-loose")) {
-        document.body.appendChild(no);
+        panel.appendChild(no);
         no.classList.add("is-loose");
       }
 
-      const btnRect = no.getBoundingClientRect();
-      const pad = 16;
-      const maxX = Math.max(pad, window.innerWidth - btnRect.width - pad);
-      const maxY = Math.max(pad, window.innerHeight - btnRect.height - pad);
+      const panelRect = panel.getBoundingClientRect();
+      const btnW = no.offsetWidth || 94;
+      const btnH = no.offsetHeight || 40;
+      const pad = 12;
+      const maxX = panelRect.width  - btnW - pad;
+      const maxY = panelRect.height - btnH - pad;
 
-      // Flee radius: at most ~35% of viewport so it stays nearby but not too far.
-      const fleeR = Math.min(window.innerWidth, window.innerHeight) * 0.35;
-      const curX = parseFloat(no.style.left) || (window.innerWidth / 2);
-      const curY = parseFloat(no.style.top) || (window.innerHeight / 2);
+      // Convert pointer to panel-local coords
+      const localPX = pointerX !== null ? pointerX - panelRect.left : null;
+      const localPY = pointerY !== null ? pointerY - panelRect.top  : null;
+
+      const curX = parseFloat(no.style.left) || panelRect.width  / 2;
+      const curY = parseFloat(no.style.top)  || panelRect.height / 2;
 
       let nextX = pad + Math.random() * (maxX - pad);
       let nextY = pad + Math.random() * (maxY - pad);
 
-      if (pointerX !== null && pointerY !== null) {
-        for (let tries = 0; tries < 24; tries += 1) {
+      if (localPX !== null && localPY !== null) {
+        for (let tries = 0; tries < 20; tries += 1) {
           const angle = Math.random() * Math.PI * 2;
-          const dist = fleeR * (0.3 + Math.random() * 0.7);
+          const dist = (Math.min(panelRect.width, panelRect.height) * 0.4) * (0.4 + Math.random() * 0.6);
           const cx = Math.max(pad, Math.min(maxX, curX + Math.cos(angle) * dist));
           const cy = Math.max(pad, Math.min(maxY, curY + Math.sin(angle) * dist));
-          if (Math.hypot(pointerX - (cx + btnRect.width / 2), pointerY - (cy + btnRect.height / 2)) > 120) {
+          if (Math.hypot(localPX - (cx + btnW / 2), localPY - (cy + btnH / 2)) > 80) {
             nextX = cx; nextY = cy; break;
           }
         }
       }
 
       no.style.left = `${nextX}px`;
-      no.style.top = `${nextY}px`;
-      no.style.transform = `rotate(${(Math.random() * 24 - 12).toFixed(1)}deg)`;
+      no.style.top  = `${nextY}px`;
+      no.style.transform = `rotate(${(Math.random() * 20 - 10).toFixed(1)}deg)`;
       dodges += 1;
       response.textContent = quips[dodges % quips.length];
     };
@@ -2900,6 +2904,8 @@ window.BIRTHDAY_CONFIG = {
       no.classList.remove("is-loose");
       no.style.left = no.style.top = no.style.transform = "";
       if (no.parentElement !== zone) zone.appendChild(no);
+      // ensure panel doesn't overflow the button
+      if (panel) panel.style.overflow = "";
     };
 
     // Run when the pointer gets close.
