@@ -1501,18 +1501,75 @@ textarea:focus {
 }
 
 /* ─── ink wash background paintings ─── */
-.ink-wash-bg {
+/* old hand-drawn SVG motifs are retired in favor of the watercolor art layer */
+.ink-wash-bg { display: none; }
+
+.ink-wash-piece {
+  position: absolute;
+  transition: opacity 1100ms ease;
+}
+
+/* ─── watercolor / ink-wash art layer ─── */
+.art-layer {
   position: fixed;
   inset: 0;
   pointer-events: none;
   z-index: 0;
   overflow: hidden;
 }
-
-.ink-wash-piece {
+.art-piece {
   position: absolute;
-  transition: opacity 1100ms ease;
+  object-fit: contain;
+  opacity: 0;
+  transition: opacity 1100ms ease, transform 1100ms ease;
+  will-change: opacity, transform;
 }
+
+/* sizes + intentionally slightly-tilted placements (only shown once loaded) */
+.art-plum {
+  right: -3vw; bottom: -3vh;
+  width: clamp(320px, 42vw, 660px);
+  transform: rotate(-2deg) translateY(12px);
+}
+.art-sakura {
+  top: -3vh; right: 1vw;
+  width: clamp(220px, 27vw, 440px);
+  transform: rotate(3deg) translateY(-12px);
+}
+.art-ink-tree {
+  left: -3vw; bottom: -2vh;
+  width: clamp(300px, 36vw, 600px);
+  transform: rotate(-1.5deg) translateY(12px);
+}
+.art-ink-flowers {
+  top: 5vh; right: 2vw;
+  width: clamp(190px, 23vw, 380px);
+  transform: rotate(2.5deg) translateX(16px);
+}
+.art-capy {
+  right: 3vw; bottom: 2vh;
+  width: clamp(170px, 21vw, 320px);
+  transform: rotate(0deg) translateY(14px);
+}
+
+/* per-slide reveals — a piece only appears when its file has loaded
+   (.is-loaded) AND its slide is active */
+body[data-page="0"] .art-plum.is-loaded   { opacity: 0.72; transform: rotate(-2deg) translateY(0); }
+body[data-page="0"] .art-sakura.is-loaded { opacity: 0.5;  transform: rotate(3deg) translateY(0); }
+
+body[data-page="1"] .art-ink-flowers.is-loaded { opacity: 0.6; transform: rotate(2.5deg) translateX(0); }
+
+body[data-page="2"] .art-ink-tree.is-loaded { opacity: 0.68; transform: rotate(-1.5deg) translateY(0); }
+
+body[data-page="3"] .art-sakura.is-loaded      { opacity: 0.62; transform: rotate(3deg) translateY(0); }
+body[data-page="3"] .art-ink-flowers.is-loaded { opacity: 0.4;  transform: rotate(2.5deg) translateX(0); }
+
+body[data-page="4"] .art-capy.is-loaded    { opacity: 0.8;  transform: rotate(0deg) translateY(0); }
+body[data-page="4"] .art-ink-tree.is-loaded{ opacity: 0.35; transform: rotate(-1.5deg) translateY(0); }
+
+body[data-page="5"] .art-plum.is-loaded    { opacity: 0.5;  transform: rotate(-2deg) translateY(0); }
+body[data-page="5"] .art-sakura.is-loaded  { opacity: 0.5;  transform: rotate(3deg) translateY(0); }
+body[data-page="5"] .art-capy.is-loaded    { opacity: 0.55; transform: rotate(0deg) translateY(0); }
 
 /* slide tint overlay — color mood shifts per page */
 .slide-tint {
@@ -1784,158 +1841,18 @@ body[data-page="5"] .iwp-capy   { opacity: 0.38; }
   background: linear-gradient(180deg, transparent, rgba(124, 77, 187, 0.5), transparent);
 }
 
-/* ─── music player card on final slide ─── */
+/* ─── Spotify embed on final slide (shows the real album art) ─── */
 .spotify-card {
   width: min(430px, 94%);
   margin: 0 auto 18px;
-  border-radius: 20px;
-  border: 1.5px solid rgba(30, 23, 16, 0.12);
-  background: rgba(255, 255, 255, 0.74);
-  padding: 16px;
-  text-align: left;
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-}
-
-.player {
-  display: flex;
-  gap: 16px;
-  align-items: stretch;
-}
-
-.player-art {
-  width: 84px;
-  height: 84px;
-  flex-shrink: 0;
   border-radius: 16px;
-  background:
-    radial-gradient(ellipse at 30% 25%, rgba(255,255,255,0.35), transparent 55%),
-    linear-gradient(150deg, #7c4dbb 0%, #9b6aaa 55%, #b8904a 130%);
-  display: grid;
-  place-items: center;
-  color: #fff;
+  overflow: hidden;
+  box-shadow: 0 6px 24px rgba(80, 40, 140, 0.16);
 }
-.player-art i { width: 30px; height: 30px; opacity: 0.92; stroke-width: 1.6; }
-
-.player-main {
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.player-top {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-.player-title {
-  margin: 0;
-  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
-  font-weight: 800;
-  font-size: 1rem;
-  color: var(--ink);
-  letter-spacing: -0.015em;
-  line-height: 1.15;
-}
-
-.player-artist {
-  margin: 3px 0 0;
-  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
-  font-size: 0.78rem;
-  color: var(--muted);
-  font-weight: 500;
-}
-
-.player-heart {
-  width: 18px;
-  height: 18px;
-  flex-shrink: 0;
-  color: var(--primary);
-  fill: rgba(124, 77, 187, 0.22);
-}
-
-.player-track {
-  position: relative;
-  height: 3px;
-  border-radius: 99px;
-  background: rgba(30, 23, 16, 0.13);
-  margin: 12px 0 11px;
-}
-.player-track::before {
-  content: "";
-  position: absolute;
-  left: 0; top: 0;
-  height: 100%;
-  width: 36%;
-  border-radius: 99px;
-  background: var(--primary);
-}
-.player-knob {
-  position: absolute;
-  left: 36%; top: 50%;
-  width: 9px; height: 9px;
-  border-radius: 50%;
-  background: var(--primary);
-  transform: translate(-50%, -50%);
-  box-shadow: 0 1px 4px rgba(124, 77, 187, 0.4);
-}
-
-.player-controls {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-}
-.player-controls .pc {
-  width: 18px;
-  height: 18px;
-  color: var(--ink);
-  opacity: 0.72;
-  stroke-width: 2;
-}
-.player-play {
-  width: 36px;
-  height: 36px;
-  flex-shrink: 0;
-  border-radius: 50%;
-  background: var(--primary);
-  display: grid;
-  place-items: center;
-}
-.player-play i {
-  width: 16px;
-  height: 16px;
-  color: #fff;
-  fill: #fff;
-  margin-left: 1px;
-}
-
-/* soundwave under the controls */
-.player-wave {
-  display: flex;
-  align-items: center;
-  gap: 2px;
-  height: 26px;
-  margin-top: 13px;
-}
-.player-wave span {
-  flex: 1;
-  min-width: 0;
-  border-radius: 99px;
-  background: rgba(124, 77, 187, 0.5);
-  transform-origin: center;
-  animation: waveBob 1.4s ease-in-out infinite;
-}
-@keyframes waveBob {
-  0%, 100% { transform: scaleY(0.55); }
-  50%      { transform: scaleY(1); }
-}
-@media (prefers-reduced-motion: reduce) {
-  .player-wave span { animation: none; }
+.spotify-embed {
+  display: block;
+  width: 100%;
+  border: 0;
 }
 
 /* gentle falling petals — only animate on the final slide */
@@ -1990,6 +1907,17 @@ body[data-page="5"] .petal {
   <canvas id="confettiCanvas" aria-hidden="true"></canvas>
   <div class="slide-tint" aria-hidden="true"></div>
   <div class="ambient" id="ambient" aria-hidden="true"></div>
+
+  <!-- Watercolor / ink-wash art background. Drop the image files into
+       assets/art/ (filenames in setupArt) and they appear automatically;
+       until then each stays hidden so nothing breaks. -->
+  <div class="art-layer" aria-hidden="true">
+    <img class="art-piece art-plum" alt="" data-art="plum" />
+    <img class="art-piece art-sakura" alt="" data-art="sakura" />
+    <img class="art-piece art-ink-tree" alt="" data-art="inkTree" />
+    <img class="art-piece art-ink-flowers" alt="" data-art="inkFlowers" />
+    <img class="art-piece art-capy" alt="" data-art="capy" />
+  </div>
 
   <!-- Ink wash painting background — inspired by Angela's artwork -->
   <div class="ink-wash-bg" aria-hidden="true">
@@ -2400,28 +2328,11 @@ body[data-page="5"] .petal {
         <h2 id="finalTitle" class="reveal" style="--d: 160ms">happy birthday, <span data-friend-name>birthday girl</span>.</h2>
         <p class="final-message reveal" style="--d: 240ms">wishing you a day as beautiful as your art —<br>full of color, warmth, and the people who love you.</p>
         <div class="spotify-card reveal" style="--d: 275ms">
-          <div class="player">
-            <div class="player-art" aria-hidden="true"><i data-lucide="music"></i></div>
-            <div class="player-main">
-              <div class="player-top">
-                <div>
-                  <p class="player-title">Paragraphs</p>
-                  <p class="player-artist">Luke Chiang</p>
-                </div>
-                <i data-lucide="heart" class="player-heart"></i>
-              </div>
-              <div class="player-track"><span class="player-knob"></span></div>
-              <div class="player-controls">
-                <i data-lucide="shuffle" class="pc"></i>
-                <i data-lucide="rewind" class="pc"></i>
-                <span class="player-play"><i data-lucide="play"></i></span>
-                <i data-lucide="fast-forward" class="pc"></i>
-                <i data-lucide="square" class="pc"></i>
-              </div>
-              <div class="player-wave" id="playerWave" aria-hidden="true"></div>
-            </div>
-          </div>
-          <!-- To use a real embed instead, paste your Spotify iframe here. -->
+          <iframe class="spotify-embed"
+            src="https://open.spotify.com/embed/track/4kEhwajTV4psTYa9FaWwac?utm_source=generator"
+            height="152" loading="lazy"
+            title="Paragraphs by Luke Chiang on Spotify"
+            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
         </div>
         <div class="letter-scroll reveal" id="letterScroll" style="--d: 310ms; display:none"></div>
         <p class="signature reveal" style="--d: 340ms">with love,<br><span data-sender-name>Spencer</span></p>
@@ -2581,7 +2492,7 @@ window.BIRTHDAY_CONFIG = {
     setupCalendar();
     setupCake();
     setupMagneticButtons();
-    buildWaveform();
+    setupArt();
     if (window.lucide) window.lucide.createIcons();
     goToPage(0, { instant: true });
 
@@ -2930,22 +2841,23 @@ window.BIRTHDAY_CONFIG = {
     else img.addEventListener("load", run, { once: true });
   }
 
-  // Build the soundwave under the player controls — varied heights, gentle bob.
-  function buildWaveform() {
-    const wave = $("#playerWave");
-    if (!wave) return;
-    const BARS = 34;
-    for (let i = 0; i < BARS; i += 1) {
-      const bar = document.createElement("span");
-      // a soundwave-like silhouette: smooth swell with some organic jitter
-      const swell = Math.sin((i / BARS) * Math.PI);
-      const jitter = 0.35 + Math.random() * 0.65;
-      const h = Math.max(14, Math.round((swell * 0.7 + jitter * 0.5) * 100));
-      bar.style.height = `${Math.min(100, h)}%`;
-      bar.style.animationDelay = `${(Math.random() * -1.4).toFixed(2)}s`;
-      bar.style.animationDuration = `${(1.1 + Math.random() * 0.7).toFixed(2)}s`;
-      wave.appendChild(bar);
-    }
+  // Wire the watercolor / ink-wash art into the background. Each piece stays
+  // hidden until its file actually loads, so missing files never break the page.
+  function setupArt() {
+    const artMap = {
+      plum: "assets/art/plum-blossom.png",
+      sakura: "assets/art/sakura.png",
+      inkTree: "assets/art/ink-tree.png",
+      inkFlowers: "assets/art/ink-flowers.png",
+      capy: "assets/art/capybara.png"
+    };
+    $$(".art-piece").forEach(img => {
+      const key = img.dataset.art;
+      const src = artMap[key];
+      if (!src) return;
+      img.addEventListener("load", () => img.classList.add("is-loaded"));
+      img.src = src;
+    });
   }
 
   function renderPhotos() {
