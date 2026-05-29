@@ -1226,48 +1226,43 @@ textarea:focus {
   transition: background-color 900ms ease;
 }
 
-body[data-page="0"] .slide-tint { background-color: rgba(184, 144, 60, 0.06); }   /* warm gold — lotus/goldfish */
-body[data-page="1"] .slide-tint { background-color: rgba(130, 55, 165, 0.09); }   /* purple — plum/grapes */
-body[data-page="2"] .slide-tint { background-color: rgba(55, 108, 62, 0.08); }    /* sage green — bamboo */
-body[data-page="3"] .slide-tint { background-color: rgba(190, 65, 95, 0.07); }    /* rose pink — lotus bloom */
-body[data-page="4"] .slide-tint { background-color: rgba(168, 38, 58, 0.08); }    /* deep red — chrysanthemum */
-body[data-page="5"] .slide-tint { background-color: rgba(85, 40, 138, 0.10); }    /* deep purple — finale */
+body[data-page="0"] .slide-tint { background-color: rgba(184, 144, 60, 0.09); }
+body[data-page="1"] .slide-tint { background-color: rgba(130, 55, 165, 0.14); }
+body[data-page="2"] .slide-tint { background-color: rgba(55, 108, 62, 0.12); }
+body[data-page="3"] .slide-tint { background-color: rgba(190, 65, 95, 0.12); }
+body[data-page="4"] .slide-tint { background-color: rgba(168, 38, 58, 0.11); }
+body[data-page="5"] .slide-tint { background-color: rgba(85, 40, 138, 0.13); }
 
-/* per-page ink wash focus — each slide features its own motifs */
+/* all motifs hidden by default */
 .iwp-lotus, .iwp-bamboo, .iwp-plum, .iwp-grapes,
-.iwp-bird, .iwp-flute, .iwp-capy { opacity: 0; }
+.iwp-bird, .iwp-flute, .iwp-capy { opacity: 0; transition: opacity 1100ms ease, transform 1100ms ease; }
 
-/* cover — her signature lotus + a touch of bamboo */
-body[data-page="0"] .iwp-lotus  { opacity: 0.40; }
-body[data-page="0"] .iwp-bamboo { opacity: 0.12; }
-body[data-page="0"] .iwp-capy   { opacity: 0.07; }
+/* page 0 cover — lotus dominates bottom-right, slim bamboo left accent */
+body[data-page="0"] .iwp-lotus  { opacity: 0.55; transform: scale(1.05); }
+body[data-page="0"] .iwp-bamboo { opacity: 0.20; }
 
-/* question (fun) — capybara is the star, with plum blossoms */
-body[data-page="1"] .iwp-capy   { opacity: 0.42; }
-body[data-page="1"] .iwp-plum   { opacity: 0.30; }
-body[data-page="1"] .iwp-grapes { opacity: 0.06; }
+/* page 1 capy game — large capy bottom-left, plum top corner */
+body[data-page="1"] .iwp-capy   { opacity: 0.58; transform: scale(1.2) translateX(-15px); }
+body[data-page="1"] .iwp-plum   { opacity: 0.45; transform: translateX(40px) translateY(10px); }
 
-/* calendar — bamboo + flute (music & timing) */
-body[data-page="2"] .iwp-bamboo { opacity: 0.44; }
-body[data-page="2"] .iwp-flute  { opacity: 0.40; }
-body[data-page="2"] .iwp-bird   { opacity: 0.05; }
+/* page 2 calendar — tall bamboo left + sweeping flute right */
+body[data-page="2"] .iwp-bamboo { opacity: 0.60; transform: scaleX(1.4) translateX(-12px); }
+body[data-page="2"] .iwp-flute  { opacity: 0.55; transform: translateY(-10px); }
 
-/* photos — orchid bird + plum branch */
-body[data-page="3"] .iwp-bird   { opacity: 0.42; }
-body[data-page="3"] .iwp-plum   { opacity: 0.30; }
-body[data-page="3"] .iwp-lotus  { opacity: 0.06; }
+/* page 3 photos — grapes cluster top-right, bird perched center */
+body[data-page="3"] .iwp-grapes { opacity: 0.58; transform: scale(1.25) translateY(-15px); }
+body[data-page="3"] .iwp-bird   { opacity: 0.50; transform: scale(1.5) translateY(-25px); }
 
-/* cake — grapes + chrysanthemum, warm & festive */
-body[data-page="4"] .iwp-grapes { opacity: 0.42; }
-body[data-page="4"] .iwp-bird   { opacity: 0.30; }
-body[data-page="4"] .iwp-capy   { opacity: 0.07; }
+/* page 4 cake — plum blossoms top big, capy small bottom peek */
+body[data-page="4"] .iwp-plum   { opacity: 0.60; transform: scale(1.3) translateY(-15px); }
+body[data-page="4"] .iwp-capy   { opacity: 0.38; transform: translateX(-25px); }
 
-/* final — everything blooms gently together */
-body[data-page="5"] .iwp-lotus  { opacity: 0.26; }
-body[data-page="5"] .iwp-bamboo { opacity: 0.18; }
-body[data-page="5"] .iwp-plum   { opacity: 0.20; }
-body[data-page="5"] .iwp-flute  { opacity: 0.22; }
-body[data-page="5"] .iwp-capy   { opacity: 0.30; }
+/* page 5 finale — all elements bloom together gently */
+body[data-page="5"] .iwp-lotus  { opacity: 0.30; }
+body[data-page="5"] .iwp-bamboo { opacity: 0.25; }
+body[data-page="5"] .iwp-plum   { opacity: 0.28; }
+body[data-page="5"] .iwp-flute  { opacity: 0.30; }
+body[data-page="5"] .iwp-capy   { opacity: 0.38; }
 
 /* letter scroll on final page */
 .letter-scroll {
@@ -1330,7 +1325,6 @@ body[data-page="5"] .iwp-capy   { opacity: 0.30; }
   right: 4vw;
   width: clamp(260px, 36vw, 560px);
   height: auto;
-  opacity: 0;
 }
 
 .iwp-capy {
@@ -1338,7 +1332,6 @@ body[data-page="5"] .iwp-capy   { opacity: 0.30; }
   left: 4vw;
   width: clamp(200px, 26vw, 400px);
   height: auto;
-  opacity: 0;
 }
 
 /* ─── final page angela photo ─── */
@@ -1347,8 +1340,8 @@ body[data-page="5"] .iwp-capy   { opacity: 0.30; }
 }
 
 .angela-frame {
-  width: min(220px, 50vw);
-  height: min(220px, 50vw);
+  width: min(300px, 65vw);
+  height: min(300px, 65vw);
   border-radius: 50%;
   overflow: hidden;
   margin: 0 auto 20px;
@@ -1907,7 +1900,7 @@ window.BIRTHDAY_CONFIG = {
   // Example: "https://formspree.io/f/xxxxxxx"
   formspreeEndpoint: "",
 
-  // Drop your 10 photos in assets/photos/ named photo-1.jpg ... photo-10.jpg
+  // Drop your 8 photos in assets/photos/ named photo-1.jpg ... photo-8.jpg
   // (any that are missing will show a watercolor placeholder instead).
   personalPhotos: [
     "assets/photos/photo-1.jpg",
@@ -1917,9 +1910,7 @@ window.BIRTHDAY_CONFIG = {
     "assets/photos/photo-5.jpg",
     "assets/photos/photo-6.jpg",
     "assets/photos/photo-7.jpg",
-    "assets/photos/photo-8.jpg",
-    "assets/photos/photo-9.jpg",
-    "assets/photos/photo-10.jpg"
+    "assets/photos/photo-8.jpg"
   ],
 
   dateIdeas: [
@@ -2212,10 +2203,10 @@ window.BIRTHDAY_CONFIG = {
     grid.classList.remove("is-empty");
     const photos = (cfg.personalPhotos || []);
     const washes = ["wash-purple", "wash-sage", "wash-gold", "wash-plum", "wash-slate", "wash-blush"];
-    const labels = ["a moment", "a memory", "just us", "favorite", "a smile", "together", "good days", "us", "again", "always"];
-    const tilts = [-2.4, 1.8, -1.2, 2.1, -0.8, 1.5, -1.9, 1.1, -1.4, 2.0];
+    const labels = ["a moment", "a memory", "just us", "favorite", "a smile", "together", "good days", "us"];
+    const tilts = [-2.4, 1.8, -1.2, 2.1, -0.8, 1.5, -1.9, 1.1];
 
-    const count = Math.max(photos.filter(Boolean).length, 10);
+    const count = Math.max(photos.filter(Boolean).length, 8);
 
     const makePlaceholder = (card, i) => {
       card.classList.add("empty", washes[i % washes.length]);
