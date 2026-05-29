@@ -84,19 +84,17 @@ body[data-page="4"] {
 }
 body[data-page="5"] {
   background:
-    radial-gradient(ellipse at 50% 50%, rgba(85, 40, 138, 0.24), transparent 60%),
-    radial-gradient(ellipse at 80% 12%, rgba(124, 77, 187, 0.18), transparent 44%),
-    linear-gradient(160deg, #2a1f44 0%, #3a2960 50%, #2e2148 100%);
+    radial-gradient(ellipse at 20% 20%, rgba(155, 106, 200, 0.35), transparent 50%),
+    radial-gradient(ellipse at 80% 80%, rgba(124, 77, 187, 0.28), transparent 52%),
+    radial-gradient(ellipse at 60% 10%, rgba(200, 150, 240, 0.20), transparent 44%),
+    linear-gradient(160deg, #e8d8f8 0%, #d4b8f0 45%, #e2ccf5 100%);
 }
-/* finale is dark — lift the panel & text for contrast */
-body[data-page="5"] .panel { background: rgba(40, 30, 64, 0.82); border-color: rgba(200, 170, 240, 0.18); }
-body[data-page="5"] .final-message,
-body[data-page="5"] h2,
-body[data-page="5"] .signature { color: #f1e8f8; }
-body[data-page="5"] .final-message { color: #d8c8ee; }
-body[data-page="5"] .eyebrow { color: #c9aef0; }
-body[data-page="5"] .signature span { color: #e8d4ff; }
-body[data-page="5"] .letter-scroll { background: rgba(60, 46, 92, 0.6); color: #ede4f8; }
+/* finale panel — semi-transparent over the purple wash, with ink-style border */
+body[data-page="5"] .panel {
+  background: rgba(248, 242, 255, 0.88);
+  border-color: rgba(124, 77, 187, 0.28);
+  box-shadow: 0 12px 56px rgba(80, 40, 140, 0.22), inset 0 1px 0 rgba(255,255,255,0.7);
+}
 
 body,
 button,
@@ -637,6 +635,9 @@ h3 {
 .moments-panel {
   display: flex;
   flex-direction: column;
+  max-height: calc(100svh - 120px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
 }
 
 .photo-grid {
@@ -658,6 +659,55 @@ h3 {
   transform: rotate(var(--tilt, 0deg));
   transition: transform 300ms var(--ease), box-shadow 300ms ease;
   isolation: isolate;
+}
+
+/* Ink brush stroke frame around each polaroid */
+.photo-card::before {
+  content: "";
+  position: absolute;
+  inset: -6px;
+  pointer-events: none;
+  border-radius: 3px;
+  background:
+    /* top edge */
+    linear-gradient(90deg, transparent 4%, rgba(26,20,40,0.55) 4% 8%, transparent 8%,
+      rgba(26,20,40,0.45) 12% 18%, transparent 18%,
+      rgba(26,20,40,0.60) 22% 30%, transparent 30%,
+      rgba(26,20,40,0.40) 36% 43%, transparent 43%,
+      rgba(26,20,40,0.52) 50% 58%, transparent 58%,
+      rgba(26,20,40,0.45) 65% 72%, transparent 72%,
+      rgba(26,20,40,0.58) 78% 86%, transparent 86%,
+      rgba(26,20,40,0.42) 92% 97%, transparent 97%)
+      left top / 100% 3px no-repeat,
+    /* bottom edge */
+    linear-gradient(90deg, transparent 3%, rgba(26,20,40,0.48) 3% 9%, transparent 9%,
+      rgba(26,20,40,0.55) 15% 23%, transparent 23%,
+      rgba(26,20,40,0.42) 28% 36%, transparent 36%,
+      rgba(26,20,40,0.60) 42% 52%, transparent 52%,
+      rgba(26,20,40,0.45) 58% 66%, transparent 66%,
+      rgba(26,20,40,0.55) 72% 80%, transparent 80%,
+      rgba(26,20,40,0.40) 86% 94%, transparent 94%)
+      left bottom / 100% 3px no-repeat,
+    /* left edge */
+    linear-gradient(180deg, transparent 3%, rgba(26,20,40,0.50) 3% 10%, transparent 10%,
+      rgba(26,20,40,0.58) 16% 26%, transparent 26%,
+      rgba(26,20,40,0.44) 32% 40%, transparent 40%,
+      rgba(26,20,40,0.55) 46% 56%, transparent 56%,
+      rgba(26,20,40,0.42) 62% 72%, transparent 72%,
+      rgba(26,20,40,0.52) 78% 88%, transparent 88%,
+      rgba(26,20,40,0.38) 94% 98%, transparent 98%)
+      left top / 3px 100% no-repeat,
+    /* right edge */
+    linear-gradient(180deg, transparent 5%, rgba(26,20,40,0.52) 5% 14%, transparent 14%,
+      rgba(26,20,40,0.45) 20% 30%, transparent 30%,
+      rgba(26,20,40,0.60) 36% 48%, transparent 48%,
+      rgba(26,20,40,0.40) 54% 64%, transparent 64%,
+      rgba(26,20,40,0.55) 70% 82%, transparent 82%,
+      rgba(26,20,40,0.42) 88% 96%, transparent 96%)
+      right top / 3px 100% no-repeat;
+  opacity: 0.7;
+  mix-blend-mode: multiply;
+  z-index: 3;
 }
 
 .photo-card:hover {
@@ -1074,12 +1124,28 @@ textarea:focus {
   margin-bottom: 28px;
   border-radius: 28px 28px 42px 42px;
   background:
-    linear-gradient(180deg, #ffdce5 0 34%, #ffd18a 34% 48%, #fff2bd 48% 100%);
-  border: 3px solid rgba(92, 54, 37, 0.22);
+    linear-gradient(180deg, #f2ecf8 0 30%, #e0d0f0 30% 55%, #d4bce8 55% 100%);
+  border: 2px solid rgba(124, 77, 187, 0.28);
   box-shadow:
-    inset 0 -18px 0 rgba(196, 128, 74, 0.12),
+    inset 0 -18px 0 rgba(124, 77, 187, 0.10),
     0 18px 44px rgba(80, 50, 31, 0.16);
   animation: cakeBreathe 4s ease-in-out infinite;
+}
+
+/* Ink brush plum blossom pattern on the cake */
+.cake-base::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background:
+    radial-gradient(circle, rgba(155,106,170,0.35) 0 5px, transparent 6px) 22% 50%,
+    radial-gradient(circle, rgba(155,106,170,0.28) 0 4px, transparent 5px) 35% 35%,
+    radial-gradient(circle, rgba(155,106,170,0.32) 0 5px, transparent 6px) 55% 60%,
+    radial-gradient(circle, rgba(155,106,170,0.25) 0 3px, transparent 4px) 68% 40%,
+    radial-gradient(circle, rgba(155,106,170,0.30) 0 4px, transparent 5px) 80% 55%;
+  background-repeat: no-repeat;
+  pointer-events: none;
 }
 
 @keyframes cakeBreathe {
@@ -1091,17 +1157,17 @@ textarea:focus {
   position: absolute;
   left: 7%;
   right: 7%;
-  top: 24px;
-  height: 28px;
+  top: 20px;
+  height: 30px;
   border-radius: 999px;
   background:
-    radial-gradient(circle at 12% 40%, #fff8fb 0 11px, transparent 12px),
-    radial-gradient(circle at 30% 58%, #fff8fb 0 13px, transparent 14px),
-    radial-gradient(circle at 50% 35%, #fff8fb 0 12px, transparent 13px),
-    radial-gradient(circle at 70% 58%, #fff8fb 0 13px, transparent 14px),
-    radial-gradient(circle at 88% 40%, #fff8fb 0 11px, transparent 12px),
-    #fff8fb;
-  box-shadow: inset 0 -8px 0 rgba(247, 199, 211, 0.42);
+    radial-gradient(circle at 12% 40%, #f8f2ff 0 11px, transparent 12px),
+    radial-gradient(circle at 30% 58%, #f8f2ff 0 13px, transparent 14px),
+    radial-gradient(circle at 50% 35%, #f8f2ff 0 12px, transparent 13px),
+    radial-gradient(circle at 70% 58%, #f8f2ff 0 13px, transparent 14px),
+    radial-gradient(circle at 88% 40%, #f8f2ff 0 11px, transparent 12px),
+    #f4edfc;
+  box-shadow: inset 0 -8px 0 rgba(155, 106, 170, 0.28);
 }
 
 .candle {
@@ -1113,8 +1179,8 @@ textarea:focus {
   transform: translateX(-50%) rotate(var(--lean));
   border-radius: 10px;
   background:
-    repeating-linear-gradient(45deg, #fff8fb 0 9px, #a7c99b 9px 15px);
-  border: 2px solid rgba(92, 54, 37, 0.22);
+    repeating-linear-gradient(180deg, #f2ecf8 0 8px, #d4b8e8 8px 14px);
+  border: 2px solid rgba(124, 77, 187, 0.30);
   box-shadow: 0 8px 18px rgba(80, 50, 31, 0.12);
   transition: transform 260ms var(--ease), opacity 260ms ease;
 }
@@ -1453,7 +1519,16 @@ body[data-page="5"] .iwp-capy   { opacity: 0.38; }
 }
 
 /* ─── special final slide flourishes ─── */
-.final-panel { position: relative; }
+.final-panel { position: relative; overflow: hidden; }
+
+.final-ink-corner {
+  position: absolute;
+  pointer-events: none;
+  width: clamp(100px, 18vw, 180px);
+  height: auto;
+}
+.final-ink-tl { top: 0; left: 0; }
+.final-ink-br { bottom: 0; right: 0; }
 
 /* soft ink-bloom halo behind her photo */
 .angela-frame {
@@ -1914,6 +1989,33 @@ body[data-page="5"] .petal {
 
     <section class="page" data-page="5" aria-labelledby="finalTitle">
       <div class="panel final-panel">
+        <!-- Ink wash plum blossom corners — visible because panel is translucent purple -->
+        <svg class="final-ink-corner final-ink-tl" viewBox="0 0 200 200" fill="none" aria-hidden="true">
+          <path d="M10 180 Q20 120 50 80 Q80 40 120 20" stroke="rgba(124,77,187,0.25)" stroke-width="8" stroke-linecap="round"/>
+          <path d="M10 180 Q25 110 60 70 Q90 38 130 15" stroke="rgba(155,106,170,0.15)" stroke-width="4" stroke-linecap="round"/>
+          <circle cx="120" cy="20" r="10" fill="rgba(200,130,220,0.38)"/>
+          <circle cx="108" cy="28" r="7" fill="rgba(190,120,210,0.32)"/>
+          <circle cx="130" cy="30" r="7" fill="rgba(200,130,220,0.28)"/>
+          <circle cx="115" cy="12" r="6" fill="rgba(210,140,230,0.30)"/>
+          <circle cx="125" cy="38" r="5" fill="rgba(180,110,200,0.22)"/>
+          <circle cx="120" cy="20" r="3" fill="rgba(184,144,60,0.6)"/>
+          <circle cx="70" cy="55" r="7" fill="rgba(200,130,220,0.28)"/>
+          <circle cx="60" cy="64" r="5" fill="rgba(190,120,210,0.22)"/>
+          <circle cx="78" cy="62" r="5" fill="rgba(200,130,220,0.20)"/>
+          <circle cx="70" cy="55" r="2.5" fill="rgba(184,144,60,0.5)"/>
+        </svg>
+        <svg class="final-ink-corner final-ink-br" viewBox="0 0 200 200" fill="none" aria-hidden="true">
+          <path d="M190 20 Q180 80 150 120 Q120 160 80 180" stroke="rgba(124,77,187,0.22)" stroke-width="8" stroke-linecap="round"/>
+          <circle cx="80" cy="180" r="9" fill="rgba(200,130,220,0.35)"/>
+          <circle cx="68" cy="172" r="6" fill="rgba(190,120,210,0.28)"/>
+          <circle cx="90" cy="170" r="6" fill="rgba(200,130,220,0.25)"/>
+          <circle cx="75" cy="188" r="5" fill="rgba(210,140,230,0.25)"/>
+          <circle cx="80" cy="180" r="2.5" fill="rgba(184,144,60,0.55)"/>
+          <circle cx="130" cy="130" r="7" fill="rgba(155,106,170,0.30)"/>
+          <circle cx="120" cy="138" r="5" fill="rgba(155,106,170,0.22)"/>
+          <circle cx="138" cy="138" r="5" fill="rgba(155,106,170,0.20)"/>
+          <circle cx="130" cy="130" r="2.5" fill="rgba(184,144,60,0.48)"/>
+        </svg>
         <div class="petals" aria-hidden="true">
           <span class="petal" style="left: 8%;  --pt: 9.5s; --pd: 0s;   --px: 34px"></span>
           <span class="petal" style="left: 22%; --pt: 11s;  --pd: 1.6s; --px: -28px"></span>
@@ -1969,14 +2071,14 @@ window.BIRTHDAY_CONFIG = {
   // Example: "https://formspree.io/f/xxxxxxx"
   formspreeEndpoint: "",
 
-  // 6 photos for the gallery grid (3 on top, 3 on bottom).
+  // 6 vertical (portrait) photos for the gallery grid (3 on top, 3 on bottom).
   personalPhotos: [
-    "assets/photos/ang.jpg",
-    "assets/photos/ang4.jpg",
+    "assets/photos/ang1.jpg",
+    "assets/photos/ang3.jpg",
     "assets/photos/ang5.jpg",
-    "assets/photos/ang7.jpg",
     "assets/photos/ang8.jpg",
-    "assets/photos/ang2.jpg"
+    "assets/photos/ang2.jpg",
+    "assets/photos/ang6.jpg"
   ],
 
   dateIdeas: [
@@ -1993,8 +2095,8 @@ window.BIRTHDAY_CONFIG = {
   // Photo of Angela for the final slide's circular frame.
   // Drop the file at assets/photos/angela.jpg (or change this path).
   imagePaths: {
-    angela: "assets/photos/ang3.jpg",
-    cover: "assets/photos/ang1.jpg"
+    angela: "assets/photos/ang13.jpg",
+    cover: "assets/photos/ang3.jpg"
   },
 
   // Put your letter here — it shows on the final page. Use \n for line breaks,
@@ -2024,8 +2126,8 @@ window.BIRTHDAY_CONFIG = {
       crown: "assets/capy-crown.png",
       party: "assets/capy-party.png",
       cakeCapy: "assets/capy-cake-big.png",
-      angela: "assets/photos/ang3.jpg",
-      cover: "assets/photos/ang1.jpg"
+      angela: "assets/photos/ang13.jpg",
+      cover: "assets/photos/ang3.jpg"
     },
     blowThreshold: 0.09
   };
@@ -2159,6 +2261,8 @@ window.BIRTHDAY_CONFIG = {
   function goToPage(index, options = {}) {
     const next = Math.max(0, Math.min(pages.length - 1, index));
     const backing = next < state.page;
+    // If leaving the cake slide, reset candles so the finale is reachable again.
+    if (state.page === 4 && next !== 5) resetCandles();
     stage.classList.toggle("is-backing", backing);
     state.page = next;
     document.body.dataset.page = next;
