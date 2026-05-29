@@ -621,6 +621,94 @@ h3 {
   to { opacity: 0; visibility: hidden; }
 }
 
+/* ─── anticipation loader (before final slide) ─── */
+.anticipate {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 26px;
+  background:
+    radial-gradient(ellipse at 30% 25%, rgba(155, 106, 200, 0.30), transparent 55%),
+    radial-gradient(ellipse at 75% 80%, rgba(124, 77, 187, 0.26), transparent 55%),
+    linear-gradient(160deg, #ece0f7 0%, #d9c2ef 50%, #e6d4f6 100%);
+}
+.anticipate.is-active { display: flex; animation: antIn 500ms ease both; }
+.anticipate.is-leaving { animation: antOut 600ms ease both; }
+
+@keyframes antIn  { from { opacity: 0; } to { opacity: 1; } }
+@keyframes antOut { to { opacity: 0; visibility: hidden; } }
+
+.anticipate-ink {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  display: grid;
+  place-items: center;
+}
+.ink-drop {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(90, 40, 140, 0.55) 0%, rgba(124, 77, 187, 0.22) 50%, transparent 72%);
+  transform: scale(0);
+}
+.ink-drop.d1 { width: 120px; height: 120px; animation: dropBloom 2.6s ease-in-out infinite; }
+.ink-drop.d2 { width: 80px;  height: 80px;  animation: dropBloom 2.6s ease-in-out 0.5s infinite; }
+.ink-drop.d3 { width: 50px;  height: 50px;  animation: dropBloom 2.6s ease-in-out 1s infinite; }
+.ink-ring {
+  position: absolute;
+  width: 60px; height: 60px;
+  border-radius: 50%;
+  border: 2px solid rgba(124, 77, 187, 0.45);
+  animation: ringPulse 2.6s ease-out infinite;
+}
+@keyframes dropBloom {
+  0%   { transform: scale(0.2); opacity: 0.7; }
+  60%  { opacity: 0.35; }
+  100% { transform: scale(1.6); opacity: 0; }
+}
+@keyframes ringPulse {
+  0%   { transform: scale(0.4); opacity: 0.8; }
+  100% { transform: scale(2.6); opacity: 0; }
+}
+
+.anticipate-word {
+  margin: 0;
+  font-family: 'Playfair Display', Georgia, serif;
+  font-style: italic;
+  font-size: clamp(1.3rem, 3.5vw, 2rem);
+  letter-spacing: 0.06em;
+  color: #3a2960;
+  opacity: 0;
+  animation: antWord 600ms ease 200ms forwards;
+}
+@keyframes antWord { to { opacity: 1; } }
+
+.anticipate-bar {
+  width: min(240px, 60vw);
+  height: 4px;
+  border-radius: 99px;
+  background: rgba(124, 77, 187, 0.18);
+  overflow: hidden;
+}
+.anticipate-bar span {
+  display: block;
+  height: 100%;
+  width: 0;
+  border-radius: 99px;
+  background: linear-gradient(90deg, #9b6aaa, #7c4dbb, #b8904a);
+}
+.anticipate.is-active .anticipate-bar span {
+  animation: antFill 2400ms cubic-bezier(.4,.1,.2,1) forwards;
+}
+@keyframes antFill {
+  0%   { width: 0; }
+  100% { width: 100%; }
+}
+
 .reveal {
   opacity: 0;
   transform: translateY(16px);
@@ -1660,6 +1748,18 @@ body[data-page="5"] .petal {
     <div class="intro-bloom"></div>
     <div class="intro-bloom two"></div>
     <p class="intro-word">Angela</p>
+  </div>
+
+  <!-- Anticipation loader before the final slide -->
+  <div class="anticipate" id="anticipate" aria-hidden="true">
+    <div class="anticipate-ink">
+      <span class="ink-drop d1"></span>
+      <span class="ink-drop d2"></span>
+      <span class="ink-drop d3"></span>
+      <span class="ink-ring"></span>
+    </div>
+    <p class="anticipate-word" id="anticipateWord">one more thing…</p>
+    <div class="anticipate-bar"><span></span></div>
   </div>
 
   <canvas id="confettiCanvas" aria-hidden="true"></canvas>
@@ -2856,7 +2956,35 @@ window.BIRTHDAY_CONFIG = {
     $("#cakeStatus").textContent = "wish logged.";
     $("#micButton").textContent = "done";
     rainConfetti(2800);
-    window.setTimeout(() => goToPage(5), 1700);
+    window.setTimeout(playAnticipation, 900);
+  }
+
+  function playAnticipation() {
+    const ant = $("#anticipate");
+    const word = $("#anticipateWord");
+    if (!ant) { goToPage(5); return; }
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    ant.classList.remove("is-leaving");
+    ant.classList.add("is-active");
+
+    const lines = ["one more thing…", "letting the ink settle…", "almost there…"];
+    let i = 0;
+    word.textContent = lines[0];
+    const cycle = window.setInterval(() => {
+      i = (i + 1) % lines.length;
+      word.textContent = lines[i];
+    }, 820);
+
+    const hold = reduced ? 200 : 2500;
+    window.setTimeout(() => {
+      window.clearInterval(cycle);
+      goToPage(5);
+      ant.classList.add("is-leaving");
+      window.setTimeout(() => {
+        ant.classList.remove("is-active", "is-leaving");
+      }, 650);
+    }, hold);
   }
 
   function resetCandles() {
