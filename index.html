@@ -3097,7 +3097,7 @@ window.BIRTHDAY_CONFIG = {
     const washes = ["wash-purple", "wash-sage", "wash-gold", "wash-plum", "wash-slate", "wash-blush"];
     const labels = ["a moment", "a memory", "just us", "favorite", "a smile", "together", "silly", "candid"];
     const tilts = [-3.2, 2.4, -1.6, 3.0, -1.0, 2.8, -2.4, 1.8];
-    const count = Math.max(photos.filter(Boolean).length, 8);
+    const count = photos.filter(Boolean).length || 6;
 
     const makePlaceholder = (card, i) => {
       card.classList.add("empty", washes[i % washes.length]);
