@@ -497,6 +497,7 @@ h3 {
 }
 
 .cover-polaroid {
+  position: relative;
   background: #fff;
   padding: 14px 14px 52px;
   border-radius: 2px;
@@ -505,6 +506,25 @@ h3 {
   animation: floatHero 5.5s ease-in-out infinite;
   z-index: 1;
   max-width: min(320px, 80%);
+}
+
+/* same light spray-art border as the gallery polaroids */
+.cover-polaroid::before {
+  content: "";
+  position: absolute;
+  inset: -14px;
+  pointer-events: none;
+  border-radius: 8px;
+  background-image:
+    radial-gradient(rgba(124, 77, 187, 0.55) 0.8px, transparent 1.4px),
+    radial-gradient(rgba(200, 130, 220, 0.45) 0.7px, transparent 1.3px),
+    radial-gradient(rgba(184, 144, 60, 0.40) 0.6px, transparent 1.2px);
+  background-size: 7px 7px, 11px 11px, 9px 9px;
+  background-position: 0 0, 3px 5px, 6px 2px;
+  -webkit-mask: radial-gradient(ellipse at center, transparent 56%, #000 78%);
+          mask: radial-gradient(ellipse at center, transparent 56%, #000 78%);
+  opacity: 0.85;
+  z-index: 3;
 }
 
 .cover-polaroid img {
@@ -661,52 +681,24 @@ h3 {
   isolation: isolate;
 }
 
-/* Ink brush stroke frame around each polaroid */
+/* Light spray-art / airbrushed speckle border around each polaroid */
 .photo-card::before {
   content: "";
   position: absolute;
-  inset: -6px;
+  inset: -14px;
   pointer-events: none;
-  border-radius: 3px;
-  background:
-    /* top edge */
-    linear-gradient(90deg, transparent 4%, rgba(26,20,40,0.55) 4% 8%, transparent 8%,
-      rgba(26,20,40,0.45) 12% 18%, transparent 18%,
-      rgba(26,20,40,0.60) 22% 30%, transparent 30%,
-      rgba(26,20,40,0.40) 36% 43%, transparent 43%,
-      rgba(26,20,40,0.52) 50% 58%, transparent 58%,
-      rgba(26,20,40,0.45) 65% 72%, transparent 72%,
-      rgba(26,20,40,0.58) 78% 86%, transparent 86%,
-      rgba(26,20,40,0.42) 92% 97%, transparent 97%)
-      left top / 100% 3px no-repeat,
-    /* bottom edge */
-    linear-gradient(90deg, transparent 3%, rgba(26,20,40,0.48) 3% 9%, transparent 9%,
-      rgba(26,20,40,0.55) 15% 23%, transparent 23%,
-      rgba(26,20,40,0.42) 28% 36%, transparent 36%,
-      rgba(26,20,40,0.60) 42% 52%, transparent 52%,
-      rgba(26,20,40,0.45) 58% 66%, transparent 66%,
-      rgba(26,20,40,0.55) 72% 80%, transparent 80%,
-      rgba(26,20,40,0.40) 86% 94%, transparent 94%)
-      left bottom / 100% 3px no-repeat,
-    /* left edge */
-    linear-gradient(180deg, transparent 3%, rgba(26,20,40,0.50) 3% 10%, transparent 10%,
-      rgba(26,20,40,0.58) 16% 26%, transparent 26%,
-      rgba(26,20,40,0.44) 32% 40%, transparent 40%,
-      rgba(26,20,40,0.55) 46% 56%, transparent 56%,
-      rgba(26,20,40,0.42) 62% 72%, transparent 72%,
-      rgba(26,20,40,0.52) 78% 88%, transparent 88%,
-      rgba(26,20,40,0.38) 94% 98%, transparent 98%)
-      left top / 3px 100% no-repeat,
-    /* right edge */
-    linear-gradient(180deg, transparent 5%, rgba(26,20,40,0.52) 5% 14%, transparent 14%,
-      rgba(26,20,40,0.45) 20% 30%, transparent 30%,
-      rgba(26,20,40,0.60) 36% 48%, transparent 48%,
-      rgba(26,20,40,0.40) 54% 64%, transparent 64%,
-      rgba(26,20,40,0.55) 70% 82%, transparent 82%,
-      rgba(26,20,40,0.42) 88% 96%, transparent 96%)
-      right top / 3px 100% no-repeat;
-  opacity: 0.7;
-  mix-blend-mode: multiply;
+  border-radius: 8px;
+  /* scattered fine spray dots in soft purple / pink / gold */
+  background-image:
+    radial-gradient(rgba(124, 77, 187, 0.55) 0.8px, transparent 1.4px),
+    radial-gradient(rgba(200, 130, 220, 0.45) 0.7px, transparent 1.3px),
+    radial-gradient(rgba(184, 144, 60, 0.40) 0.6px, transparent 1.2px);
+  background-size: 7px 7px, 11px 11px, 9px 9px;
+  background-position: 0 0, 3px 5px, 6px 2px;
+  /* fade out toward the center so the spray only frames the edges */
+  -webkit-mask: radial-gradient(ellipse at center, transparent 56%, #000 78%);
+          mask: radial-gradient(ellipse at center, transparent 56%, #000 78%);
+  opacity: 0.85;
   z-index: 3;
 }
 
@@ -2071,14 +2063,15 @@ window.BIRTHDAY_CONFIG = {
   // Example: "https://formspree.io/f/xxxxxxx"
   formspreeEndpoint: "",
 
-  // 6 vertical (portrait) photos for the gallery grid (3 on top, 3 on bottom).
+  // 6 photos for the gallery grid (3 on top, 3 on bottom) — all unique,
+  // all with people clearly in frame.
   personalPhotos: [
-    "assets/photos/ang1.jpg",
-    "assets/photos/ang3.jpg",
+    "assets/photos/ang2.jpg",
     "assets/photos/ang5.jpg",
     "assets/photos/ang8.jpg",
-    "assets/photos/ang2.jpg",
-    "assets/photos/ang6.jpg"
+    "assets/photos/ang.jpg",
+    "assets/photos/ang4.jpg",
+    "assets/photos/ang7.jpg"
   ],
 
   dateIdeas: [
@@ -2096,7 +2089,7 @@ window.BIRTHDAY_CONFIG = {
   // Drop the file at assets/photos/angela.jpg (or change this path).
   imagePaths: {
     angela: "assets/photos/ang13.jpg",
-    cover: "assets/photos/ang3.jpg"
+    cover: "assets/photos/ang1.jpg"
   },
 
   // Put your letter here — it shows on the final page. Use \n for line breaks,
@@ -2127,7 +2120,7 @@ window.BIRTHDAY_CONFIG = {
       party: "assets/capy-party.png",
       cakeCapy: "assets/capy-cake-big.png",
       angela: "assets/photos/ang13.jpg",
-      cover: "assets/photos/ang3.jpg"
+      cover: "assets/photos/ang1.jpg"
     },
     blowThreshold: 0.09
   };
@@ -2563,9 +2556,7 @@ window.BIRTHDAY_CONFIG = {
       `Date: ${dateLines}`,
       `Time: ${state.selectedStartTime && state.selectedEndTime ? `${state.selectedStartTime} – ${state.selectedEndTime}` : state.selectedStartTime || state.selectedEndTime || "not picked"}`,
       `Ideas: ${state.selectedIdeas.length ? state.selectedIdeas.join(", ") : "not picked"}`,
-      note ? `Note: ${note}` : "Note: none",
-      "",
-      `Sent by ${cfg.senderName || "Spencer"}.`
+      note ? `Note: ${note}` : "Note: none"
     ].join("\n");
   }
 
