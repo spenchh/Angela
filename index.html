@@ -815,20 +815,24 @@ h3 {
   flex-direction: column;
   align-items: center;
   max-height: calc(100svh - 120px);
-  overflow: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
   gap: 0;
+  padding-bottom: 12px;
 }
 
 /* remove the soft white glow over the bottom photos */
 .moments-panel::after { display: none; }
 
-/* one-at-a-time polaroid stage */
+/* scrollable polaroid feed — cards drop in one at a time */
 .photo-stage {
-  position: relative;
-  width: clamp(220px, 52vw, 380px);
-  height: clamp(260px, 56vw, 430px);
-  margin: 12px auto 0;
-  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 22px;
+  width: 100%;
+  margin: 14px 0 0;
+  padding: 0 8px 4px;
 }
 
 .photo-stage-hint {
@@ -837,7 +841,7 @@ h3 {
   text-transform: uppercase;
   color: var(--muted);
   opacity: 0.7;
-  margin: 10px 0 0;
+  margin: 4px 0 0;
   text-align: center;
   transition: opacity 400ms ease;
 }
@@ -848,48 +852,37 @@ h3 {
   letter-spacing: 0.1em;
   color: var(--muted);
   opacity: 0.5;
-  margin: 4px 0 0;
+  margin: 2px 0 6px;
   text-align: center;
 }
 
-/* each card sits absolute inside the stage, initially below + hidden */
+/* each card in the feed — natural size, no cropping */
 .photo-stage .photo-card {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  opacity: 0;
-  transform: rotate(var(--tilt, 0deg)) translateY(40px) scale(0.92);
-  transition:
-    opacity 550ms var(--ease),
-    transform 550ms var(--ease);
-  pointer-events: none;
+  position: relative;
+  width: clamp(200px, 68vw, 340px);
   min-height: unset;
+  opacity: 0;
+  transform: rotate(var(--tilt, 0deg)) translateY(36px) scale(0.93);
+  transition:
+    opacity 580ms var(--ease),
+    transform 580ms var(--ease);
+  flex-shrink: 0;
 }
 
 .photo-stage .photo-card.is-visible {
   opacity: 1;
   transform: rotate(var(--tilt, 0deg)) translateY(0) scale(1);
-  pointer-events: auto;
-  z-index: 2;
-}
-
-/* stacked ghost behind the visible card */
-.photo-stage .photo-card.is-behind {
-  opacity: 0.35;
-  transform: rotate(calc(var(--tilt, 0deg) * -0.5)) translateY(-6px) scale(0.94);
-  z-index: 1;
-  pointer-events: none;
 }
 
 @keyframes polaroidDrop {
-  0%   { opacity: 0; transform: rotate(var(--tilt,0deg)) translateY(-32px) scale(0.94) rotate(-6deg); }
-  60%  { opacity: 1; transform: rotate(var(--tilt,0deg)) translateY(6px)  scale(1.02); }
-  100% { opacity: 1; transform: rotate(var(--tilt,0deg)) translateY(0)    scale(1); }
+  0%   { opacity: 0; transform: rotate(var(--tilt,0deg)) translateY(-28px) scale(0.92); }
+  60%  { opacity: 1; transform: rotate(var(--tilt,0deg)) translateY(5px) scale(1.01); }
+  100% { opacity: 1; transform: rotate(var(--tilt,0deg)) translateY(0) scale(1); }
 }
 
 .photo-stage .photo-card.is-entering {
-  animation: polaroidDrop 550ms var(--ease) both;
+  animation: polaroidDrop 580ms var(--ease) both;
+}
 }
 
 /* keep photo-grid used only internally for JS; visually replaced by photo-stage */
@@ -966,11 +959,12 @@ h3 {
 
 .photo-card img {
   width: 100%;
-  height: 100%;
-  min-height: 150px;
-  object-fit: cover;
+  height: auto;
+  min-height: unset;
+  object-fit: contain;
   border-radius: 1px;
   display: block;
+  background: #fff;
 }
 
 .photo-card.empty {
@@ -2938,12 +2932,14 @@ window.BIRTHDAY_CONFIG = {
 
   // Curated fallbacks if a photo can't be sampled (each tuned to its photo's mood).
   const FRAME_FALLBACKS = [
-    ["rgba(214,150,70,0.82)","rgba(228,176,96,0.76)","rgba(150,170,205,0.62)","rgba(200,135,80,0.74)"], // ang2 warm honey
-    ["rgba(120,196,170,0.78)","rgba(150,205,185,0.72)","rgba(214,196,150,0.70)","rgba(168,210,180,0.70)"], // ang5 mint + cream
-    ["rgba(120,180,130,0.78)","rgba(150,200,150,0.72)","rgba(190,205,170,0.66)","rgba(110,170,140,0.74)"], // ang8 sage
-    ["rgba(150,110,200,0.78)","rgba(124,90,180,0.74)","rgba(220,160,90,0.66)","rgba(170,130,210,0.70)"], // ang violet + amber
-    ["rgba(214,150,140,0.78)","rgba(228,178,150,0.72)","rgba(200,150,160,0.66)","rgba(220,165,135,0.72)"], // ang4 warm rose
-    ["rgba(120,150,195,0.78)","rgba(150,175,205,0.70)","rgba(180,195,210,0.62)","rgba(110,140,185,0.74)"]  // ang7 slate blue
+    ["rgba(214,150,70,0.82)","rgba(228,176,96,0.76)","rgba(150,170,205,0.62)","rgba(200,135,80,0.74)"],
+    ["rgba(120,196,170,0.78)","rgba(150,205,185,0.72)","rgba(214,196,150,0.70)","rgba(168,210,180,0.70)"],
+    ["rgba(120,180,130,0.78)","rgba(150,200,150,0.72)","rgba(190,205,170,0.66)","rgba(110,170,140,0.74)"],
+    ["rgba(150,110,200,0.78)","rgba(124,90,180,0.74)","rgba(220,160,90,0.66)","rgba(170,130,210,0.70)"],
+    ["rgba(214,150,140,0.78)","rgba(228,178,150,0.72)","rgba(200,150,160,0.66)","rgba(220,165,135,0.72)"],
+    ["rgba(120,150,195,0.78)","rgba(150,175,205,0.70)","rgba(180,195,210,0.62)","rgba(110,140,185,0.74)"],
+    ["rgba(200,140,100,0.80)","rgba(220,165,115,0.74)","rgba(175,135,195,0.66)","rgba(205,150,105,0.72)"],
+    ["rgba(160,200,165,0.78)","rgba(140,185,148,0.72)","rgba(210,175,125,0.66)","rgba(155,195,160,0.70)"]
   ];
 
   function rgbToHsl(r, g, b) {
@@ -3093,14 +3089,15 @@ window.BIRTHDAY_CONFIG = {
     const hint = $("#photoHint");
     const counter = $("#photoCounter");
     const continueRow = $("#photoContinueRow");
+    const panel = stage.closest(".moments-panel");
     grid.innerHTML = "";
     stage.innerHTML = "";
 
     const photos = (cfg.personalPhotos || []);
     const washes = ["wash-purple", "wash-sage", "wash-gold", "wash-plum", "wash-slate", "wash-blush"];
-    const labels = ["a moment", "a memory", "just us", "favorite", "a smile", "together"];
-    const tilts = [-3.2, 2.4, -1.6, 3.0, -1.0, 2.8];
-    const count = Math.max(photos.filter(Boolean).length, 6);
+    const labels = ["a moment", "a memory", "just us", "favorite", "a smile", "together", "silly", "candid"];
+    const tilts = [-3.2, 2.4, -1.6, 3.0, -1.0, 2.8, -2.4, 1.8];
+    const count = Math.max(photos.filter(Boolean).length, 8);
 
     const makePlaceholder = (card, i) => {
       card.classList.add("empty", washes[i % washes.length]);
@@ -3137,78 +3134,70 @@ window.BIRTHDAY_CONFIG = {
     let revealed = 0;
 
     const updateCounter = () => {
-      counter.textContent = `${revealed} / ${count}`;
+      counter.textContent = revealed > 0 ? `${revealed} / ${count}` : "";
     };
     updateCounter();
 
     const revealNext = () => {
       if (revealed >= count) return;
-
-      // Demote current visible to behind
-      if (revealed > 0) {
-        const prev = cards[revealed - 1];
-        prev.classList.remove("is-visible", "is-entering");
-        prev.classList.add("is-behind");
-        // after transition, fully hide it
-        window.setTimeout(() => prev.classList.remove("is-behind"), 600);
-      }
-
       const card = cards[revealed];
       card.classList.add("is-visible", "is-entering");
-      // remove entering class after animation completes
-      window.setTimeout(() => card.classList.remove("is-entering"), 600);
-
+      window.setTimeout(() => card.classList.remove("is-entering"), 620);
       revealed += 1;
       updateCounter();
+
+      // Scroll the new card into view smoothly
+      window.setTimeout(() => {
+        card.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      }, 80);
 
       if (revealed >= count) {
         hint.classList.add("is-done");
         window.setTimeout(() => {
           continueRow.style.opacity = "1";
           continueRow.style.pointerEvents = "";
-        }, 400);
+        }, 500);
       } else {
         hint.textContent = "tap for next";
         hint.classList.remove("is-done");
       }
     };
 
-    // Reveal first card immediately when slide becomes active
     const onPhotoSlideEnter = () => {
       if (revealed === 0) revealNext();
     };
 
-    // Tap / click anywhere in the stage reveals next
-    stage.addEventListener("click", () => {
+    // Tap anywhere on the stage that isn't a revealed card advances
+    stage.addEventListener("click", (e) => {
       if (revealed < count) revealNext();
     });
 
-    // Scroll (wheel) on the moments panel also advances
-    const panel = stage.closest(".moments-panel");
+    // Scroll down on the panel also advances when cards remain
     if (panel) {
       panel.addEventListener("wheel", (e) => {
-        if (revealed < count) { e.preventDefault(); revealNext(); }
+        if (revealed < count && e.deltaY > 0) {
+          e.preventDefault();
+          revealNext();
+        }
       }, { passive: false });
     }
 
-    // Keyboard: right arrow / space while on this slide
     document.addEventListener("keydown", (e) => {
       if (state.page !== 3) return;
       if (e.key === "ArrowRight" || e.key === " ") { e.preventDefault(); revealNext(); }
     });
 
-    // Expose so goToPage can trigger the first reveal
     window._onPhotoSlideEnter = onPhotoSlideEnter;
 
-    // Reset on re-visit
     window._resetPhotoStage = () => {
       revealed = 0;
-      cards.forEach(c => c.classList.remove("is-visible", "is-entering", "is-behind"));
+      cards.forEach(c => c.classList.remove("is-visible", "is-entering"));
       hint.textContent = "tap to reveal";
       hint.classList.remove("is-done");
       continueRow.style.opacity = "0";
       continueRow.style.pointerEvents = "none";
       updateCounter();
+      if (panel) panel.scrollTop = 0;
     };
   }
 
