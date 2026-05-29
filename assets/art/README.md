@@ -4,13 +4,15 @@ Drop the watercolor / ink-wash images here with these EXACT filenames. They get
 wired into the per-slide background automatically (see `setupArt()` in
 `index.html`). Until a file exists it simply stays hidden — nothing breaks.
 
-| Filename            | Image you sent                         | Shows on            |
-|---------------------|----------------------------------------|---------------------|
-| `capybara.png`      | the watercolor capybara                | cake slide, finale  |
-| `plum-blossom.png`  | the pink plum-blossom tree             | cover, finale       |
-| `sakura.png`        | the pink sakura branch                 | cover, photos, finale |
-| `ink-tree.png`      | the misty ink-wash tree                | calendar slide      |
-| `ink-flowers.png`   | the black ink-wash flowers             | question, photos    |
+| Filename            | Actual image                           | Shows on                  |
+|---------------------|----------------------------------------|---------------------------|
+| `capybara.png`      | watercolor capybara                    | cake slide, finale        |
+| `sakura.png`        | pink cherry branch                     | cover, calendar, photos, finale |
+| `plum-blossom.png`  | black ink-wash flowers                 | cover                     |
+| `ink-tree.png`      | misty ink-wash bare tree               | question, calendar, cake  |
+| `ink-flowers.png`   | pink peony with green leaves           | question, photos, finale  |
+
+(Filenames don't all match their contents, but placement is by actual image.)
 
 Tips
 - **Transparent PNGs** look best (the art floats over the page). JPGs work but
