@@ -1,0 +1,341 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Loading indicators — prototypes</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root { --p: #7c4dbb; --p2: #9b6aaa; --p3: #5a2890; --g: #b8904a; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      padding: 44px 24px 64px;
+      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+      color: #1a1428;
+      background:
+        radial-gradient(ellipse at 14% 16%, rgba(124,77,187,0.08), transparent 38%),
+        radial-gradient(ellipse at 86% 84%, rgba(184,144,60,0.07), transparent 36%),
+        linear-gradient(160deg, #f7f2ee 0%, #ece4da 50%, #f4ede8 100%);
+    }
+    .head { text-align: center; margin: 0 auto 34px; max-width: 640px; }
+    .head h1 {
+      font-family: 'Fraunces', Georgia, serif;
+      font-weight: 600; letter-spacing: -0.02em;
+      font-size: clamp(1.7rem, 4vw, 2.6rem);
+      margin: 0 0 8px;
+    }
+    .head p { margin: 0; color: #7a6882; font-size: 0.95rem; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, 200px);
+      gap: 18px;
+      justify-content: center;
+    }
+    .cell {
+      position: relative;
+      width: 200px; height: 200px;
+      display: grid; place-items: center;
+      border: 1px solid rgba(124, 77, 187, 0.14);
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.45);
+      overflow: hidden;
+    }
+    /* small picker index — not part of the loader */
+    .n {
+      position: absolute; top: 9px; left: 12px;
+      font-size: 11px; font-weight: 700;
+      color: rgba(124, 77, 187, 0.42);
+      letter-spacing: 0.02em;
+    }
+
+    /* shared */
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* 1 — morphing ink blob */
+    .L1 {
+      width: 96px; height: 96px;
+      border-radius: 42% 58% 63% 37% / 41% 44% 56% 59%;
+      background:
+        radial-gradient(ellipse at 34% 30%, rgba(155,106,200,.55), transparent 60%),
+        linear-gradient(150deg, var(--p), var(--p2) 60%, var(--g) 140%);
+      box-shadow: 0 8px 26px rgba(124,77,187,.26);
+      animation: l1 3s ease-in-out infinite;
+    }
+    @keyframes l1 {
+      0%,100% { border-radius:42% 58% 63% 37%/41% 44% 56% 59%; transform: rotate(0) scale(.92); }
+      33%     { border-radius:67% 33% 47% 53%/37% 62% 38% 63%; transform: rotate(120deg) scale(1.06); }
+      66%     { border-radius:38% 62% 35% 65%/63% 37% 63% 37%; transform: rotate(240deg) scale(.98); }
+    }
+
+    /* 2 — breathing blob ring */
+    .L2 {
+      width: 90px; height: 90px; background: transparent;
+      border: 10px solid var(--p);
+      border-radius: 46% 54% 60% 40% / 55% 45% 55% 45%;
+      animation: l2 2.4s ease-in-out infinite;
+    }
+    @keyframes l2 {
+      0%,100% { border-radius:46% 54% 60% 40%/55% 45% 55% 45%; transform: scale(.85) rotate(0); border-color: var(--p); }
+      50%     { border-radius:60% 40% 45% 55%/45% 55% 45% 55%; transform: scale(1.05) rotate(180deg); border-color: var(--p2); }
+    }
+
+    /* 3 — ink bloom ripples */
+    .L3 { position: relative; width: 120px; height: 120px; }
+    .L3 i {
+      position: absolute; inset: 0; margin: auto;
+      width: 34px; height: 34px;
+      border-radius: 46% 54% 60% 40% / 55% 45% 55% 45%;
+      background: radial-gradient(circle, var(--p) 0%, var(--p2) 60%, transparent 78%);
+      transform: scale(0); animation: l3 2.4s ease-out infinite;
+    }
+    .L3 i:nth-child(2) { animation-delay: .8s; }
+    .L3 i:nth-child(3) { animation-delay: 1.6s; }
+    @keyframes l3 {
+      0%   { transform: scale(.2) rotate(0); opacity: .85; }
+      70%  { opacity: .25; }
+      100% { transform: scale(2.7) rotate(120deg); opacity: 0; }
+    }
+
+    /* 4 — orbiting trio */
+    .L4 { position: relative; width: 100px; height: 100px; animation: spin 2.6s linear infinite; }
+    .L4 i {
+      position: absolute; width: 30px; height: 30px;
+      border-radius: 46% 54% 60% 40% / 55% 45% 55% 45%;
+      background: linear-gradient(150deg, var(--p), var(--p2));
+      animation: morph4 1.6s ease-in-out infinite;
+    }
+    .L4 i:nth-child(1) { top: 0; left: 35px; }
+    .L4 i:nth-child(2) { bottom: 6px; left: 4px; background: linear-gradient(150deg, var(--p2), var(--g)); animation-delay: .3s; }
+    .L4 i:nth-child(3) { bottom: 6px; right: 4px; background: linear-gradient(150deg, var(--p3), var(--p)); animation-delay: .6s; }
+    @keyframes morph4 {
+      0%,100% { border-radius:46% 54% 60% 40%/55% 45% 55% 45%; transform: scale(.82); }
+      50%     { border-radius:60% 40% 45% 55%/45% 55% 45% 55%; transform: scale(1.12); }
+    }
+
+    /* 5 — gooey merging pair */
+    .L5 { position: relative; width: 120px; height: 60px; filter: url(#goo); }
+    .L5 i { position: absolute; top: 10px; width: 40px; height: 40px; border-radius: 50%; }
+    .L5 i:nth-child(1) { left: 8px; background: var(--p); animation: l5a 1.8s ease-in-out infinite; }
+    .L5 i:nth-child(2) { right: 8px; background: var(--p2); animation: l5b 1.8s ease-in-out infinite; }
+    @keyframes l5a { 0%,100% { transform: translateX(0) scale(1); } 50% { transform: translateX(30px) scale(1.15); } }
+    @keyframes l5b { 0%,100% { transform: translateX(0) scale(1); } 50% { transform: translateX(-30px) scale(1.15); } }
+
+    /* 6 — jelly bounce */
+    .L6 {
+      width: 70px; height: 70px;
+      border-radius: 46% 54% 60% 40% / 55% 45% 55% 45%;
+      background: linear-gradient(150deg, var(--p), var(--p2));
+      animation: l6 1.2s cubic-bezier(.5,.05,.5,.95) infinite;
+    }
+    @keyframes l6 {
+      0%,100% { transform: translateY(-28px) scale(.92,1.08); border-radius: 50%; }
+      50%     { transform: translateY(28px) scale(1.16,.84); border-radius: 55% 45% 40% 60%/40% 60% 45% 55%; }
+    }
+
+    /* 7 — split & merge */
+    .L7 { position: relative; width: 130px; height: 48px; filter: url(#goo); }
+    .L7 i { position: absolute; top: 2px; left: 50%; margin-left: -22px; width: 44px; height: 44px; border-radius: 50%; }
+    .L7 i:nth-child(1) { background: var(--p); animation: l7a 2s ease-in-out infinite; }
+    .L7 i:nth-child(2) { background: var(--p2); animation: l7b 2s ease-in-out infinite; }
+    @keyframes l7a { 0%,100% { transform: translateX(0); } 50% { transform: translateX(28px); } }
+    @keyframes l7b { 0%,100% { transform: translateX(0); } 50% { transform: translateX(-28px); } }
+
+    /* 8 — wobbling outline blob */
+    .L8 {
+      width: 92px; height: 92px; background: transparent;
+      border: 6px solid var(--p);
+      border-radius: 42% 58% 63% 37% / 41% 44% 56% 59%;
+      animation: l8 2.8s ease-in-out infinite;
+    }
+    @keyframes l8 {
+      0%,100% { border-radius:42% 58% 63% 37%/41% 44% 56% 59%; transform: rotate(0); }
+      33%     { border-radius:67% 33% 47% 53%/37% 62% 38% 63%; transform: rotate(120deg); }
+      66%     { border-radius:38% 62% 35% 65%/63% 37% 63% 37%; transform: rotate(240deg); }
+    }
+
+    /* 9 — trio scale pulse */
+    .L9 { display: flex; gap: 12px; align-items: center; }
+    .L9 i {
+      width: 24px; height: 24px;
+      border-radius: 46% 54% 60% 40% / 55% 45% 55% 45%;
+      background: linear-gradient(150deg, var(--p), var(--p2));
+      animation: l9 1.2s ease-in-out infinite;
+    }
+    .L9 i:nth-child(2) { animation-delay: .2s; }
+    .L9 i:nth-child(3) { animation-delay: .4s; }
+    @keyframes l9 { 0%,100% { transform: scale(.5); opacity: .5; } 50% { transform: scale(1.25); opacity: 1; } }
+
+    /* 10 — liquid drop */
+    .L10 {
+      width: 84px; height: 84px;
+      background: linear-gradient(150deg, var(--p), var(--p2) 70%, var(--g));
+      border-radius: 50% 50% 50% 8%;
+      box-shadow: 0 8px 24px rgba(124,77,187,.24);
+      animation: l10 2s linear infinite;
+    }
+    @keyframes l10 {
+      0%   { transform: rotate(0) scale(.95); border-radius: 50% 50% 50% 8%; }
+      50%  { transform: rotate(180deg) scale(1.08); border-radius: 8% 50% 50% 50%; }
+      100% { transform: rotate(360deg) scale(.95); border-radius: 50% 50% 50% 8%; }
+    }
+
+    /* 11 — cluster spin */
+    .L11 { position: relative; width: 90px; height: 90px; animation: spin 3s linear infinite; }
+    .L11 i { position: absolute; width: 34px; height: 34px; border-radius: 46% 54% 60% 40% / 55% 45% 55% 45%; background: linear-gradient(150deg, var(--p), var(--p2)); }
+    .L11 i:nth-child(1) { top: 0; left: 28px; }
+    .L11 i:nth-child(2) { bottom: 0; left: 28px; background: linear-gradient(150deg, var(--p2), var(--g)); }
+    .L11 i:nth-child(3) { left: 0; top: 28px; background: linear-gradient(150deg, var(--p3), var(--p)); }
+    .L11 i:nth-child(4) { right: 0; top: 28px; background: linear-gradient(150deg, var(--p), var(--p3)); }
+
+    /* 12 — two-tone swap */
+    .L12 {
+      width: 88px; height: 88px; border-radius: 50%;
+      background: conic-gradient(var(--p) 0 50%, var(--p2) 50% 100%);
+      animation: l12 1.6s ease-in-out infinite;
+    }
+    @keyframes l12 {
+      0%,100% { transform: rotate(0); border-radius: 50%; }
+      50%     { transform: rotate(180deg); border-radius: 46% 54% 60% 40%/55% 45% 55% 45%; }
+    }
+
+    /* 13 — ripple outline rings */
+    .L13 { position: relative; width: 120px; height: 120px; }
+    .L13 i {
+      position: absolute; inset: 0; margin: auto;
+      width: 40px; height: 40px;
+      border-radius: 46% 54% 60% 40% / 55% 45% 55% 45%;
+      border: 3px solid var(--p); transform: scale(0);
+      animation: l13 2.2s ease-out infinite;
+    }
+    .L13 i:nth-child(2) { animation-delay: .7s; border-color: var(--p2); }
+    .L13 i:nth-child(3) { animation-delay: 1.4s; border-color: var(--g); }
+    @keyframes l13 { 0% { transform: scale(.2) rotate(0); opacity: .9; } 100% { transform: scale(2.5) rotate(140deg); opacity: 0; } }
+
+    /* 14 — comet (gooey) */
+    .L14 { position: relative; width: 110px; height: 110px; filter: url(#goo); }
+    .L14 .core { position: absolute; inset: 0; margin: auto; width: 32px; height: 32px; border-radius: 50%; background: var(--p); }
+    .L14 .orb { position: absolute; inset: 0; animation: spin 1.5s linear infinite; }
+    .L14 .orb::before { content: ""; position: absolute; top: 8px; left: 50%; margin-left: -11px; width: 22px; height: 22px; border-radius: 50%; background: var(--p2); }
+
+    /* 15 — squircle pulse */
+    .L15 {
+      width: 84px; height: 84px; border-radius: 30%;
+      background: linear-gradient(150deg, var(--p), var(--p2));
+      box-shadow: 0 8px 24px rgba(124,77,187,.22);
+      animation: l15 2s ease-in-out infinite;
+    }
+    @keyframes l15 {
+      0%,100% { border-radius: 30%; transform: scale(.9) rotate(0); }
+      50%     { border-radius: 50% 50% 48% 52%/52% 48% 50% 50%; transform: scale(1.08) rotate(45deg); }
+    }
+
+    /* 16 — bouncing trio wave */
+    .L16 { display: flex; gap: 12px; align-items: flex-end; height: 64px; }
+    .L16 i {
+      width: 22px; height: 22px;
+      border-radius: 46% 54% 60% 40% / 55% 45% 55% 45%;
+      background: linear-gradient(150deg, var(--p), var(--p2));
+      animation: l16 .9s ease-in-out infinite;
+    }
+    .L16 i:nth-child(2) { animation-delay: .15s; }
+    .L16 i:nth-child(3) { animation-delay: .3s; }
+    @keyframes l16 { 0%,100% { transform: translateY(0) scale(1,.9); } 50% { transform: translateY(-28px) scale(.9,1.1); } }
+
+    /* 17 — swirl skew blob */
+    .L17 {
+      width: 86px; height: 86px;
+      border-radius: 46% 54% 60% 40% / 55% 45% 55% 45%;
+      background: linear-gradient(150deg, var(--p), var(--p2) 60%, var(--g));
+      animation: l17 2.2s ease-in-out infinite;
+    }
+    @keyframes l17 {
+      0%,100% { transform: rotate(0) skew(0,0) scale(.95); }
+      33%     { transform: rotate(120deg) skew(8deg,4deg) scale(1.05); }
+      66%     { transform: rotate(240deg) skew(-8deg,-4deg) scale(1); }
+    }
+
+    /* 18 — nucleus orbit (gooey) */
+    .L18 { position: relative; width: 110px; height: 110px; filter: url(#goo); }
+    .L18 .core { position: absolute; inset: 0; margin: auto; width: 40px; height: 40px; border-radius: 50%; background: var(--p); animation: l18 2s ease-in-out infinite; }
+    .L18 .e { position: absolute; inset: 0; animation: spin 1.4s linear infinite; }
+    .L18 .e::before { content: ""; position: absolute; top: 12px; left: 50%; margin-left: -9px; width: 18px; height: 18px; border-radius: 50%; background: var(--p2); }
+    @keyframes l18 { 0%,100% { transform: scale(.9); } 50% { transform: scale(1.06); } }
+
+    /* 19 — blooming petals */
+    .L19 { position: relative; width: 120px; height: 120px; animation: spin 6s linear infinite; }
+    .L19 i {
+      position: absolute; inset: 0; margin: auto;
+      width: 26px; height: 36px;
+      border-radius: 50% 50% 50% 50% / 62% 62% 38% 38%;
+      background: linear-gradient(180deg, var(--p), var(--p2));
+      transform-origin: 50% 60px;
+      animation: l19 2s ease-in-out infinite;
+    }
+    .L19 i:nth-child(1) { --r: 0deg; }
+    .L19 i:nth-child(2) { --r: 72deg; animation-delay: .1s; }
+    .L19 i:nth-child(3) { --r: 144deg; animation-delay: .2s; }
+    .L19 i:nth-child(4) { --r: 216deg; animation-delay: .3s; }
+    .L19 i:nth-child(5) { --r: 288deg; animation-delay: .4s; }
+    @keyframes l19 {
+      0%,100% { transform: rotate(var(--r)) translateY(-2px) scale(.7); }
+      50%     { transform: rotate(var(--r)) translateY(-16px) scale(1); }
+    }
+
+    /* 20 — lava lamp (gooey) */
+    .L20 { position: relative; width: 60px; height: 124px; filter: url(#goo); }
+    .L20 i { position: absolute; left: 8px; width: 44px; height: 44px; border-radius: 50%; }
+    .L20 i:nth-child(1) { top: 6px; background: var(--p); animation: l20a 3s ease-in-out infinite; }
+    .L20 i:nth-child(2) { bottom: 6px; background: var(--p2); animation: l20b 3s ease-in-out infinite; }
+    @keyframes l20a { 0%,100% { transform: translateY(0) scale(1); } 50% { transform: translateY(46px) scale(1.15); } }
+    @keyframes l20b { 0%,100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-46px) scale(.9); } }
+
+    @media (prefers-reduced-motion: reduce) {
+      * { animation-duration: 2s !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="head">
+    <h1>loading indicators</h1>
+    <p>20 organic, blobby takes — each fits a 200×200 space. Tell me a number and I'll wire it into the end loader.</p>
+  </div>
+
+  <div class="grid">
+    <div class="cell"><div class="L1"></div><b class="n">1</b></div>
+    <div class="cell"><div class="L2"></div><b class="n">2</b></div>
+    <div class="cell"><div class="L3"><i></i><i></i><i></i></div><b class="n">3</b></div>
+    <div class="cell"><div class="L4"><i></i><i></i><i></i></div><b class="n">4</b></div>
+    <div class="cell"><div class="L5"><i></i><i></i></div><b class="n">5</b></div>
+    <div class="cell"><div class="L6"></div><b class="n">6</b></div>
+    <div class="cell"><div class="L7"><i></i><i></i></div><b class="n">7</b></div>
+    <div class="cell"><div class="L8"></div><b class="n">8</b></div>
+    <div class="cell"><div class="L9"><i></i><i></i><i></i></div><b class="n">9</b></div>
+    <div class="cell"><div class="L10"></div><b class="n">10</b></div>
+    <div class="cell"><div class="L11"><i></i><i></i><i></i><i></i></div><b class="n">11</b></div>
+    <div class="cell"><div class="L12"></div><b class="n">12</b></div>
+    <div class="cell"><div class="L13"><i></i><i></i><i></i></div><b class="n">13</b></div>
+    <div class="cell"><div class="L14"><span class="core"></span><span class="orb"></span></div><b class="n">14</b></div>
+    <div class="cell"><div class="L15"></div><b class="n">15</b></div>
+    <div class="cell"><div class="L16"><i></i><i></i><i></i></div><b class="n">16</b></div>
+    <div class="cell"><div class="L17"></div><b class="n">17</b></div>
+    <div class="cell"><div class="L18"><span class="core"></span><span class="e"></span></div><b class="n">18</b></div>
+    <div class="cell"><div class="L19"><i></i><i></i><i></i><i></i><i></i></div><b class="n">19</b></div>
+    <div class="cell"><div class="L20"><i></i><i></i></div><b class="n">20</b></div>
+  </div>
+
+  <!-- gooey metaball filter for loaders 5, 7, 14, 18, 20 -->
+  <svg width="0" height="0" aria-hidden="true" style="position:absolute">
+    <defs>
+      <filter id="goo">
+        <feGaussianBlur in="SourceGraphic" stdDeviation="6" result="blur" />
+        <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 19 -8" />
+      </filter>
+    </defs>
+  </svg>
+</body>
+</html>
