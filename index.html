@@ -699,26 +699,22 @@ h3 {
 }
 @keyframes antWord { to { opacity: 1; } }
 
-.anticipate-bar {
-  width: min(240px, 60vw);
-  height: 4px;
-  border-radius: 99px;
-  background: rgba(124, 77, 187, 0.18);
-  overflow: hidden;
+/* default end-of-cake loader — a soft morphing ink blob (swap for any from
+   loaders.html by changing this one block) */
+.end-loader {
+  width: 96px;
+  height: 96px;
+  background:
+    radial-gradient(ellipse at 34% 30%, rgba(155,106,200,0.55), transparent 60%),
+    linear-gradient(150deg, #7c4dbb, #9b6aaa 60%, #b8904a 140%);
+  border-radius: 42% 58% 63% 37% / 41% 44% 56% 59%;
+  animation: endLoaderMorph 3s ease-in-out infinite;
+  box-shadow: 0 8px 30px rgba(124, 77, 187, 0.28);
 }
-.anticipate-bar span {
-  display: block;
-  height: 100%;
-  width: 0;
-  border-radius: 99px;
-  background: linear-gradient(90deg, #9b6aaa, #7c4dbb, #b8904a);
-}
-.anticipate.is-active .anticipate-bar span {
-  animation: antFill 2400ms cubic-bezier(.4,.1,.2,1) forwards;
-}
-@keyframes antFill {
-  0%   { width: 0; }
-  100% { width: 100%; }
+@keyframes endLoaderMorph {
+  0%, 100% { border-radius: 42% 58% 63% 37% / 41% 44% 56% 59%; transform: rotate(0deg) scale(0.92); }
+  33%      { border-radius: 67% 33% 47% 53% / 37% 62% 38% 63%; transform: rotate(120deg) scale(1.06); }
+  66%      { border-radius: 38% 62% 35% 65% / 63% 37% 63% 37%; transform: rotate(240deg) scale(0.98); }
 }
 
 .reveal {
@@ -1758,75 +1754,188 @@ body[data-page="5"] .iwp-capy   { opacity: 0.38; }
 }
 .seal-stamp span { font-size: 19px; }
 
-/* ─── Chinese name watermark — 文靜 ─── */
+/* ─── Chinese name — 文靜 — vertical seal beside her photo ─── */
 .chinese-name {
   position: absolute;
   font-family: 'Songti SC', 'STSong', 'Noto Serif CJK SC', 'Source Han Serif SC', serif;
-  font-size: clamp(60px, 11vw, 130px);
-  font-weight: 900;
-  color: rgba(124, 77, 187, 0.065);
+  font-size: clamp(34px, 5.2vw, 58px);
+  font-weight: 700;
+  color: rgba(124, 77, 187, 0.62);
   writing-mode: vertical-rl;
-  top: 12px;
-  right: 10px;
-  letter-spacing: 0.08em;
+  top: -2px;
+  right: 2px;
+  letter-spacing: 0.14em;
   line-height: 1;
   user-select: none;
   pointer-events: none;
-  z-index: 0;
+  z-index: 4;
   white-space: nowrap;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+/* thin brush rule under the name, like a scroll inscription */
+.chinese-name::after {
+  content: "";
+  position: absolute;
+  left: -7px;
+  top: 4px;
+  bottom: 4px;
+  width: 2px;
+  border-radius: 2px;
+  background: linear-gradient(180deg, transparent, rgba(124, 77, 187, 0.5), transparent);
 }
 
-/* ─── Spotify card on final slide ─── */
+/* ─── music player card on final slide ─── */
 .spotify-card {
-  width: min(400px, 92%);
+  width: min(430px, 94%);
   margin: 0 auto 18px;
-  border-radius: 18px;
-  border: 1.5px solid rgba(124, 77, 187, 0.18);
-  background: rgba(248, 243, 255, 0.55);
-  padding: 16px 20px;
+  border-radius: 20px;
+  border: 1.5px solid rgba(30, 23, 16, 0.12);
+  background: rgba(255, 255, 255, 0.74);
+  padding: 16px;
   text-align: left;
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
 }
 
-.spotify-label {
+.player {
   display: flex;
-  align-items: center;
-  gap: 14px;
+  gap: 16px;
+  align-items: stretch;
 }
 
-.spotify-icon-wrap {
-  width: 38px;
-  height: 38px;
-  border-radius: 10px;
-  background: rgba(124, 77, 187, 0.10);
+.player-art {
+  width: 84px;
+  height: 84px;
+  flex-shrink: 0;
+  border-radius: 16px;
+  background:
+    radial-gradient(ellipse at 30% 25%, rgba(255,255,255,0.35), transparent 55%),
+    linear-gradient(150deg, #7c4dbb 0%, #9b6aaa 55%, #b8904a 130%);
   display: grid;
   place-items: center;
-  flex-shrink: 0;
+  color: #fff;
+}
+.player-art i { width: 30px; height: 30px; opacity: 0.92; stroke-width: 1.6; }
+
+.player-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
-.spotify-icon {
-  width: 18px;
-  height: 18px;
-  color: var(--primary);
-  stroke: var(--primary);
+.player-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
 }
 
-.spotify-track {
+.player-title {
   margin: 0;
   font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
-  font-weight: 700;
-  font-size: 0.92rem;
+  font-weight: 800;
+  font-size: 1rem;
   color: var(--ink);
-  letter-spacing: -0.01em;
+  letter-spacing: -0.015em;
+  line-height: 1.15;
 }
 
-.spotify-artist {
+.player-artist {
   margin: 3px 0 0;
   font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
   font-size: 0.78rem;
   color: var(--muted);
-  font-weight: 400;
+  font-weight: 500;
+}
+
+.player-heart {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  color: var(--primary);
+  fill: rgba(124, 77, 187, 0.22);
+}
+
+.player-track {
+  position: relative;
+  height: 3px;
+  border-radius: 99px;
+  background: rgba(30, 23, 16, 0.13);
+  margin: 12px 0 11px;
+}
+.player-track::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 0;
+  height: 100%;
+  width: 36%;
+  border-radius: 99px;
+  background: var(--primary);
+}
+.player-knob {
+  position: absolute;
+  left: 36%; top: 50%;
+  width: 9px; height: 9px;
+  border-radius: 50%;
+  background: var(--primary);
+  transform: translate(-50%, -50%);
+  box-shadow: 0 1px 4px rgba(124, 77, 187, 0.4);
+}
+
+.player-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.player-controls .pc {
+  width: 18px;
+  height: 18px;
+  color: var(--ink);
+  opacity: 0.72;
+  stroke-width: 2;
+}
+.player-play {
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--primary);
+  display: grid;
+  place-items: center;
+}
+.player-play i {
+  width: 16px;
+  height: 16px;
+  color: #fff;
+  fill: #fff;
+  margin-left: 1px;
+}
+
+/* soundwave under the controls */
+.player-wave {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  height: 26px;
+  margin-top: 13px;
+}
+.player-wave span {
+  flex: 1;
+  min-width: 0;
+  border-radius: 99px;
+  background: rgba(124, 77, 187, 0.5);
+  transform-origin: center;
+  animation: waveBob 1.4s ease-in-out infinite;
+}
+@keyframes waveBob {
+  0%, 100% { transform: scaleY(0.55); }
+  50%      { transform: scaleY(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .player-wave span { animation: none; }
 }
 
 /* gentle falling petals — only animate on the final slide */
@@ -1874,12 +1983,8 @@ body[data-page="5"] .petal {
   <!-- Anticipation loader before the final slide -->
   <div class="anticipate" id="anticipate" aria-hidden="true">
     <div class="anticipate-ink">
-      <span class="ink-drop d1"></span>
-      <span class="ink-drop d2"></span>
-      <span class="ink-drop d3"></span>
-      <span class="ink-ring"></span>
+      <span class="end-loader"></span>
     </div>
-    <div class="anticipate-bar"><span></span></div>
   </div>
 
   <canvas id="confettiCanvas" aria-hidden="true"></canvas>
@@ -2174,7 +2279,7 @@ body[data-page="5"] .petal {
         <h2 id="questionTitle" class="reveal" style="--d: 80ms">hang out<br>soon?</h2>
         <p class="subtle reveal" style="--d: 150ms">there's really only one right answer here.</p>
         <div class="answer-zone reveal" id="answerZone" style="--d: 240ms">
-          <button class="primary yes-button magnetic" type="button" id="yesButton">yes <i data-lucide="sparkles" style="width:13px;height:13px;vertical-align:-1px;display:inline-block;stroke:currentColor;stroke-width:2.5;fill:none"></i></button>
+          <button class="primary yes-button magnetic" type="button" id="yesButton">yes</button>
           <button class="secondary no-button" type="button" id="noButton">no</button>
         </div>
         <p class="micro response-line" id="questionResponse"></p>
@@ -2295,14 +2400,28 @@ body[data-page="5"] .petal {
         <h2 id="finalTitle" class="reveal" style="--d: 160ms">happy birthday, <span data-friend-name>birthday girl</span>.</h2>
         <p class="final-message reveal" style="--d: 240ms">wishing you a day as beautiful as your art —<br>full of color, warmth, and the people who love you.</p>
         <div class="spotify-card reveal" style="--d: 275ms">
-          <div class="spotify-label">
-            <span class="spotify-icon-wrap"><i data-lucide="music" class="spotify-icon"></i></span>
-            <div>
-              <p class="spotify-track">Paragraphs</p>
-              <p class="spotify-artist">Luke Chiang</p>
+          <div class="player">
+            <div class="player-art" aria-hidden="true"><i data-lucide="music"></i></div>
+            <div class="player-main">
+              <div class="player-top">
+                <div>
+                  <p class="player-title">Paragraphs</p>
+                  <p class="player-artist">Luke Chiang</p>
+                </div>
+                <i data-lucide="heart" class="player-heart"></i>
+              </div>
+              <div class="player-track"><span class="player-knob"></span></div>
+              <div class="player-controls">
+                <i data-lucide="shuffle" class="pc"></i>
+                <i data-lucide="rewind" class="pc"></i>
+                <span class="player-play"><i data-lucide="play"></i></span>
+                <i data-lucide="fast-forward" class="pc"></i>
+                <i data-lucide="square" class="pc"></i>
+              </div>
+              <div class="player-wave" id="playerWave" aria-hidden="true"></div>
             </div>
           </div>
-          <!-- paste spotify iframe here -->
+          <!-- To use a real embed instead, paste your Spotify iframe here. -->
         </div>
         <div class="letter-scroll reveal" id="letterScroll" style="--d: 310ms; display:none"></div>
         <p class="signature reveal" style="--d: 340ms">with love,<br><span data-sender-name>Spencer</span></p>
@@ -2462,6 +2581,7 @@ window.BIRTHDAY_CONFIG = {
     setupCalendar();
     setupCake();
     setupMagneticButtons();
+    buildWaveform();
     if (window.lucide) window.lucide.createIcons();
     goToPage(0, { instant: true });
 
@@ -2808,6 +2928,24 @@ window.BIRTHDAY_CONFIG = {
     };
     if (img.complete && img.naturalWidth) run();
     else img.addEventListener("load", run, { once: true });
+  }
+
+  // Build the soundwave under the player controls — varied heights, gentle bob.
+  function buildWaveform() {
+    const wave = $("#playerWave");
+    if (!wave) return;
+    const BARS = 34;
+    for (let i = 0; i < BARS; i += 1) {
+      const bar = document.createElement("span");
+      // a soundwave-like silhouette: smooth swell with some organic jitter
+      const swell = Math.sin((i / BARS) * Math.PI);
+      const jitter = 0.35 + Math.random() * 0.65;
+      const h = Math.max(14, Math.round((swell * 0.7 + jitter * 0.5) * 100));
+      bar.style.height = `${Math.min(100, h)}%`;
+      bar.style.animationDelay = `${(Math.random() * -1.4).toFixed(2)}s`;
+      bar.style.animationDuration = `${(1.1 + Math.random() * 0.7).toFixed(2)}s`;
+      wave.appendChild(bar);
+    }
   }
 
   function renderPhotos() {
