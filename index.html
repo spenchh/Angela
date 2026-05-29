@@ -2187,6 +2187,8 @@ window.BIRTHDAY_CONFIG = {
   const $ = (selector, root = document) => root.querySelector(selector);
   const $$ = (selector, root = document) => Array.from(root.querySelectorAll(selector));
 
+  let resetNoButton = null;
+
   const state = {
     page: 0,
     selectedDate: "",
@@ -2316,14 +2318,8 @@ window.BIRTHDAY_CONFIG = {
     const backing = next < state.page;
     // If leaving the cake slide, reset candles so the finale is reachable again.
     if (state.page === 4 && next !== 5) resetCandles();
-    // Reset the runaway "no" button so it sits next to "yes" again.
-    if (next !== 1) {
-      const no = $("#noButton");
-      if (no) {
-        no.classList.remove("is-loose");
-        no.style.left = no.style.top = no.style.transform = "";
-      }
-    }
+    // Always restore the runaway "no" button so it sits next to "yes".
+    if (typeof resetNoButton === "function") resetNoButton();
     stage.classList.toggle("is-backing", backing);
     state.page = next;
     document.body.dataset.page = next;
@@ -2378,17 +2374,22 @@ window.BIRTHDAY_CONFIG = {
   function setupQuestion() {
     const no = $("#noButton");
     const yes = $("#yesButton");
+    const zone = $("#answerZone");
     const response = $("#questionResponse");
     const quips = ["nice try.", "nope.", "catch me.", "not today.", "too slow.", "keep dreaming.", "almost!"];
     let dodges = 0;
 
     // Flee anywhere on screen, away from the pointer.
     const flee = (pointerX = null, pointerY = null) => {
-      // On first dodge, break out of the flow so it can roam freely.
-      if (!no.classList.contains("is-loose")) no.classList.add("is-loose");
+      // On first dodge, move it onto <body> so position:fixed is relative to the
+      // viewport (the active .page has a transform, which would otherwise trap it).
+      if (!no.classList.contains("is-loose")) {
+        document.body.appendChild(no);
+        no.classList.add("is-loose");
+      }
 
       const btnRect = no.getBoundingClientRect();
-      const pad = 14;
+      const pad = 16;
       const maxX = Math.max(pad, window.innerWidth - btnRect.width - pad);
       const maxY = Math.max(pad, window.innerHeight - btnRect.height - pad);
 
@@ -2396,10 +2397,10 @@ window.BIRTHDAY_CONFIG = {
       let nextY = pad + Math.random() * (maxY - pad);
 
       if (pointerX !== null && pointerY !== null) {
-        for (let tries = 0; tries < 14; tries += 1) {
+        for (let tries = 0; tries < 16; tries += 1) {
           const cx = pad + Math.random() * (maxX - pad);
           const cy = pad + Math.random() * (maxY - pad);
-          if (Math.hypot(pointerX - (cx + btnRect.width / 2), pointerY - (cy + btnRect.height / 2)) > 180) {
+          if (Math.hypot(pointerX - (cx + btnRect.width / 2), pointerY - (cy + btnRect.height / 2)) > 200) {
             nextX = cx; nextY = cy; break;
           }
         }
@@ -2412,13 +2413,20 @@ window.BIRTHDAY_CONFIG = {
       response.textContent = quips[dodges % quips.length];
     };
 
+    // Put the button back next to "yes" (called when arriving / leaving the slide).
+    resetNoButton = () => {
+      no.classList.remove("is-loose");
+      no.style.left = no.style.top = no.style.transform = "";
+      if (no.parentElement !== zone) zone.appendChild(no);
+    };
+
     // Run when the pointer gets close.
     document.addEventListener("pointermove", event => {
       if (state.page !== 1) return;
       const rect = no.getBoundingClientRect();
       const cx = rect.left + rect.width / 2;
       const cy = rect.top + rect.height / 2;
-      if (Math.hypot(event.clientX - cx, event.clientY - cy) < 90) {
+      if (Math.hypot(event.clientX - cx, event.clientY - cy) < 95) {
         flee(event.clientX, event.clientY);
       }
     });
